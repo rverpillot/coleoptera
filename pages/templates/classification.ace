@@ -1,0 +1,19 @@
+div.ui.container style="margin-top: 5em;"
+
+  div.ui.message.attached
+    div.header Ajouter/Modifier une classification
+
+  form.ui.form.attached.fluid.segment data-action="submit: submit"
+
+    div.field.ten.wide
+      label Nom de la classification :
+      div.ui.input 
+        input name="classification" type="text" placeholder="Classification..."
+
+    button.ui.button data-action="{{.CloseAction}}" Annuler
+    button.ui.button.primary type="{{.CloseSubmit}}" Valider
+
+  {{with .Error}}
+  div.ui.bottom.message.attached.error
+    {{.}}
+  {{end}}

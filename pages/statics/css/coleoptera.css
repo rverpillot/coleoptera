@@ -1,0 +1,9 @@
+.classification {
+    font-weight: bold
+}
+
+.espece {
+    color: black;
+    font-style: italic;
+    margin-right: 2em;
+}

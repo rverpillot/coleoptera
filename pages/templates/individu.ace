@@ -1,0 +1,209 @@
+
+div.ui.container style="margin-top: 5em;"  
+
+  {{if .Edit}}
+  div.ui.message.attached
+    div.header Ajouter/Modifier une donnée
+
+  form#formIndividu.ui.form.attached.segment.fluid data-action="{{.FormAction}}"
+
+    div.field.two.wide
+      label Date :
+      input name="date" type="text" placeholder="JJ/MM/AAAA" value={{.Individu.Date.Format "02/01/2006"}}
+
+    div.field.ten.wide
+      label Genre/Espèce :
+      div.ui.dropdown.search.selection.additions
+        input name="espece" type="hidden" value="{{if (gt .Individu.Espece.ID 0)}}{{.Individu.Espece.ID}}{{end}}"
+        i.dropdown.icon
+        div.default.text Espèce
+        div.menu
+          div.item 
+            a href="#" data-action="{{.AddEspeceAction}}" Ajouter une espéce
+          div.divider
+          {{range .Especes}}
+          div.item data-value="{{.ID}}" {{.NomEspece}}
+          {{end}}
+
+    div.inline.fields
+      label Sexe :
+      div.field
+        div.ui.radio.checkbox
+          {{if (eq .Individu.Sexe "M")}}
+          input.hidden name="sexe" tabindex=0 type="radio" value="M" checked=
+          {{else}}
+          input.hidden name="sexe" tabindex=0 type="radio" value="M"
+          {{end}}
+          label 
+            i.icon.man
+      div.field
+        div.ui.radio.checkbox
+          {{if (eq .Individu.Sexe "F")}}
+          input.hidden name="sexe" tabindex=0 type="radio" value="F" checked=
+          {{else}}
+          input.hidden name="sexe" tabindex=0 type="radio" value="F"
+          {{end}}
+          label 
+            i.icon.woman
+
+    div.field.six.wide
+      label Site :
+      div.ui.dropdown.search.selection.additions
+        input name="site" type="hidden" value="{{.Individu.Site}}"
+        i.dropdown.icon
+        div.default.text Site
+        div.menu
+          {{range .Sites}}
+          div.item data-value="{{.}}" {{.}}
+          {{end}}
+
+    div.fields
+      div.field.six.wide.disabled
+        label Commune :
+        div.ui.dropdown.search.selection.additions
+          input name="commune" type="hidden" value="{{.Individu.Commune}}"
+          i.dropdown.icon
+          div.default.text Commune
+          div.menu
+            {{range .Communes}}
+            div.item data-value="{{.}}" {{.}}
+            {{end}}
+
+      div.field.six.wide.disabled
+        label Département :
+        div.ui.dropdown.search.selection
+          input name="code" type="hidden" value="{{.Individu.Code}}"
+          i.dropdown.icon
+          div.default.text Département
+          div.menu
+            {{range .Departements}}
+            div.item data-value="{{.Code}}" {{.Code}} - {{.Nom}} 
+            {{end}}
+
+    div.fields
+      div.field.four.wide
+        label Latitude :
+        input name="latitude" type="text" value="{{.Individu.Latitude}}"
+      div.field.four.wide
+        label Longitude :
+        input name="longitude" type="text" value="{{.Individu.Longitude}}"
+
+    div.field.twelve.wide.noupdate
+      label Plan :
+      div.ui.icon.input.fluid
+        input placeholder="Lieu..." type="text" data-action="{{.SearchAction}}" value="{{.Search}}"
+        i.circular.search.icon.link
+      div#mapedit style="margin-top:10px; width: 100%; height: 400px"
+      script createEditMap("#mapedit")
+
+    div.field.two.wide
+      label Altitude :
+      div.ui.right.labeled.input
+        input name="altitude" type="text" value={{.Individu.Altitude.Int64}}
+        div.ui.basic.label m
+
+    div.field.four.wide
+      label Récolteur :
+      div.ui.dropdown.search.selection.additions
+        input name="recolteur" type="hidden" value="{{.Individu.Recolteur}}"
+        i.dropdown.icon
+        div.default.text Récolteur
+        div.menu
+          {{range .Recolteurs}}
+          div.item data-value="{{.}}" {{.}}
+          {{end}}
+
+    div.field
+      label Conditions de capture :
+      textarea name="commentaire" rows=2 {{.Individu.Commentaire.String}}
+
+  div.ui.bottom.attached.header
+    button.ui.button data-action="{{.CloseAction}}" Annuler
+    button.ui.button.positive data-action="{{.ValidAction}}" Valider
+
+  {{with .Error}}
+  div.ui.bottom.message.attached.error
+    {{.}}
+  {{end}}
+
+  div style="margin-bottom: 10em"
+
+
+  {{else}}
+
+
+  {{if .Delete}}
+  div.ui.modal.small
+    i.icon.close
+    div.header {{.Individu.Espece.NomEspece}} 
+    div.content 
+      p Supprimer cette donnée ?
+    div.actions
+      div.ui.positive.button data-action="{{.CancelDeleteAction}}" Non
+      div.ui.red.right.button data-action="{{.ConfirmDeleteAction}}" Oui
+
+
+  {{else}}
+  {{with .Individu}}
+  h3.ui.top.attached.header {{.Espece.NomEspece}}
+  div.ui.segment.attached 
+    table
+      style. type="text/css" scoped=
+        td {
+          padding: 5px;
+        }
+        .label {
+          text-align: left; 
+          font-weight: bold;
+          padding-left: 2em;
+          width: 10em;
+        }
+        .value {
+          padding-left: 2em;
+        }
+
+      tr
+        td.label Date : 
+        td.value {{.Date.Format "02/01/2006"}}
+      tr
+        td.label Sexe :
+        td.value 
+          {{if (eq .Sexe "M")}}
+          i.icon.man
+          {{else}}
+          i.icon.woman
+          {{end}}
+      tr
+        td.label Site :
+        td.value {{.Site}}
+      tr
+        td.label Commune :
+        td.value {{.Commune}}
+      tr
+        td.label Département :
+        td.value {{.Departement.Nom}} ({{.Code}})
+      tr
+        td.label Altitude :
+        td.value {{.Altitude.Int64}}m
+      tr
+        td.label Récolteur :
+        td.value {{.Recolteur}}
+      tr
+        td.label Conditions :
+        td.value {{.Commentaire.String}}
+      tr 
+        td.label Plan :
+    div#mappreview style="margin-top:10px; width: 100%; height: 400px"
+    script createPreviewMap("#mappreview",{{.Longitude}},{{.Latitude}})
+
+  {{end}}
+  div.ui.bottom.attached.header.center.aligned
+    button.ui.button data-action="{{.CloseAction}}" Fermer
+    {{if .Admin}}
+    button.ui.button.primary data-action="{{.EditAction}}" Modifier
+    button.ui.button.red data-action="{{.DeleteAction}}" Supprimer
+    {{end}}
+  {{end}}
+  {{end}}
+
+
