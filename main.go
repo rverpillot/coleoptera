@@ -16,7 +16,6 @@ import (
 
 	_ "net/http/pprof"
 
-	"github.com/facebookgo/inject"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
@@ -31,9 +30,15 @@ func start(session *ihui.Session) {
 	session.Set("db", db)
 	session.Set("admin", *debug)
 
-	menu := pages.NewMenu("individus")
-	inject.Populate(menu, pages.NewPageIndividus(menu), pages.NewPageEspeces(menu), pages.NewPagePlan(menu))
-	session.ShowPage("Coleoptera", menu.PageIndividus)
+	menu := pages.NewMenu()
+	pageEspeces := pages.NewPageEspeces(menu)
+	pageIndividus := pages.NewPageIndividus(menu)
+	pagePlan := pages.NewPagePlan(menu)
+	menu.Add("especes", "Espèces", pageEspeces)
+	menu.Add("individus", "Individus", pageIndividus)
+	menu.Add("plan", "Plan", pagePlan)
+
+	session.ShowPage("Coleoptera", false, pageIndividus)
 }
 
 func main() {
