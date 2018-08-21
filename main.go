@@ -11,8 +11,8 @@ import (
 	"runtime"
 	"runtime/pprof"
 	"rverpi/coleoptera/pages"
-	"rverpi/ihui"
-	"strings"
+
+	"rverpi/ihui.v2"
 
 	_ "net/http/pprof"
 
@@ -27,18 +27,13 @@ var (
 	debug       *bool
 )
 
-func start(ctx *ihui.Context) {
-	ctx.Set("db", db)
-	ctx.Set("admin", *debug)
-	if *contextRoot == "/" {
-		ctx.Session["Path"] = ""
-	} else {
-		ctx.Session["Path"] = *contextRoot
-	}
-	//	model.UpdateLocations(db)
+func start(session *ihui.Session) {
+	session.Set("db", db)
+	session.Set("admin", *debug)
+
 	menu := pages.NewMenu("individus")
 	inject.Populate(menu, pages.NewPageIndividus(menu), pages.NewPageEspeces(menu), pages.NewPagePlan(menu))
-	ctx.DisplayPage(menu.PageIndividus, false)
+	session.ShowPage("Coleoptera", menu.PageIndividus)
 }
 
 func main() {
@@ -99,34 +94,14 @@ func main() {
 	defer db.Close()
 	db.LogMode(*debug)
 
-	if !strings.HasPrefix(*contextRoot, "/") {
-		*contextRoot = "/" + *contextRoot
-	}
-
-	h := ihui.NewHTTPHandler("Coleoptera", start)
-
-	h.AddCss(path.Join(*contextRoot, "/css/semantic.min.css"))
-	h.AddCss(path.Join(*contextRoot, "/css/coleoptera.css"))
-	h.AddCss(path.Join(*contextRoot, "/css/leaflet.css"))
-	h.AddCss(path.Join(*contextRoot, "/css/GpPluginLeaflet.css"))
-
-	h.AddJs(path.Join(*contextRoot, "/js/leaflet.js"))
-	h.AddJs(path.Join(*contextRoot, "/js/GpPluginLeaflet.js"))
-	h.AddJs(path.Join(*contextRoot, "/js/semantic.min.js"))
-	h.AddJs(path.Join(*contextRoot, "/js/coleoptera.js"))
-
-	http.Handle(path.Join(*contextRoot, "app")+"/", h)
-
 	paths := []string{"js", "css", "images"}
 	for _, p := range paths {
 		path := path.Join(*contextRoot, p) + "/"
 		log.Println(path)
 		http.Handle(path, http.StripPrefix(*contextRoot, http.FileServer(pages.ResourcesBox.HTTPBox())))
 	}
-	http.HandleFunc(*contextRoot, func(w http.ResponseWriter, r *http.Request) {
-		http.Redirect(w, r, path.Join(*contextRoot, "app"), http.StatusTemporaryRedirect)
-	})
-	//	http.HandleFunc("/json/locations", model.Json_locations(db))
+
+	http.Handle(os.path.Join(*contextRoot, "/app"), ihui.NewHTTPHandler(start))
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)

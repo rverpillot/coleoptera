@@ -1,12 +1,9 @@
 package pages
 
 import (
-	"io"
-	"log"
-	"rverpi/ihui"
+	"rverpi/ihui.v2"
 
 	rice "github.com/GeertJohan/go.rice"
-	"github.com/yosssi/ace"
 )
 
 var (
@@ -14,38 +11,24 @@ var (
 	ResourcesBox = rice.MustFindBox("statics")
 )
 
-func renderTemplate(pageTemplate string, w io.Writer, model interface{}) {
-	opts := &ace.Options{DynamicReload: true}
-	opts.Asset = func(name string) ([]byte, error) {
-		data, err := templateBox.Bytes(name)
-		return data, err
-	}
-	tmpl, err := ace.Load(pageTemplate, "", opts)
+func newAceTemplate(name string, model interface{}) *ihui.AceTemplateDrawer {
+	content, err := templateBox.Bytes(name)
 	if err != nil {
-		log.Println(err)
 		panic(err)
 	}
-
-	err = tmpl.Execute(w, model)
-	if err != nil {
-		log.Println(err)
-	}
+	return ihui.NewAceTemplateDrawer(content, model)
 }
 
 type Page struct {
-	*ihui.Page
-	pageTemplate string
+	tmpl *ihui.AceTemplateDrawer
 }
 
-func NewPage(pageTemplate string, modal bool) *Page {
-	page := &Page{
-		Page:         ihui.NewPage("Coleoptera"),
-		pageTemplate: pageTemplate,
+func NewPage(pageTemplate string, model interface{}) *Page {
+	return &Page{
+		templ: ihui.newAceTemplate(pageTemplate, model),
 	}
-
-	return page
 }
 
-func (p *Page) renderPage(w io.Writer, model interface{}) {
-	renderTemplate(p.pageTemplate, w, model)
+func (p *Page) Draw(page ihui.PageDrawer) {
+	page.Draw(p.tmpl)
 }

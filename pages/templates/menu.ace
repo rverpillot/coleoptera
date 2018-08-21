@@ -1,13 +1,13 @@
 div.ui.inverted.fixed.menu
   div.header.item  
-    img src="{{.Session.Path}}/images/icon.png"
-    p data-position="right bottom" data-tooltip="2.1 © Régis Verpillot" data-inverted="" Coleoptera 
-  a.item class="{{if (eq .MenuItemActive "especes")}}active teal{{end}}" data-id="especes" data-action="{{.OnMenu}}" Espèces
-  a.item class="{{if (eq .MenuItemActive "individus")}}active teal{{end}}" data-id="individus" data-action="{{.OnMenu}}" Données
-  a.item class="{{if (eq .MenuItemActive "plan")}}active teal{{end}}" data-id="plan" data-action="{{.OnMenu}}" Plan
+    img src="images/icon.png"
+    p data-position="right bottom" data-tooltip="3.0 © Régis Verpillot" data-inverted="" Coleoptera 
+  a.item class="menu-item {{if (eq .MenuItemActive "especes")}}active teal{{end}}" data-id="especes"  Espèces
+  a.item class="menu-item {{if (eq .MenuItemActive "individus")}}active teal{{end}}" data-id="individus"  Données
+  a.item class="menu-item {{if (eq .MenuItemActive "plan")}}active teal{{end}}" data-id="plan"  Plan
   div.right.menu
     {{if .Connected}}
-    a.item data-action="{{.OnDisconnect}}" Déconnexion
+    a.item id="disconnect" Déconnexion
     {{else}}
-    a.item data-action="{{.OnConnection}}" Connexion
+    a.item id="connect" Connexion
     {{end}}
