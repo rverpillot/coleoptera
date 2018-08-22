@@ -2,60 +2,59 @@ package pages
 
 import (
 	"database/sql"
-	"io"
 	"log"
-	"rverpi/coleoptera/model"
-	"rverpi/ihui"
 	"strconv"
 	"time"
 
 	"github.com/jinzhu/gorm"
+	"rverpi/coleoptera.v3/model"
+	"rverpi/ihui.v2"
 )
 
 type PageIndividu struct {
-	*Page
-	Individu            model.Individu
-	Admin               bool
-	Edit                bool
-	Delete              bool
-	Especes             []model.Espece
-	Departements        []model.Departement
-	Sites               []string
-	Communes            []string
-	Recolteurs          []string
-	Error               string
-	Search              string
-	SearchAction        ihui.ChangeAction
-	ValidAction         ihui.ClickAction
-	AddEspeceAction     ihui.ClickAction
-	CloseAction         ihui.ClickAction
-	EditAction          ihui.ClickAction
-	DeleteAction        ihui.ClickAction
-	ConfirmDeleteAction ihui.ClickAction
-	CancelDeleteAction  ihui.ClickAction
-	FormAction          ihui.FormAction
+	tmpl         *ihui.AceTemplateDrawer
+	Individu     model.Individu
+	Admin        bool
+	Edit         bool
+	Delete       bool
+	Especes      []model.Espece
+	Departements []model.Departement
+	Sites        []string
+	Communes     []string
+	Recolteurs   []string
+	Error        string
+	Search       string
 }
 
-func newPageIndividu(individu model.Individu, editMode bool) ihui.PageRender {
+func newPageIndividu(individu model.Individu, editMode bool) *PageIndividu {
 	page := &PageIndividu{
-		Page:     NewPage("individu", true),
 		Individu: individu,
 		Edit:     editMode,
 	}
+	page.tmpl = newAceTemplate("individu.ace", page)
 	return page
 }
 
-func (page *PageIndividu) OnInit(ctx *ihui.Context) {
-	db := ctx.Get("db").(*gorm.DB)
+func (page *PageIndividu) Draw(p ihui.Page) {
+	db := p.Get("db").(*gorm.DB)
+	page.Especes = model.AllEspeces(db)
 
-	page.Admin = ctx.Get("admin").(bool)
-	page.Sites = model.AllSites(db)
-	page.Communes = model.AllCommunes(db)
-	page.Departements = model.AllDepartements(db)
-	page.Recolteurs = model.AllRecolteurs(db)
+	p.Draw(page.tmpl)
 
-	page.FormAction = func(name string, val string) {
+	p.On("load", "page", func(s *ihui.Session, event ihui.Event) {
+		page.Admin = s.Get("admin").(bool)
+		page.Sites = model.AllSites(db)
+		page.Communes = model.AllCommunes(db)
+		page.Departements = model.AllDepartements(db)
+		page.Recolteurs = model.AllRecolteurs(db)
+	})
+
+	p.On("form", "form", func(s *ihui.Session, event ihui.Event) {
+		data := event.Data.(map[string]interface{})
+		name := data["name"].(string)
+		val := data["val"].(string)
 		log.Println(name, val)
+
 		switch name {
 		case "date":
 			page.Individu.Date, _ = time.Parse("02/01/2006", val)
@@ -83,24 +82,57 @@ func (page *PageIndividu) OnInit(ctx *ihui.Context) {
 			long, _ := strconv.ParseFloat(val, 64)
 			page.Individu.Longitude = long
 			page.Search = ""
-			ctx.Script("updateEditMap(%f,%f)", page.Individu.Latitude, page.Individu.Longitude)
+			s.Script("updateEditMap(%f,%f)", page.Individu.Latitude, page.Individu.Longitude)
 		case "latitude":
 			lat, _ := strconv.ParseFloat(val, 64)
 			page.Individu.Latitude = lat
 			page.Search = ""
-			ctx.Script("updateEditMap(%f,%f)", page.Individu.Latitude, page.Individu.Longitude)
+			s.Script("updateEditMap(%f,%f)", page.Individu.Latitude, page.Individu.Longitude)
 		case "recolteur":
 			page.Individu.Recolteur = val
 		case "commentaire":
 			page.Individu.Commentaire = sql.NullString{val, true}
 		}
-	}
+	})
 
-	page.SearchAction = func(val string) {
+	p.On("input", "[id=search]", func(s *ihui.Session, event ihui.Event) {
+		val := event.Value()
 		log.Println(val)
 		page.Individu.Latitude, page.Individu.Longitude, _ = model.FindLatLng(val)
-		ctx.Script("updateEditMap(%f,%f)", page.Individu.Latitude, page.Individu.Longitude)
-	}
+		s.Script("updateEditMap(%f,%f)", page.Individu.Latitude, page.Individu.Longitude)
+	})
+
+	p.On("click", "[id=cancel]", func(s *ihui.Session, event ihui.Event) {
+		s.QuitPage()
+	})
+
+	p.On("click", "[id=edit]", func(s *ihui.Session, event ihui.Event) {
+		page.Edit = true
+	})
+
+	p.On("click", "[id=confirm-delete]", func(s *ihui.Session, event ihui.Event) {
+		if page.Individu.ID > 0 {
+			if err := db.Delete(page.Individu).Error; err != nil {
+				log.Println(err)
+				page.Error = err.Error()
+				return
+			}
+		}
+		s.QuitPage()
+	})
+
+	p.On("click", "[id=cancel-delete]", func(s *ihui.Session, event ihui.Event) {
+		page.Delete = false
+	})
+
+	p.On("click", "[id=delete]", func(s *ihui.Session, event ihui.Event) {
+		page.Delete = false
+	})
+
+}
+
+func (page *PageIndividu) OnInit(ctx *ihui.Context) {
+	db := ctx.Get("db").(*gorm.DB)
 
 	page.ValidAction = func(_ string) {
 		log.Println(page.Individu)
@@ -131,29 +163,6 @@ func (page *PageIndividu) OnInit(ctx *ihui.Context) {
 		}
 	}
 
-	page.CloseAction = func(_ string) {
-		page.Close()
-	}
-	page.EditAction = func(_ string) {
-		page.Edit = true
-	}
-	page.DeleteAction = func(_ string) {
-		page.Delete = true
-	}
-	page.CancelDeleteAction = func(_ string) {
-		page.Delete = false
-	}
-	page.ConfirmDeleteAction = func(_ string) {
-		if page.Individu.ID > 0 {
-			if err := db.Delete(page.Individu).Error; err != nil {
-				log.Println(err)
-				page.Error = err.Error()
-				return
-			}
-		}
-		page.Close()
-	}
-
 	page.On("position", func(ctx *ihui.Context) {
 		pos := ctx.Event.Data.(map[string]interface{})
 		log.Println(pos)
@@ -169,11 +178,4 @@ func (page *PageIndividu) OnInit(ctx *ihui.Context) {
 		page.Individu.Altitude = sql.NullInt64{altitude, true}
 	})
 
-}
-
-func (page *PageIndividu) Render(w io.Writer, ctx *ihui.Context) {
-	db := ctx.Get("db").(*gorm.DB)
-	page.Especes = model.AllEspeces(db)
-
-	page.renderPage(w, page)
 }

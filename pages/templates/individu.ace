@@ -5,7 +5,7 @@ div.ui.container style="margin-top: 5em;"
   div.ui.message.attached
     div.header Ajouter/Modifier une donnée
 
-  form#formIndividu.ui.form.attached.segment.fluid data-action="{{.FormAction}}"
+  form#formIndividu.ui.form.attached.segment.fluid
 
     div.field.two.wide
       label Date :
@@ -91,7 +91,7 @@ div.ui.container style="margin-top: 5em;"
     div.field.twelve.wide.noupdate
       label Plan :
       div.ui.icon.input.fluid
-        input placeholder="Lieu..." type="text" data-action="{{.SearchAction}}" value="{{.Search}}"
+        input placeholder="Lieu..." type="text" id="search" value="{{.Search}}"
         i.circular.search.icon.link
       div#mapedit style="margin-top:10px; width: 100%; height: 400px"
       script createEditMap("#mapedit")
@@ -118,8 +118,8 @@ div.ui.container style="margin-top: 5em;"
       textarea name="commentaire" rows=2 {{.Individu.Commentaire.String}}
 
   div.ui.bottom.attached.header
-    button.ui.button data-action="{{.CloseAction}}" Annuler
-    button.ui.button.positive data-action="{{.ValidAction}}" Valider
+    button.ui.button id="cancel" Annuler
+    button.ui.button.positive id="valid" Valider
 
   {{with .Error}}
   div.ui.bottom.message.attached.error
@@ -139,8 +139,8 @@ div.ui.container style="margin-top: 5em;"
     div.content 
       p Supprimer cette donnée ?
     div.actions
-      div.ui.positive.button data-action="{{.CancelDeleteAction}}" Non
-      div.ui.red.right.button data-action="{{.ConfirmDeleteAction}}" Oui
+      div.ui.positive.button id="cancel-delete" Non
+      div.ui.red.right.button id="confirm-delete" Oui
 
 
   {{else}}
@@ -198,10 +198,10 @@ div.ui.container style="margin-top: 5em;"
 
   {{end}}
   div.ui.bottom.attached.header.center.aligned
-    button.ui.button data-action="{{.CloseAction}}" Fermer
+    button.ui.button id="cancel" Fermer
     {{if .Admin}}
-    button.ui.button.primary data-action="{{.EditAction}}" Modifier
-    button.ui.button.red data-action="{{.DeleteAction}}" Supprimer
+    button.ui.button.primary id="edit" Modifier
+    button.ui.button.red id="delete" Supprimer
     {{end}}
   {{end}}
   {{end}}

@@ -1,35 +1,32 @@
 package pages
 
 import (
-	"io"
 	"log"
-	"rverpi/coleoptera/model"
-	"rverpi/ihui"
 	"strconv"
 	"strings"
+
+	"rverpi/coleoptera.v3/model"
+	"rverpi/ihui.v2"
 
 	"github.com/jinzhu/gorm"
 )
 
 type PageEspece struct {
-	*Page
-	Espece                  *model.Espece
-	Classifications         []model.Classification
-	AllGenres               []string
-	AllSousGenres           []string
-	AllEspeces              []string
-	AllSousEspeces          []string
-	Error                   string
-	AddClassificationAction ihui.ClickAction
-	SubmitAction            ihui.SubmitAction
-	CloseAction             ihui.ClickAction
+	tmpl            *ihui.AceTemplateDrawer
+	Espece          *model.Espece
+	Classifications []model.Classification
+	AllGenres       []string
+	AllSousGenres   []string
+	AllEspeces      []string
+	AllSousEspeces  []string
+	Error           string
 }
 
-func newPageEspece(espece *model.Espece) ihui.PageRender {
+func newPageEspece(espece *model.Espece) *PageEspece {
 	page := &PageEspece{
-		Page:   NewPage("espece", true),
 		Espece: espece,
 	}
+	page.tmpl = newAceTemplate("espece.ace", page)
 	return page
 }
 
@@ -40,28 +37,32 @@ func (page *PageEspece) ID() string {
 	return strconv.Itoa(int(page.Espece.ID))
 }
 
-func (page *PageEspece) OnInit(ctx *ihui.Context) {
-	db := ctx.Get("db").(*gorm.DB)
+func (page *PageEspece) draw(p ihui.Page) {
+	db := p.Get("db").(*gorm.DB)
 
+	page.Classifications = model.AllClassifications(db)
 	page.AllGenres = model.AllGenres(db)
 	page.AllSousGenres = model.AllSousGenres(db)
 	page.AllEspeces = model.AllNomEspeces(db)
 	page.AllSousEspeces = model.AllSousEspeces(db)
 
-	page.AddClassificationAction = func(_ string) {
+	p.Draw(page.tmpl)
+
+	p.On("click", "[id=add-classification]", func(s *ihui.Session, ev ihui.Event) {
 		var classification model.Classification
-		ctx.DisplayPage(newPageClassification(&classification), true)
+		s.ShowPage(newPageClassification(&classification), &ihui.Options{Modal: true})
 		if !db.NewRecord(classification) {
 			page.Espece.Classification = classification
 			page.Espece.ClassificationID = classification.ID
 		}
-	}
+	})
 
-	page.CloseAction = func(_ string) {
-		page.Close()
-	}
+	p.On("click", "[id=cancel]", func(s *ihui.Session, ev ihui.Event) {
+		s.QuitPage()
+	})
 
-	page.SubmitAction = func(data map[string]interface{}) {
+	p.On("submit", "formm", func(s *ihui.Session, ev ihui.Event) {
+		data := ev.Data.(map[string]interface{})
 		id, _ := strconv.Atoi(data["classification"].(string))
 
 		page.Espece.ClassificationID = uint(id)
@@ -83,15 +84,6 @@ func (page *PageEspece) OnInit(ctx *ihui.Context) {
 			page.Error = err.Error()
 			return
 		}
-		page.Close()
-	}
-
-}
-
-func (page *PageEspece) Render(w io.Writer, ctx *ihui.Context) {
-	db := ctx.Get("db").(*gorm.DB)
-
-	page.Classifications = model.AllClassifications(db)
-	page.renderPage(w, page)
-
+		s.QuitPage()
+	})
 }

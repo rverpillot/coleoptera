@@ -1,36 +1,34 @@
 package pages
 
 import (
-	"io"
-
 	"rverpi/ihui.v2"
 )
 
 type Item struct {
-	Name string
-	Label string
+	Name   string
+	Label  string
 	Active bool
 	drawer ihui.PageDrawer
 }
 
 type Menu struct {
-	tmpl *ihui.AceTemplateDrawer
+	tmpl           *ihui.AceTemplateDrawer
 	MenuItemActive string
 	Connected      bool
-	Items []Item
+	Items          []Item
 }
 
 func NewMenu() *Menu {
-	menu = &Menu{}
-	menu.tmpl = NewPage("menu.ace", menu)
+	menu := &Menu{}
+	menu.tmpl = newAceTemplate("menu.ace", menu)
 	return menu
 }
 
 func (menu *Menu) Add(name string, label string, item ihui.PageDrawer) {
 	active := len(menu.Items) == 0
-	menu.items = append(menu.Items, Item{Label: label, Active: active, drawer: item})
+	menu.Items = append(menu.Items, Item{Label: label, Active: active, drawer: item})
 	if menu.MenuItemActive == "" {
-		menu.MenuItemActive  = name
+		menu.MenuItemActive = name
 	}
 }
 
@@ -40,12 +38,13 @@ func (menu *Menu) SetActive(name string) {
 	}
 }
 
-func (menu *Menu) Active() string{
+func (menu *Menu) Active() string {
 	for _, item := range menu.Items {
 		if item.Active {
-			return item.name
+			return item.Name
 		}
 	}
+	return ""
 }
 
 /*
@@ -62,27 +61,21 @@ func (menu *Menu) OnInit(ctx *ihui.Context) {
 }
 */
 
-func (menu *Menu) Render(w io.Writer, ctx *ihui.Context) {
-	menu.Connected = ctx.Get("admin").(bool)
-
-	renderTemplate("menu", w, menu)
-}
-
-func (menu *Menu) Draw(page ihui.PageDrawer) {
+func (menu *Menu) Draw(page ihui.Page) {
 	menu.Connected = page.Get("admin").(bool)
 
 	page.Draw(menu.tmpl)
 
-	page.On("click", ".menu-item"], function(s *ihui.Session, value interface{}) {
-		menu.MenuItemActive = value.(string)
-	})
-	
-	
-	page.On("click", "[id=connect]"], function(s *ihui.Session, _ interface{}) {
-		s.ShowPage(NewPageLogin())
+	page.On("click", ".menu-item", func(s *ihui.Session, event ihui.Event) {
+		menu.MenuItemActive = event.Value()
 	})
 
-	page.On("click", "[id=disconnect]"], function(s *ihui.Session, _ interface{}) {
+	page.On("click", "[id=connect]", func(s *ihui.Session, _ ihui.Event) {
+		//TODO: login
+		//		s.ShowPage(NewPageLogin(), nil)
+	})
+
+	page.On("click", "[id=disconnect]", func(s *ihui.Session, _ ihui.Event) {
 		s.Set("admin", false)
 	})
 }

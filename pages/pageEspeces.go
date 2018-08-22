@@ -20,15 +20,15 @@ func NewPageEspeces(menu *Menu) *PageEspeces {
 	return page
 }
 
-func (page *PageEspeces) Draw(p ihui.PageDrawer) {
+func (page *PageEspeces) Draw(p ihui.Page) {
 	db := p.Get("db").(*gorm.DB)
 	page.Classifications = model.AllClassifications(db)
 
 	p.Draw(page.tmpl)
 
-	p.On("click", ".espece", func(session *ihui.Session) {
+	p.On("click", ".espece", func(session *ihui.Session, event ihui.Event) {
 		var espece model.Espece
-		db.First(&espece, id)
+		db.First(&espece, event.Value())
 		session.Set("search_espece", espece.ID)
 	})
 }

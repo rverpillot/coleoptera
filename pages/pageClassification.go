@@ -1,51 +1,44 @@
 package pages
 
 import (
-	"io"
 	"log"
-	"rverpi/coleoptera/model"
-	"rverpi/ihui"
 
 	"github.com/jinzhu/gorm"
+	"rverpi/coleoptera.v3/model"
+	"rverpi/ihui.v2"
 )
 
 type PageClassification struct {
-	*Page
+	tmpl           *ihui.AceTemplateDrawer
 	classification *model.Classification
-	CloseAction    ihui.ClickAction
-	SubmitAction   ihui.SubmitAction
 	Error          string
 }
 
-func newPageClassification(classification *model.Classification) ihui.PageRender {
+func newPageClassification(classification *model.Classification) *PageClassification {
 	page := &PageClassification{
-		Page:           NewPage("classification", false),
 		classification: classification,
 	}
+	page.tmpl = newAceTemplate("classification.ace", page)
 	return page
 }
 
-func (page *PageClassification) OnInit(ctx *ihui.Context) {
-	db := ctx.Get("db").(*gorm.DB)
+func (page *PageClassification) Draw(p ihui.Page) {
+	db := p.Get("db").(*gorm.DB)
 
-	page.CloseAction = func(_ string) {
-		page.Close()
-	}
+	p.Draw(page.tmpl)
 
-	page.SubmitAction = func(data map[string]interface{}) {
+	p.On("click", "close", func(s *ihui.Session, event ihui.Event) {
+		s.QuitPage()
+	})
+
+	p.On("submit", "form", func(s *ihui.Session, event ihui.Event) {
+		data := event.Data.(map[string]interface{})
 		page.classification.Nom = data["classification"].(string)
 		if err := db.Create(page.classification).Error; err != nil {
 			log.Println(err)
 			page.Error = err.Error()
 		} else {
-			page.Close()
+			s.QuitPage()
 		}
-	}
-}
-
-func (page *PageClassification) Render(w io.Writer, ctx *ihui.Context) {
-	//db := ctx.Get("db").(*gorm.DB)
-
-	page.renderPage(w, page)
-
+	})
 }

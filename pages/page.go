@@ -25,10 +25,10 @@ type Page struct {
 
 func NewPage(pageTemplate string, model interface{}) *Page {
 	return &Page{
-		templ: ihui.newAceTemplate(pageTemplate, model),
+		tmpl: newAceTemplate(pageTemplate, model),
 	}
 }
 
-func (p *Page) Draw(page ihui.PageDrawer) {
+func (p *Page) Draw(page ihui.Page) {
 	page.Draw(p.tmpl)
 }
