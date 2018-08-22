@@ -9,7 +9,7 @@ import (
 )
 
 type PageClassification struct {
-	tmpl           *ihui.AceTemplateDrawer
+	tmpl           *ihui.PageAce
 	classification *model.Classification
 	Error          string
 }
@@ -22,10 +22,10 @@ func newPageClassification(classification *model.Classification) *PageClassifica
 	return page
 }
 
-func (page *PageClassification) Draw(p ihui.Page) {
+func (page *PageClassification) Render(p ihui.Page) {
 	db := p.Get("db").(*gorm.DB)
 
-	p.Draw(page.tmpl)
+	page.tmpl.Render(p)
 
 	p.On("click", "close", func(s *ihui.Session, event ihui.Event) {
 		s.QuitPage()

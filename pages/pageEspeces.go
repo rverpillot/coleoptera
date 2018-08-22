@@ -7,7 +7,7 @@ import (
 )
 
 type PageEspeces struct {
-	tmpl            *ihui.AceTemplateDrawer
+	tmpl            *ihui.PageAce
 	menu            *Menu
 	Classifications []model.Classification
 }
@@ -20,11 +20,11 @@ func NewPageEspeces(menu *Menu) *PageEspeces {
 	return page
 }
 
-func (page *PageEspeces) Draw(p ihui.Page) {
+func (page *PageEspeces) Render(p ihui.Page) {
 	db := p.Get("db").(*gorm.DB)
 	page.Classifications = model.AllClassifications(db)
 
-	p.Draw(page.tmpl)
+	page.tmpl.Render(p)
 
 	p.On("click", ".espece", func(session *ihui.Session, event ihui.Event) {
 		var espece model.Espece

@@ -11,16 +11,16 @@ var (
 	ResourcesBox = rice.MustFindBox("statics")
 )
 
-func newAceTemplate(name string, model interface{}) *ihui.AceTemplateDrawer {
+func newAceTemplate(name string, model interface{}) *ihui.PageAce {
 	content, err := templateBox.Bytes(name)
 	if err != nil {
 		panic(err)
 	}
-	return ihui.NewAceTemplateDrawer(content, model)
+	return ihui.NewPageAce(content, model)
 }
 
 type Page struct {
-	tmpl *ihui.AceTemplateDrawer
+	tmpl *ihui.PageAce
 }
 
 func NewPage(pageTemplate string, model interface{}) *Page {
@@ -29,6 +29,6 @@ func NewPage(pageTemplate string, model interface{}) *Page {
 	}
 }
 
-func (p *Page) Draw(page ihui.Page) {
-	page.Draw(p.tmpl)
+func (p *Page) Render(page ihui.Page) {
+	p.tmpl.Render(page)
 }

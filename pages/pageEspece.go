@@ -12,7 +12,7 @@ import (
 )
 
 type PageEspece struct {
-	tmpl            *ihui.AceTemplateDrawer
+	tmpl            *ihui.PageAce
 	Espece          *model.Espece
 	Classifications []model.Classification
 	AllGenres       []string
@@ -37,7 +37,7 @@ func (page *PageEspece) ID() string {
 	return strconv.Itoa(int(page.Espece.ID))
 }
 
-func (page *PageEspece) draw(p ihui.Page) {
+func (page *PageEspece) Render(p ihui.Page) {
 	db := p.Get("db").(*gorm.DB)
 
 	page.Classifications = model.AllClassifications(db)
@@ -46,7 +46,7 @@ func (page *PageEspece) draw(p ihui.Page) {
 	page.AllEspeces = model.AllNomEspeces(db)
 	page.AllSousEspeces = model.AllSousEspeces(db)
 
-	p.Draw(page.tmpl)
+	page.tmpl.Render(p)
 
 	p.On("click", "[id=add-classification]", func(s *ihui.Session, ev ihui.Event) {
 		var classification model.Classification

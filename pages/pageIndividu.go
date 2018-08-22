@@ -12,7 +12,7 @@ import (
 )
 
 type PageIndividu struct {
-	tmpl         *ihui.AceTemplateDrawer
+	tmpl         *ihui.PageAce
 	Individu     model.Individu
 	Admin        bool
 	Edit         bool
@@ -35,11 +35,11 @@ func newPageIndividu(individu model.Individu, editMode bool) *PageIndividu {
 	return page
 }
 
-func (page *PageIndividu) Draw(p ihui.Page) {
+func (page *PageIndividu) Render(p ihui.Page) {
 	db := p.Get("db").(*gorm.DB)
 	page.Especes = model.AllEspeces(db)
 
-	p.Draw(page.tmpl)
+	page.tmpl.Render(p)
 
 	p.On("load", "page", func(s *ihui.Session, event ihui.Event) {
 		page.Admin = s.Get("admin").(bool)

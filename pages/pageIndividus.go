@@ -11,7 +11,7 @@ import (
 )
 
 type PageIndividus struct {
-	tmpl          *ihui.AceTemplateDrawer
+	tmpl          *ihui.PageAce
 	menu          *Menu
 	selection     map[uint]bool
 	Pagination    *ihui.Paginator
@@ -22,27 +22,26 @@ type PageIndividus struct {
 }
 
 func NewPageIndividus(menu *Menu) *PageIndividus {
-	page := &PageIndividus{
+	return &PageIndividus{
+		tmpl:       newAceTemplate("individus.ace", nil),
 		menu:       menu,
 		selection:  make(map[uint]bool),
 		Pagination: ihui.NewPaginator(60),
 	}
-	page.tmpl = newAceTemplate("individus.ace", page)
-	return page
 }
 
-func (page *PageIndividus) Draw(p ihui.Page) {
+func (page *PageIndividus) Render(p ihui.Page) {
 	db := p.Get("db").(*gorm.DB)
 
 	var espece_id uint
 
-	page.Admin = ctx.Get("admin").(bool)
+	page.Admin = p.Get("admin").(bool)
 
 	if p.Get("search_individus") != nil {
-		page.Search = ctx.Get("search_individus").(string)
+		page.Search = p.Get("search_individus").(string)
 	}
 	if p.Get("search_espece") != nil {
-		espece_id = ctx.Get("search_espece").(uint)
+		espece_id = p.Get("search_espece").(uint)
 		if espece_id != 0 {
 			page.Search = ""
 		}
@@ -60,7 +59,9 @@ func (page *PageIndividus) Draw(p ihui.Page) {
 		}
 	}
 
-	p.Draw(page.tmpl)
+	page.menu.Render(p)
+	page.tmpl.SetModel(page)
+	page.tmpl.Render(p)
 
 	p.On("load", "page", func(s *ihui.Session, _ ihui.Event) {
 		page.Pagination.SetPage(1)
@@ -69,19 +70,19 @@ func (page *PageIndividus) Draw(p ihui.Page) {
 	p.On("input", ".search", func(s *ihui.Session, event ihui.Event) {
 		s.Set("search_individus", event.Value())
 		s.Set("search_espece", uint(0))
-		s.Pagination.SetPage(1)
+		page.Pagination.SetPage(1)
 	})
 
 	p.On("click", ".detail", func(s *ihui.Session, event ihui.Event) {
 		id := event.Value()
 		var individu model.Individu
 		db.Preload("Espece").Preload("Departement").Find(&individu, id)
-		s.ShowPage(newPageIndividu(individu, false), ihui.Options{Modal: true})
+		s.ShowPage(newPageIndividu(individu, false), &ihui.Options{Modal: true})
 	})
 
 	p.On("change", ".select", func(s *ihui.Session, event ihui.Event) {
-		ID, _ := strconv.Atoi(event.Source())
-		if val {
+		ID, _ := strconv.Atoi(event.Source)
+		if event.Data.(bool) {
 			page.selection[uint(ID)] = true
 		} else {
 			delete(page.selection, uint(ID))
@@ -110,6 +111,6 @@ func (page *PageIndividus) Draw(p ihui.Page) {
 			Longitude: 6.997305,
 			Altitude:  sql.NullInt64{100, true},
 		}
-		s.ShowPage(newPageIndividu(individu, true), ihui.Options{Modal: true})
+		s.ShowPage(newPageIndividu(individu, true), &ihui.Options{Modal: true})
 	})
 }
