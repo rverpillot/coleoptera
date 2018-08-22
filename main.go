@@ -10,8 +10,8 @@ import (
 	"path"
 	"runtime"
 	"runtime/pprof"
-	"rverpi/coleoptera/pages"
 
+	"rverpi/coleoptera.v3/pages"
 	"rverpi/ihui.v2"
 
 	_ "net/http/pprof"
@@ -38,7 +38,7 @@ func start(session *ihui.Session) {
 	menu.Add("individus", "Individus", pageIndividus)
 	menu.Add("plan", "Plan", pagePlan)
 
-	session.ShowPage("Coleoptera", false, pageIndividus)
+	session.ShowPage(pageIndividus, nil)
 }
 
 func main() {

@@ -3,16 +3,17 @@ package pages
 import (
 	"database/sql"
 	"io"
-	"rverpi/coleoptera/model"
-	"rverpi/ihui"
 	"strconv"
 	"time"
+
+	"rverpi/coleoptera.v3/model"
+	"rverpi/ihui.v2"
 
 	"github.com/jinzhu/gorm"
 )
 
 type PageIndividus struct {
-	ihui.Page
+	tmpl               *ihui.AceTemplateDrawer
 	menu               *Menu
 	selection          map[uint]bool
 	Pagination         *ihui.Paginator
@@ -35,8 +36,17 @@ func NewPageIndividus(menu *Menu) *PageIndividus {
 		selection:  make(map[uint]bool),
 		Pagination: ihui.NewPaginator(60),
 	}
-	page.Add("#menu", menu)
+	page.tmpl = newAceTemplate("individus.ace", page)
 	return page
+}
+
+func (page *PageIndividus) Draw(p ihui.PageDrawer) {
+	db := p.Get("db").(*gorm.DB)
+	p.Draw(page.tmpl)
+
+	p.On("load", "page", func(s *ihui.Session) {
+		page.Pagination.SetPage(1)
+	})
 }
 
 func (page *PageIndividus) OnInit(ctx *ihui.Context) {

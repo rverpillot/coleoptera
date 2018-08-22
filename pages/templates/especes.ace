@@ -1,14 +1,13 @@
 div id="menu"
 
 div.ui.container style="margin-top: 7em;"  
-  {{$selectAction := .SelectAction}}
   ul
     {{range .Classifications}}
     li.classification {{.Nom}}
     ul
       {{range .Especes}}
       li
-        a.espece href="#" data-id="{{.ID}}" data-action="{{$selectAction}}" {{.NomEspece}} 
+        a.espece href="#" class="espece" data-id="{{.ID}}" {{.NomEspece}} 
         span {{.Descripteur}}
       {{end}}
     {{end}}
