@@ -5,7 +5,7 @@ div.ui.container style="margin-top: 7em;"
     div.row
       div.seven.wide.column
         div.ui.icon.input.fluid
-          input placeholder="Search..." type="text" autofocus= data-action="{{.SearchAction}}" value="{{.Search}}"
+          input placeholder="Search..." type="text" autofocus= class="search" value="{{.Search}}"
           i.circular.search.icon.link
       div.two.wide.column
         {{if .ShowAllButton}}
@@ -32,15 +32,15 @@ div.ui.container style="margin-top: 7em;"
         td
           div.ui.checkbox
             {{if .Selected}}
-            input.hidden tabindex="0" type="checkbox" data-id="{{.ID}}" data-action="{{$selectAction}}" checked=
+            input.hidden tabindex="0" type="checkbox" class="select" data-id="{{.ID}}" checked=
             {{else}}
-            input.hidden tabindex="0" type="checkbox" data-id="{{.ID}}" data-action="{{$selectAction}}"
+            input.hidden tabindex="0" type="checkbox" class="select" data-id="{{.ID}}"
             {{end}}
         td {{.Date.Format "02/01/2006"}}
         td {{.Espece.NomEspece}}
         td {{printf "%s - %s (%s)" .Site .Commune .Code}}
         td 
-          a href="#" data-id="{{.ID}}" data-action="{{$detailAction}}"
+          a href="#" data-id="{{.ID}}" class="detail"
             i.icon.zoom
     {{end}}
 

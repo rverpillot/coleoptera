@@ -21,10 +21,8 @@ type PageIndividus struct {
 	Admin              bool
 	Search             string
 	ShowAllButton      bool
-	SearchAction       ihui.ChangeAction
 	SelectAction       ihui.CheckAction
 	ResetAction        ihui.ClickAction
-	DetailAction       ihui.ClickAction
 	PreviousPageAction ihui.ClickAction
 	NextPageAction     ihui.ClickAction
 	AddAction          ihui.ClickAction
@@ -44,19 +42,29 @@ func (page *PageIndividus) Draw(p ihui.PageDrawer) {
 	db := p.Get("db").(*gorm.DB)
 	p.Draw(page.tmpl)
 
-	p.On("load", "page", func(s *ihui.Session) {
+	p.On("load", "page", func(s *ihui.Session, _ interface{}) {
 		page.Pagination.SetPage(1)
+	})
+
+	p.On("input", ".search", func(s *ihui.Session, value interface{}) {
+		s.Set("search_individus", value.(string))
+		s.Set("search_espece", uint(0))
+		s.Pagination.SetPage(1)
+	})
+
+	p.On("click", ".detail", func(s *ihui.Session, value interface{}) {
+		id := value.(string)
+		var individu model.Individu
+		db.Preload("Espece").Preload("Departement").Find(&individu, id)
+		s.ShowPage(newPageIndividu(individu, false), ihui.Options{Modal: true})
+	})
+
+	p.On("change", ".select", func(s *ihui.Session, value interface{}) {
 	})
 }
 
 func (page *PageIndividus) OnInit(ctx *ihui.Context) {
 	db := ctx.Get("db").(*gorm.DB)
-
-	page.DetailAction = func(id string) {
-		var individu model.Individu
-		db.Preload("Espece").Preload("Departement").Find(&individu, id)
-		ctx.DisplayPage(newPageIndividu(individu, false), true)
-	}
 
 	page.AddAction = func(_ string) {
 		individu := model.Individu{
@@ -76,13 +84,6 @@ func (page *PageIndividus) OnInit(ctx *ihui.Context) {
 		} else {
 			delete(page.selection, uint(ID))
 		}
-	}
-
-	page.SearchAction = func(val string) {
-		ctx.Set("search_individus", val)
-		ctx.Set("search_espece", uint(0))
-		page.Pagination.SetPage(1)
-		page.Trigger("searching", ctx)
 	}
 
 	page.ResetAction = func(_ string) {
