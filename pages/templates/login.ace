@@ -1,11 +1,11 @@
 div.ui.middle.aligned.center.aligned.grid style="height: 100%"
   div.column style="max-width: 450px;"
     h2.ui.teal.image.header
-      img.image src="{{.Session.Path}}/images/icon.png"
+      img.image src="images/icon.png"
       div.content.
         Coleoptera
 
-    form.ui.large.form data-action="{{.SubmitAction}}"
+    form.ui.large.form
       div.ui.segment
         div.field
           div.ui.left.icon.input
@@ -16,7 +16,7 @@ div.ui.middle.aligned.center.aligned.grid style="height: 100%"
             input type="password" name="password" placeholder="Mot de passe"
 
         button.ui.fluid.large.teal.button type="submit" Connexion
-        button.ui.fluid.large.button type="button" data-action="{{.CancelAction}}" Annuler
+        button.ui.fluid.large.button type="button" id="cancel" Annuler
 
       div.ui.error.message class="{{if .Error}}visible{{end}}"
         {{.Error}}

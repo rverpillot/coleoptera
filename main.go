@@ -106,7 +106,7 @@ func main() {
 		http.Handle(path, http.StripPrefix(*contextRoot, http.FileServer(pages.ResourcesBox.HTTPBox())))
 	}
 
-	http.Handle(os.path.Join(*contextRoot, "/app"), ihui.NewHTTPHandler(start))
+	http.Handle(path.Join(*contextRoot, "/app"), ihui.NewHTTPHandler(start))
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)

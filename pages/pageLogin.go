@@ -1,23 +1,25 @@
 package pages
 
 import (
-	"io"
-	"rverpi/ihui"
+	"rverpi/ihui.v2"
 )
 
 type PageLogin struct {
-	*Page
-	Error        string
-	SubmitAction ihui.SubmitAction
-	CancelAction ihui.ClickAction
+	tmpl  *ihui.PageAce
+	Error string
 }
 
 func NewPageLogin() *PageLogin {
-	return &PageLogin{Page: NewPage("login", true)}
+	page := &PageLogin{}
+	page.tmpl = newAceTemplate("login.ace", page)
+	return page
 }
 
-func (page *PageLogin) OnInit(ctx *ihui.Context) {
-	page.SubmitAction = func(data map[string]interface{}) {
+func (page *PageLogin) Render(p ihui.Page) {
+	page.tmpl.Render(p)
+
+	p.On("submit", "form", func(s *ihui.Session, event ihui.Event) {
+		data := event.Data.(map[string]interface{})
 		username := data["username"].(string)
 		password := data["password"].(string)
 		if username == "" {
@@ -29,19 +31,16 @@ func (page *PageLogin) OnInit(ctx *ihui.Context) {
 			return
 		}
 		if page.authenticate(username, password) {
-			ctx.Set("admin", true)
-			page.Close()
+			s.Set("admin", true)
+			s.QuitPage()
 		} else {
 			page.Error = "Utilisateur ou mot de passe inconnu!"
 		}
-	}
-	page.CancelAction = func(_ string) {
-		page.Close()
-	}
-}
+	})
 
-func (page *PageLogin) Render(w io.Writer, ctx *ihui.Context) {
-	page.renderPage(w, page)
+	p.On("click", "[id=cancel]", func(s *ihui.Session, event ihui.Event) {
+		s.QuitPage()
+	})
 }
 
 func (page *PageLogin) authenticate(username string, password string) bool {

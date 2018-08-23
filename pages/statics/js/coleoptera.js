@@ -28,7 +28,7 @@ function createMap(tag, center, zoom) {
 
     var center = map_individus.getCenter()
     var data = { lat: center.lat, lng: center.lng, zoom: map_individus.getZoom() }
-    sendMsg("change", "map-loaded", data)
+    sendMsg(null, "map-loaded", "map", "page", data)
 
     console.log("createMap")
 }
@@ -95,7 +95,7 @@ function createEditMap(tag) {
     editMarker.on('dragend', function (event) {
         var position = editMarker.getLatLng()
         // editMarker.setTitle(position.toString())
-        sendMsg("change", "position", position)
+        sendMsg(null, "position", "map", "page", position)
     })
 }
 

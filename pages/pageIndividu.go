@@ -129,12 +129,16 @@ func (page *PageIndividu) Render(p ihui.Page) {
 		page.Delete = false
 	})
 
-}
+	p.On("click", "[id=add-espece]", func(s *ihui.Session, event ihui.Event) {
+		espece := model.Espece{}
+		s.ShowPage(newPageEspece(&espece), &ihui.Options{Modal: true})
+		if !db.NewRecord(espece) {
+			page.Individu.Espece = espece
+			page.Individu.EspeceID = espece.ID
+		}
+	})
 
-func (page *PageIndividu) OnInit(ctx *ihui.Context) {
-	db := ctx.Get("db").(*gorm.DB)
-
-	page.ValidAction = func(_ string) {
+	p.On("click", "[id=validation]", func(s *ihui.Session, event ihui.Event) {
 		log.Println(page.Individu)
 		if page.Individu.Espece.ID == 0 {
 			page.Error = "Genre/espèce absent !"
@@ -151,20 +155,11 @@ func (page *PageIndividu) OnInit(ctx *ihui.Context) {
 			page.Error = err.Error()
 			return
 		}
-		page.Close()
-	}
+		s.QuitPage()
+	})
 
-	page.AddEspeceAction = func(_ string) {
-		espece := model.Espece{}
-		ctx.DisplayPage(newPageEspece(&espece), true)
-		if !db.NewRecord(espece) {
-			page.Individu.Espece = espece
-			page.Individu.EspeceID = espece.ID
-		}
-	}
-
-	page.On("position", func(ctx *ihui.Context) {
-		pos := ctx.Event.Data.(map[string]interface{})
+	p.On("position", "page", func(s *ihui.Session, event ihui.Event) {
+		pos := event.Data.(map[string]interface{})
 		log.Println(pos)
 		page.Individu.Latitude = pos["lat"].(float64)
 		page.Individu.Longitude = pos["lng"].(float64)
