@@ -70,12 +70,11 @@ func (menu *Menu) Render(page ihui.Page) {
 		menu.MenuItemActive = event.Value()
 	})
 
-	page.On("click", "[id=connect]", func(s *ihui.Session, _ ihui.Event) {
-		//TODO: login
-		//		s.ShowPage(NewPageLogin(), nil)
+	page.On("click", "#connect", func(s *ihui.Session, _ ihui.Event) {
+		s.ShowPage(NewPageLogin(), nil)
 	})
 
-	page.On("click", "[id=disconnect]", func(s *ihui.Session, _ ihui.Event) {
+	page.On("click", "#disconnect", func(s *ihui.Session, _ ihui.Event) {
 		s.Set("admin", false)
 	})
 }

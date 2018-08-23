@@ -89,21 +89,21 @@ func (page *PageIndividus) Render(p ihui.Page) {
 		}
 	})
 
-	p.On("click", "[id=reset]", func(s *ihui.Session, event ihui.Event) {
+	p.On("click", "#reset", func(s *ihui.Session, event ihui.Event) {
 		s.Set("search_individus", "")
 		s.Set("search_espece", uint(0))
 		page.Pagination.SetPage(1)
 	})
 
-	p.On("click", "[id=next]", func(s *ihui.Session, event ihui.Event) {
+	p.On("click", "#next", func(s *ihui.Session, event ihui.Event) {
 		page.Pagination.NextPage()
 	})
 
-	p.On("click", "[id=previous]", func(s *ihui.Session, event ihui.Event) {
+	p.On("click", "#previous", func(s *ihui.Session, event ihui.Event) {
 		page.Pagination.PreviousPage()
 	})
 
-	p.On("click", "[id=add]", func(s *ihui.Session, event ihui.Event) {
+	p.On("click", "#add", func(s *ihui.Session, event ihui.Event) {
 		individu := model.Individu{
 			Date:      time.Now(),
 			Sexe:      "M",

@@ -16,7 +16,7 @@ func newAceTemplate(name string, model interface{}) *ihui.PageAce {
 	if err != nil {
 		panic(err)
 	}
-	return ihui.NewPageAce(content, model)
+	return ihui.NewPageAce(name, content, model)
 }
 
 type Page struct {

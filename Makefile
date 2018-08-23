@@ -2,7 +2,7 @@
 all: build
 
 build:
-	go build -v
+	go build -v -o coleoptera .
 	cd pages && rice append --exec ../coleoptera
 
 static: 

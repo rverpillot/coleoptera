@@ -99,14 +99,8 @@ func main() {
 	defer db.Close()
 	db.LogMode(*debug)
 
-	paths := []string{"js", "css", "images"}
-	for _, p := range paths {
-		path := path.Join(*contextRoot, p) + "/"
-		log.Println(path)
-		http.Handle(path, http.StripPrefix(*contextRoot, http.FileServer(pages.ResourcesBox.HTTPBox())))
-	}
-
-	http.Handle(path.Join(*contextRoot, "/app"), ihui.NewHTTPHandler(start))
+	http.Handle(*contextRoot+"/", http.StripPrefix(*contextRoot, http.FileServer(pages.ResourcesBox.HTTPBox())))
+	http.Handle(path.Join(*contextRoot, "app")+"/", ihui.NewHTTPHandler(start))
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
