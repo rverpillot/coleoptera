@@ -12,10 +12,9 @@ type Item struct {
 }
 
 type Menu struct {
-	tmpl           *ihui.PageAce
-	MenuItemActive string
-	Connected      bool
-	Items          []Item
+	tmpl      *ihui.PageAce
+	Connected bool
+	Items     []*Item
 }
 
 func NewMenu() *Menu {
@@ -26,10 +25,7 @@ func NewMenu() *Menu {
 
 func (menu *Menu) Add(name string, label string, item ihui.PageRenderer) {
 	active := len(menu.Items) == 0
-	menu.Items = append(menu.Items, Item{Label: label, Active: active, drawer: item})
-	if menu.MenuItemActive == "" {
-		menu.MenuItemActive = name
-	}
+	menu.Items = append(menu.Items, &Item{Name: name, Label: label, Active: active, drawer: item})
 }
 
 func (menu *Menu) SetActive(name string) {
@@ -67,7 +63,7 @@ func (menu *Menu) Render(page ihui.Page) {
 	menu.tmpl.Render(page)
 
 	page.On("click", ".menu-item", func(s *ihui.Session, event ihui.Event) {
-		menu.MenuItemActive = event.Value()
+		menu.SetActive(event.Value())
 	})
 
 	page.On("click", "#connect", func(s *ihui.Session, _ ihui.Event) {

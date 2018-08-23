@@ -95,22 +95,22 @@ func (page *PageIndividu) Render(p ihui.Page) {
 		}
 	})
 
-	p.On("input", "[id=search]", func(s *ihui.Session, event ihui.Event) {
+	p.On("input", "#search", func(s *ihui.Session, event ihui.Event) {
 		val := event.Value()
 		log.Println(val)
 		page.Individu.Latitude, page.Individu.Longitude, _ = model.FindLatLng(val)
 		s.Script("updateEditMap(%f,%f)", page.Individu.Latitude, page.Individu.Longitude)
 	})
 
-	p.On("click", "[id=cancel]", func(s *ihui.Session, event ihui.Event) {
+	p.On("click", "#cancel", func(s *ihui.Session, event ihui.Event) {
 		s.QuitPage()
 	})
 
-	p.On("click", "[id=edit]", func(s *ihui.Session, event ihui.Event) {
+	p.On("click", "#edit", func(s *ihui.Session, event ihui.Event) {
 		page.Edit = true
 	})
 
-	p.On("click", "[id=confirm-delete]", func(s *ihui.Session, event ihui.Event) {
+	p.On("click", "#confirm-delete", func(s *ihui.Session, event ihui.Event) {
 		if page.Individu.ID > 0 {
 			if err := db.Delete(page.Individu).Error; err != nil {
 				log.Println(err)

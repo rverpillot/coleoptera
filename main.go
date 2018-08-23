@@ -10,6 +10,7 @@ import (
 	"path"
 	"runtime"
 	"runtime/pprof"
+	"strings"
 
 	"rverpi/coleoptera.v3/pages"
 	"rverpi/ihui.v2"
@@ -47,7 +48,7 @@ func main() {
 		flag.PrintDefaults()
 	}
 
-	contextRoot = flag.String("context", "/", "`context_root` (ex: /app)")
+	contextRoot = flag.String("context", "/", "`context_root` (ex: /coleoptera)")
 	var address = flag.String("listen", "127.0.0.1:8080", "`address` (ip:port)")
 	var secure = flag.Bool("secure", false, "SSL")
 	var certFile = flag.String("certFile", "cert.pem", "`certFile`")
@@ -99,8 +100,11 @@ func main() {
 	defer db.Close()
 	db.LogMode(*debug)
 
-	http.Handle(*contextRoot+"/", http.StripPrefix(*contextRoot, http.FileServer(pages.ResourcesBox.HTTPBox())))
-	http.Handle(path.Join(*contextRoot, "app")+"/", ihui.NewHTTPHandler(start))
+	if !strings.HasSuffix(*contextRoot, "/") {
+		*contextRoot += "/"
+	}
+	http.Handle(*contextRoot, http.StripPrefix(*contextRoot, http.FileServer(pages.ResourcesBox.HTTPBox())))
+	http.Handle(*contextRoot+"app/", ihui.NewHTTPHandler(start))
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
