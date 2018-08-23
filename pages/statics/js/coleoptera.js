@@ -91,6 +91,7 @@ function createEditMap(tag) {
         draggable: true
     });
     editMarker.addTo(editMap);
+    console.log("createEditMap")
 
     editMarker.on('dragend', function (event) {
         var position = editMarker.getLatLng()
@@ -111,6 +112,7 @@ function createPreviewMap(tag, longitude, latitude) {
         title: position.toString()
     })
     marker.addTo(map)
+    console.log("createPreviewMap")
 }
 
 

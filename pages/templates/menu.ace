@@ -13,5 +13,5 @@ div.ui.inverted.fixed.menu
     {{end}}
 
 {{range .Items}}
-div id="{{.Name}}" class="{{if .Active}}{{end}}"
+div id="{{.Name}}" style="display:{{if .Active}}block{{else}}hidden{{end}}"
 {{end}}

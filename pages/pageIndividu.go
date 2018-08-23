@@ -121,15 +121,15 @@ func (page *PageIndividu) Render(p ihui.Page) {
 		s.QuitPage()
 	})
 
-	p.On("click", "[id=cancel-delete]", func(s *ihui.Session, event ihui.Event) {
+	p.On("click", "#cancel-delete", func(s *ihui.Session, event ihui.Event) {
 		page.Delete = false
 	})
 
-	p.On("click", "[id=delete]", func(s *ihui.Session, event ihui.Event) {
+	p.On("click", "#delete", func(s *ihui.Session, event ihui.Event) {
 		page.Delete = false
 	})
 
-	p.On("click", "[id=add-espece]", func(s *ihui.Session, event ihui.Event) {
+	p.On("click", "#add-espece", func(s *ihui.Session, event ihui.Event) {
 		espece := model.Espece{}
 		s.ShowPage(newPageEspece(&espece), &ihui.Options{Modal: true})
 		if !db.NewRecord(espece) {
@@ -138,7 +138,7 @@ func (page *PageIndividu) Render(p ihui.Page) {
 		}
 	})
 
-	p.On("click", "[id=validation]", func(s *ihui.Session, event ihui.Event) {
+	p.On("click", "#validation", func(s *ihui.Session, event ihui.Event) {
 		log.Println(page.Individu)
 		if page.Individu.Espece.ID == 0 {
 			page.Error = "Genre/espèce absent !"
