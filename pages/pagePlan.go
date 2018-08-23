@@ -45,8 +45,8 @@ func NewPagePlan(menu *Menu) *PagePlan {
 }
 
 func (page *PagePlan) Render(p ihui.Page) {
-	page.menu.Render(p)
 	page.tmpl.Render(p)
+	p.Add("#menu", page.menu)
 
 	if page.refresh {
 		// log.Printf("refreshMap({lat:%f, lng: %f}, %d)\n", page.infoMap.Lat, page.infoMap.Lng, page.infoMap.Zoom)
