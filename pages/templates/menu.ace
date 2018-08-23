@@ -11,3 +11,7 @@ div.ui.inverted.fixed.menu
     {{else}}
     a.item id="connect" Connexion
     {{end}}
+
+{{range .Items}}
+div id="{{.Name}}" class="{{if .Active}}{{end}}"
+{{end}}
