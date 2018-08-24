@@ -42,20 +42,6 @@ func (menu *Menu) Active() string {
 	return ""
 }
 
-/*
-func (menu *Menu) OnInit(ctx *ihui.Context) {
-	menu.PageEspeces.On("search_espece", func(ctx *ihui.Context) {
-		ctx.Set("search_espece", ctx.Event.Data)
-		menu.OnMenu("individus")
-		menu.PagePlan.Trigger("refresh", ctx)
-	})
-
-	menu.PageIndividus.On("searching", func(ctx *ihui.Context) {
-		menu.PagePlan.Trigger("refresh", ctx)
-	})
-}
-*/
-
 func (menu *Menu) Render(page ihui.Page) {
 	menu.Connected = page.Get("admin").(bool)
 
@@ -66,7 +52,7 @@ func (menu *Menu) Render(page ihui.Page) {
 	})
 
 	page.On("click", "#connect", func(s *ihui.Session, _ ihui.Event) {
-		s.ShowPage(NewPageLogin(), nil)
+		s.ShowPage(NewPageLogin(), &ihui.Options{Modal: true})
 	})
 
 	page.On("click", "#disconnect", func(s *ihui.Session, _ ihui.Event) {

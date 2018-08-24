@@ -38,7 +38,7 @@ func (page *PageLogin) Render(p ihui.Page) {
 		}
 	})
 
-	p.On("click", "[id=cancel]", func(s *ihui.Session, event ihui.Event) {
+	p.On("click", "#cancel", func(s *ihui.Session, event ihui.Event) {
 		s.QuitPage()
 	})
 }

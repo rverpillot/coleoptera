@@ -2,7 +2,6 @@ package pages
 
 import (
 	"database/sql"
-	"log"
 	"strconv"
 	"time"
 
@@ -79,7 +78,6 @@ func (page *PageIndividus) Render(p ihui.Page) {
 	})
 
 	p.On("check", ".select", func(s *ihui.Session, event ihui.Event) {
-		log.Print(event)
 		ID, _ := strconv.Atoi(event.Source)
 		if event.Data.(bool) {
 			page.selection[uint(ID)] = true

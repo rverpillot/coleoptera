@@ -37,7 +37,7 @@ func (page *PagePlan) Render(p ihui.Page) {
 		page.refresh = false
 	}
 
-	p.On("geoportail-ready", "page", func(s *ihui.Session, event ihui.Event) {
+	p.On("load", "page", func(s *ihui.Session, event ihui.Event) {
 		page.infoMap.Lat = 46.435317
 		page.infoMap.Lng = 1.812990
 		page.infoMap.Zoom = 6

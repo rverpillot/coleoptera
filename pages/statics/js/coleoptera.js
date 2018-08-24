@@ -1,6 +1,3 @@
-window.onload = function () {
-    trigger(null, "geoportail-ready", "page", "page", null)
-}
 
 $(document).on("page-new page-update page", function(){
     doSemanticUI("body > #main")
