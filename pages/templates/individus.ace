@@ -1,5 +1,3 @@
-div id="menu"
-
 div.ui.container style="margin-top: 7em;"  
   div.ui.grid
     div.row

@@ -38,15 +38,14 @@ type PagePlan struct {
 	refresh bool
 }
 
-func NewPagePlan(menu *Menu) *PagePlan {
-	page := &PagePlan{menu: menu}
+func NewPagePlan() *PagePlan {
+	page := &PagePlan{}
 	page.tmpl = newAceTemplate("plan.ace", page)
 	return page
 }
 
 func (page *PagePlan) Render(p ihui.Page) {
 	page.tmpl.Render(p)
-	p.Add("#menu", page.menu)
 
 	if page.refresh {
 		// log.Printf("refreshMap({lat:%f, lng: %f}, %d)\n", page.infoMap.Lat, page.infoMap.Lng, page.infoMap.Zoom)

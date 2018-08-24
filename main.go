@@ -31,15 +31,7 @@ func start(session *ihui.Session) {
 	session.Set("db", db)
 	session.Set("admin", *debug)
 
-	menu := pages.NewMenu()
-	pageEspeces := pages.NewPageEspeces(menu)
-	pageIndividus := pages.NewPageIndividus(menu)
-	pagePlan := pages.NewPagePlan(menu)
-	menu.Add("especes", "Espèces", pageEspeces)
-	menu.Add("individus", "Individus", pageIndividus)
-	menu.Add("plan", "Plan", pagePlan)
-
-	session.ShowPage(pageIndividus, nil)
+	session.ShowPage(pages.NewPageMain(), nil)
 }
 
 func main() {

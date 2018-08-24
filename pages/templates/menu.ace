@@ -12,6 +12,3 @@ div.ui.inverted.fixed.menu
     a.item id="connect" Connexion
     {{end}}
 
-{{range .Items}}
-div id="{{.Name}}" style="display:{{if .Active}}block{{else}}hidden{{end}}"
-{{end}}

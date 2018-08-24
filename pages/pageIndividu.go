@@ -47,6 +47,7 @@ func (page *PageIndividu) Render(p ihui.Page) {
 		page.Communes = model.AllCommunes(db)
 		page.Departements = model.AllDepartements(db)
 		page.Recolteurs = model.AllRecolteurs(db)
+		s.Script(`createPreviewMap("#mappreview",%f,%f)`, page.Individu.Longitude, page.Individu.Latitude)
 	})
 
 	p.On("form", "form", func(s *ihui.Session, event ihui.Event) {

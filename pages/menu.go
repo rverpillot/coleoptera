@@ -8,7 +8,6 @@ type Item struct {
 	Name   string
 	Label  string
 	Active bool
-	drawer ihui.PageRenderer
 }
 
 type Menu struct {
@@ -23,9 +22,9 @@ func NewMenu() *Menu {
 	return menu
 }
 
-func (menu *Menu) Add(name string, label string, item ihui.PageRenderer) {
+func (menu *Menu) Add(name string, label string) {
 	active := len(menu.Items) == 0
-	menu.Items = append(menu.Items, &Item{Name: name, Label: label, Active: active, drawer: item})
+	menu.Items = append(menu.Items, &Item{Name: name, Label: label, Active: active})
 }
 
 func (menu *Menu) SetActive(name string) {

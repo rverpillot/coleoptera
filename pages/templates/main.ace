@@ -1,0 +1,5 @@
+div id="menu"
+
+{{range .Menu.Items}}
+div id="{{.Name}}" style="display:{{if .Active}}block{{else}}none{{end}}"
+{{end}}
