@@ -72,4 +72,5 @@ func (menu *Menu) Render(page ihui.Page) {
 	page.On("click", "#disconnect", func(s *ihui.Session, _ ihui.Event) {
 		s.Set("admin", false)
 	})
+
 }

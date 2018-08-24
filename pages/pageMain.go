@@ -23,6 +23,7 @@ func NewPageMain() *PageMain {
 	page.Menu.Add("especes", "Espèces")
 	page.Menu.Add("individus", "Individus")
 	page.Menu.Add("plan", "Plan")
+	page.Menu.SetActive("plan")
 	return page
 }
 
@@ -31,5 +32,16 @@ func (main *PageMain) Render(page ihui.Page) {
 	page.Add("#menu", main.Menu)
 	page.Add("#especes", main.pageEspeces)
 	page.Add("#individus", main.pageIndividus)
-	// page.Add("#plan", main.pagePlan)
+	page.Add("#plan", main.pagePlan)
+
+	page.On("click", ".espece", func(session *ihui.Session, _ ihui.Event) {
+		main.Menu.SetActive("individus")
+	})
+
+	page.On("click", ".menu-item", func(s *ihui.Session, event ihui.Event) {
+		if event.Value() == "plan" {
+			main.pagePlan.RefreshMarkers()
+		}
+	})
+
 }

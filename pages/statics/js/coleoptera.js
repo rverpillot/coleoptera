@@ -1,9 +1,17 @@
+window.onload = function () {
+    trigger(null, "geoportail-ready", "page", "page", null)
+}
+
+$(document).on("ihui", function(){
+    doSemanticUI("body > #main")
+})
+
 var map_individus;
 var gmarkers = [];
 
-Gp.Services.getConfig({
-    apiKey: '1zt39dn13glty5q8zjcbcsbs'
-});
+// Gp.Services.getConfig({
+//     apiKey: '1zt39dn13glty5q8zjcbcsbs'
+// });
 
 function mapIGN(map) {
     L.geoportalLayer.WMTS({
@@ -20,26 +28,7 @@ function mapIGN(map) {
     map.addControl(mp);
 }
 
-function createMap(tag, center, zoom) {
-    if ($(tag).length == 0) return;
-
-    map_individus = L.map($(tag)[0]).setView([center.lat, center.lng], zoom);
-    mapIGN(map_individus)
-
-    var center = map_individus.getCenter()
-    var data = { lat: center.lat, lng: center.lng, zoom: map_individus.getZoom() }
-    sendMsg(null, "map-loaded", "map", "page", data)
-
-    console.log("createMap")
-}
-
-function refreshMap(center, zoom) {
-    // google.maps.event.trigger(map_individus, 'resize')
-    map_individus.setView(center, zoom)
-}
-
 function showMarkers(tag, markers) {
-
     console.log("show markers")
 
     $.each(gmarkers, function (i, marker) {
@@ -49,14 +38,6 @@ function showMarkers(tag, markers) {
     gmarkers = []
     $.each(markers, function (i, location) {
         var position = location.Location
-        // if (!map_individus.getBounds().contains(position)) {
-        //     return
-        // }
-        // var nb = location.Infos.length
-        // var label = nb.toString()
-        // if (nb > 9) {
-        //     label = "#"
-        // }
         var marker = L.marker(position, {
             title: location.Infos.join("\n")
         })
@@ -64,6 +45,25 @@ function showMarkers(tag, markers) {
         marker.addTo(map_individus)
     })
 }
+
+function createMap(tag, center, zoom) {
+    if ($(tag).length == 0) return;
+
+    map_individus = L.map($(tag)[0]).setView([center.lat, center.lng], zoom);
+    mapIGN(map_individus)
+
+    // var center = map_individus.getCenter()
+    // var data = { lat: center.lat, lng: center.lng, zoom: map_individus.getZoom() }
+    // trigger(null, "map-loaded", "map", "page", data)
+
+    console.log("createMap")
+}
+
+function refreshMap(center, zoom) {
+    console.log("refreshMap")
+    map_individus.setView(center, zoom)
+}
+
 
 var editMap;
 var editMarker;
@@ -96,7 +96,7 @@ function createEditMap(tag) {
     editMarker.on('dragend', function (event) {
         var position = editMarker.getLatLng()
         // editMarker.setTitle(position.toString())
-        sendMsg(null, "position", "map", "page", position)
+        trigger(null, "position", "map", "page", position)
     })
 }
 
@@ -108,16 +108,14 @@ function createPreviewMap(tag, longitude, latitude) {
     }).setView(position, 8);
     mapIGN(map);
 
-    var marker = L.marker(position, {
-        title: position.toString()
-    })
+    var marker = L.marker(position, {})
     marker.addTo(map)
     console.log("createPreviewMap")
 }
 
 
-$(document).on("ihui:display", function (ev, tag) {
-    //    console.log(tag)
+function doSemanticUI(tag) {
+    console.log("load:",$(tag))
 
     $(tag).find('.ui.modal').modal({ closable: false }).modal("show")
     $(tag).find('.ui.checkbox').checkbox()
@@ -145,4 +143,4 @@ $(document).on("ihui:display", function (ev, tag) {
 
     $(tag).find('select.dropdown').dropdown()
 
-})
+}
