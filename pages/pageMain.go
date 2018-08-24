@@ -23,7 +23,7 @@ func NewPageMain() *PageMain {
 	page.Menu.Add("especes", "Espèces")
 	page.Menu.Add("individus", "Individus")
 	page.Menu.Add("plan", "Plan")
-	page.Menu.SetActive("plan")
+	page.Menu.SetActive("individus")
 	return page
 }
 

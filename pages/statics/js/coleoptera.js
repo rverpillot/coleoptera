@@ -49,16 +49,19 @@ function createMap(tag, center, zoom) {
     map_individus = L.map($(tag)[0]).setView([center.lat, center.lng], zoom);
     mapIGN(map_individus)
 
-    // var center = map_individus.getCenter()
-    // var data = { lat: center.lat, lng: center.lng, zoom: map_individus.getZoom() }
-    // trigger(null, "map-loaded", "map", "page", data)
+    map_individus.on("moveend zoomend", function(ev){
+        var center = map_individus.getCenter()
+        var data = { lat: center.lat, lng: center.lng, zoom: map_individus.getZoom() }
+        trigger(null, "map-changed", "map", "page", data)
+    })
 
     console.log("createMap")
 }
 
 function refreshMap(center, zoom) {
     console.log("refreshMap")
-    map_individus.setView(center, zoom)
+//    map_individus.setView(center, zoom)
+    map_individus.invalidateSize()
 }
 
 

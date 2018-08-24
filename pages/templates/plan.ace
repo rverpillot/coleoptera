@@ -1,3 +1,3 @@
 div.ui.container style="margin-top: 7em;"  
-  div style="position:fixed; width:80%; height:80%"
-    div#map class="noupdate" style="height:100%"
+  div class="noupdate" style="position:fixed; width:80%; height:80%"
+    div#map style="height:100%"

@@ -23,7 +23,13 @@ type PagePlan struct {
 }
 
 func NewPagePlan() *PagePlan {
-	page := &PagePlan{}
+	page := &PagePlan{
+		infoMap: infoMap{
+			Lat:  46.435317,
+			Lng:  1.812990,
+			Zoom: 6,
+		},
+	}
 	page.tmpl = newAceTemplate("plan.ace", page)
 	return page
 }
@@ -32,17 +38,25 @@ func (page *PagePlan) Render(p ihui.Page) {
 	page.tmpl.Render(p)
 
 	if page.refresh {
-		// p.Script("refreshMap({lat:%f, lng: %f}, %d)", page.infoMap.Lat, page.infoMap.Lng, page.infoMap.Zoom)
-		page.showMarkers(p.Session())
+		p.On("updated", "page", func(s *ihui.Session, event ihui.Event) {
+			page.showMarkers(p.Session())
+			p.Script("refreshMap({lat:%f, lng: %f}, %d)", page.infoMap.Lat, page.infoMap.Lng, page.infoMap.Zoom)
+		})
 		page.refresh = false
 	}
 
 	p.On("load", "page", func(s *ihui.Session, event ihui.Event) {
-		page.infoMap.Lat = 46.435317
-		page.infoMap.Lng = 1.812990
-		page.infoMap.Zoom = 6
 		s.Script(`createMap("#map", {lat:%f, lng:%f}, %d)`, page.infoMap.Lat, page.infoMap.Lng, page.infoMap.Zoom)
 		page.showMarkers(s)
+	})
+
+	p.On("map-changed", "page", func(s *ihui.Session, event ihui.Event) {
+		data := event.Data.(map[string]interface{})
+		page.infoMap = infoMap{
+			Lat:  data["lat"].(float64),
+			Lng:  data["lng"].(float64),
+			Zoom: int(data["zoom"].(float64)),
+		}
 	})
 
 }
