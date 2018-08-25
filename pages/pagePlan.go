@@ -3,10 +3,9 @@ package pages
 import (
 	"encoding/json"
 
+	"github.com/jinzhu/gorm"
 	"rverpi/coleoptera.v3/model"
 	"rverpi/ihui.v2"
-
-	"github.com/jinzhu/gorm"
 )
 
 type infoMap struct {
@@ -22,8 +21,9 @@ type PagePlan struct {
 	refresh bool
 }
 
-func NewPagePlan() *PagePlan {
+func NewPagePlan(menu *Menu) *PagePlan {
 	page := &PagePlan{
+		menu: menu,
 		infoMap: infoMap{
 			Lat:  46.435317,
 			Lng:  1.812990,
@@ -36,16 +36,18 @@ func NewPagePlan() *PagePlan {
 
 func (page *PagePlan) Render(p ihui.Page) {
 	page.tmpl.Render(p)
+	page.menu.SetActive("plan")
+	p.Add("#menu", page.menu)
 
 	if page.refresh {
-		p.On("updated", "page", func(s *ihui.Session, event ihui.Event) {
+		p.On("update", "page", func(s *ihui.Session, event ihui.Event) {
 			page.showMarkers(p.Session())
-			p.Script("refreshMap({lat:%f, lng: %f}, %d)", page.infoMap.Lat, page.infoMap.Lng, page.infoMap.Zoom)
+			//	p.Script("refreshMap({lat:%f, lng: %f}, %d)", page.infoMap.Lat, page.infoMap.Lng, page.infoMap.Zoom)
 		})
 		page.refresh = false
 	}
 
-	p.On("load", "page", func(s *ihui.Session, event ihui.Event) {
+	p.On("create", "page", func(s *ihui.Session, event ihui.Event) {
 		s.Script(`createMap("#map", {lat:%f, lng:%f}, %d)`, page.infoMap.Lat, page.infoMap.Lng, page.infoMap.Zoom)
 		page.showMarkers(s)
 	})

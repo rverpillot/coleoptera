@@ -1,14 +1,10 @@
 
-$(document).on("page-new page-update page", function(){
+$(document).on("page-create page-update", function(){
     doSemanticUI("body > #main")
 })
 
 var map_individus;
 var gmarkers = [];
-
-// Gp.Services.getConfig({
-//     apiKey: '1zt39dn13glty5q8zjcbcsbs'
-// });
 
 function mapIGN(map) {
     L.geoportalLayer.WMTS({
