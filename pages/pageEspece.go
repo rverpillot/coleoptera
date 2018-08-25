@@ -50,7 +50,7 @@ func (page *PageEspece) Render(p ihui.Page) {
 
 	p.On("click", "[id=add-classification]", func(s *ihui.Session, ev ihui.Event) {
 		var classification model.Classification
-		s.ShowPage(newPageClassification(&classification), &ihui.Options{Modal: true})
+		s.ShowPage("classification", newPageClassification(&classification), &ihui.Options{Modal: true})
 		if !db.NewRecord(classification) {
 			page.Espece.Classification = classification
 			page.Espece.ClassificationID = classification.ID

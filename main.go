@@ -31,7 +31,7 @@ func start(session *ihui.Session) {
 	session.Set("db", db)
 	session.Set("admin", *debug)
 
-	session.ShowPage(pages.NewPageMain(), nil)
+	session.ShowPage("main", pages.NewPageMain(), nil)
 }
 
 func main() {

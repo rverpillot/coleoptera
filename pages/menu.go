@@ -52,7 +52,7 @@ func (menu *Menu) Render(page ihui.Page) {
 	})
 
 	page.On("click", "#connect", func(s *ihui.Session, _ ihui.Event) {
-		s.ShowPage(NewPageLogin(), &ihui.Options{Modal: true})
+		s.ShowPage("login", NewPageLogin(), &ihui.Options{Modal: true})
 	})
 
 	page.On("click", "#disconnect", func(s *ihui.Session, _ ihui.Event) {

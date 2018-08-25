@@ -132,7 +132,7 @@ func (page *PageIndividu) Render(p ihui.Page) {
 
 	p.On("click", "#add-espece", func(s *ihui.Session, event ihui.Event) {
 		espece := model.Espece{}
-		s.ShowPage(newPageEspece(&espece), &ihui.Options{Modal: true})
+		s.ShowPage("espece", newPageEspece(&espece), &ihui.Options{Modal: true})
 		if !db.NewRecord(espece) {
 			page.Individu.Espece = espece
 			page.Individu.EspeceID = espece.ID

@@ -74,7 +74,7 @@ func (page *PageIndividus) Render(p ihui.Page) {
 		id := event.Value()
 		var individu model.Individu
 		db.Preload("Espece").Preload("Departement").Find(&individu, id)
-		s.ShowPage(newPageIndividu(individu, false), &ihui.Options{Modal: true})
+		s.ShowPage("individu", newPageIndividu(individu, false), &ihui.Options{Modal: true})
 	})
 
 	p.On("check", ".select", func(s *ihui.Session, event ihui.Event) {
@@ -108,6 +108,6 @@ func (page *PageIndividus) Render(p ihui.Page) {
 			Longitude: 6.997305,
 			Altitude:  sql.NullInt64{100, true},
 		}
-		s.ShowPage(newPageIndividu(individu, true), &ihui.Options{Modal: true})
+		s.ShowPage("individu", newPageIndividu(individu, true), &ihui.Options{Modal: true})
 	})
 }
