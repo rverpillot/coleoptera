@@ -96,23 +96,25 @@ function createEditMap(tag) {
     })
 }
 
+var previewMap
 function createPreviewMap(tag, longitude, latitude) {
     var position = { lat: latitude, lng: longitude };
 
-    var map = L.map($(tag)[0], {
+    previewMap = L.map($(tag)[0], {
         scrollWheelZoom: false 
     }).setView(position, 8);
-    mapIGN(map);
+    mapIGN(previewMap);
 
     var marker = L.marker(position, {})
-    marker.addTo(map)
+    marker.addTo(previewMap)
     console.log("createPreviewMap")
 }
 
+function removePreviewMap(tag) {
+    previewMap.remove()
+}
 
 function doSemanticUI(tag) {
-    console.log("load:",$(tag))
-
     $(tag).find('.ui.modal').modal({ closable: false }).modal("show")
     $(tag).find('.ui.checkbox').checkbox()
     $(tag).find('.ui.dropdown').dropdown({
