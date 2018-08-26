@@ -1,14 +1,10 @@
 
-$(document).on("page-new page-update page", function(){
+$(document).on("page-create page-update", function(){
     doSemanticUI("body > #main")
 })
 
 var map_individus;
 var gmarkers = [];
-
-// Gp.Services.getConfig({
-//     apiKey: '1zt39dn13glty5q8zjcbcsbs'
-// });
 
 function mapIGN(map) {
     L.geoportalLayer.WMTS({
@@ -103,20 +99,18 @@ function createEditMap(tag) {
 function createPreviewMap(tag, longitude, latitude) {
     var position = { lat: latitude, lng: longitude };
 
-    var map = L.map($(tag)[0], {
+    var previewMap = L.map($(tag)[0], {
         scrollWheelZoom: false 
     }).setView(position, 8);
-    mapIGN(map);
+    mapIGN(previewMap);
 
     var marker = L.marker(position, {})
-    marker.addTo(map)
+    marker.addTo(previewMap)
     console.log("createPreviewMap")
 }
 
 
 function doSemanticUI(tag) {
-    console.log("load:",$(tag))
-
     $(tag).find('.ui.modal').modal({ closable: false }).modal("show")
     $(tag).find('.ui.checkbox').checkbox()
     $(tag).find('.ui.dropdown').dropdown({

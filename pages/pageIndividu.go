@@ -39,14 +39,15 @@ func (page *PageIndividu) Render(p ihui.Page) {
 	db := p.Get("db").(*gorm.DB)
 	page.Especes = model.AllEspeces(db)
 
+	page.Admin = p.Get("admin").(bool)
+	page.Sites = model.AllSites(db)
+	page.Communes = model.AllCommunes(db)
+	page.Departements = model.AllDepartements(db)
+	page.Recolteurs = model.AllRecolteurs(db)
+
 	page.tmpl.Render(p)
 
-	p.On("load", "page", func(s *ihui.Session, event ihui.Event) {
-		page.Admin = s.Get("admin").(bool)
-		page.Sites = model.AllSites(db)
-		page.Communes = model.AllCommunes(db)
-		page.Departements = model.AllDepartements(db)
-		page.Recolteurs = model.AllRecolteurs(db)
+	p.On("create", "page", func(s *ihui.Session, event ihui.Event) {
 		s.Script(`createPreviewMap("#mappreview",%f,%f)`, page.Individu.Longitude, page.Individu.Latitude)
 	})
 

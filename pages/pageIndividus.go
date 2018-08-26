@@ -12,6 +12,7 @@ import (
 
 type PageIndividus struct {
 	tmpl          *ihui.PageAce
+	menu          *Menu
 	selection     map[uint]bool
 	Pagination    *ihui.Paginator
 	Individus     []model.Individu
@@ -20,9 +21,10 @@ type PageIndividus struct {
 	ShowAllButton bool
 }
 
-func NewPageIndividus() *PageIndividus {
+func NewPageIndividus(menu *Menu) *PageIndividus {
 	return &PageIndividus{
 		tmpl:       newAceTemplate("individus.ace", nil),
+		menu:       menu,
 		selection:  make(map[uint]bool),
 		Pagination: ihui.NewPaginator(60),
 	}
@@ -59,8 +61,10 @@ func (page *PageIndividus) Render(p ihui.Page) {
 
 	page.tmpl.SetModel(page)
 	page.tmpl.Render(p)
+	page.menu.SetActive("individus")
+	p.Add("#menu", page.menu)
 
-	p.On("load", "page", func(s *ihui.Session, _ ihui.Event) {
+	p.On("create", "page", func(s *ihui.Session, _ ihui.Event) {
 		page.Pagination.SetPage(1)
 	})
 

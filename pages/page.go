@@ -1,8 +1,6 @@
 package pages
 
 import (
-	"log"
-
 	"rverpi/ihui.v2"
 
 	rice "github.com/GeertJohan/go.rice"
@@ -18,7 +16,6 @@ func newAceTemplate(name string, model interface{}) *ihui.PageAce {
 	if err != nil {
 		panic(err)
 	}
-	log.Printf("New page: %s", name)
 	return ihui.NewPageAce(name, content, model)
 }
 
