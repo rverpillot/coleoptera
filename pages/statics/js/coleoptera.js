@@ -79,7 +79,7 @@ function createEditMap(tag) {
     }
     editMap = L.map($(tag)[0], {
         scrollWheelZoom: false
-    }).setView(position, 12);
+    }).setView(position, 10);
     mapIGN(editMap);
 
     editMarker = L.marker(position, {
@@ -101,7 +101,7 @@ function createPreviewMap(tag, longitude, latitude) {
 
     var previewMap = L.map($(tag)[0], {
         scrollWheelZoom: false 
-    }).setView(position, 8);
+    }).setView(position, 6);
     mapIGN(previewMap);
 
     var marker = L.marker(position, {})

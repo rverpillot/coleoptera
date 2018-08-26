@@ -26,7 +26,7 @@ func NewPagePlan(menu *Menu) *PagePlan {
 		infoMap: infoMap{
 			Lat:  46.435317,
 			Lng:  1.812990,
-			Zoom: 6,
+			Zoom: 5,
 		},
 	}
 	page.tmpl = newAceTemplate("plan.ace", page)
