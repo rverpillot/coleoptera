@@ -96,11 +96,10 @@ function createEditMap(tag) {
     })
 }
 
-var previewMap
 function createPreviewMap(tag, longitude, latitude) {
     var position = { lat: latitude, lng: longitude };
 
-    previewMap = L.map($(tag)[0], {
+    var previewMap = L.map($(tag)[0], {
         scrollWheelZoom: false 
     }).setView(position, 8);
     mapIGN(previewMap);
@@ -110,9 +109,6 @@ function createPreviewMap(tag, longitude, latitude) {
     console.log("createPreviewMap")
 }
 
-function removePreviewMap(tag) {
-    previewMap.remove()
-}
 
 function doSemanticUI(tag) {
     $(tag).find('.ui.modal').modal({ closable: false }).modal("show")

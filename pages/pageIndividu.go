@@ -47,12 +47,8 @@ func (page *PageIndividu) Render(p ihui.Page) {
 
 	page.tmpl.Render(p)
 
-	p.On("load", "page", func(s *ihui.Session, event ihui.Event) {
+	p.On("create", "page", func(s *ihui.Session, event ihui.Event) {
 		s.Script(`createPreviewMap("#mappreview",%f,%f)`, page.Individu.Longitude, page.Individu.Latitude)
-	})
-
-	p.On("unload", "page", func(s *ihui.Session, event ihui.Event) {
-		s.Script(`removePreviewMap("#mappreview")`)
 	})
 
 	p.On("form", "form", func(s *ihui.Session, event ihui.Event) {

@@ -64,7 +64,7 @@ func (page *PageIndividus) Render(p ihui.Page) {
 	page.menu.SetActive("individus")
 	p.Add("#menu", page.menu)
 
-	p.On("load", "page", func(s *ihui.Session, _ ihui.Event) {
+	p.On("create", "page", func(s *ihui.Session, _ ihui.Event) {
 		page.Pagination.SetPage(1)
 	})
 
