@@ -1,6 +1,6 @@
 
-$(document).on("page-create page-update", function(){
-    doSemanticUI("body > #main")
+$(document).on("page-create page-update", function(event, data){
+    doSemanticUI($("#"+data.page))
 })
 
 var map_individus;
