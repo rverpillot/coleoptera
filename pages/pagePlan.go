@@ -18,7 +18,6 @@ type PagePlan struct {
 	tmpl    *ihui.PageAce
 	menu    *Menu
 	infoMap infoMap
-	refresh bool
 }
 
 func NewPagePlan(menu *Menu) *PagePlan {
@@ -39,16 +38,12 @@ func (page *PagePlan) Render(p ihui.Page) {
 	page.menu.SetActive("plan")
 	p.Add("#menu", page.menu)
 
-	if page.refresh {
-		p.On("update", "page", func(s *ihui.Session, event ihui.Event) {
-			page.showMarkers(p.Session())
-			//	p.Script("refreshMap({lat:%f, lng: %f}, %d)", page.infoMap.Lat, page.infoMap.Lng, page.infoMap.Zoom)
-		})
-		page.refresh = false
-	}
-
 	p.On("create", "page", func(s *ihui.Session, event ihui.Event) {
 		s.Script(`createMap("#map", {lat:%f, lng:%f}, %d)`, page.infoMap.Lat, page.infoMap.Lng, page.infoMap.Zoom)
+		page.showMarkers(s)
+	})
+
+	p.On("update", "page", func(s *ihui.Session, event ihui.Event) {
 		page.showMarkers(s)
 	})
 
@@ -78,8 +73,4 @@ func (page *PagePlan) showMarkers(session *ihui.Session) {
 	data, _ := json.Marshal(&markers)
 	js := string(data)
 	session.Script("showMarkers('#map',%s)", js)
-}
-
-func (page *PagePlan) RefreshMarkers() {
-	page.refresh = true
 }

@@ -30,5 +30,6 @@ func (page *PageEspeces) Render(p ihui.Page) {
 		var espece model.Espece
 		db.First(&espece, event.Value())
 		session.Set("search_espece", espece.ID)
+		page.menu.ShowPage(session, "individus")
 	})
 }

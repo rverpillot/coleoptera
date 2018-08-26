@@ -34,18 +34,23 @@ func (menu *Menu) SetActive(name string) {
 	}
 }
 
+func (menu *Menu) ShowPage(s *ihui.Session, name string) {
+	for _, item := range menu.Items {
+		if item.Name == name {
+			menu.SetActive(name)
+			s.ShowPage(item.Name, item.Drawer, nil)
+			break
+		}
+	}
+}
+
 func (menu *Menu) Render(page ihui.Page) {
 	menu.Connected = page.Get("admin").(bool)
 
 	menu.tmpl.Render(page)
 
 	page.On("click", ".menu-item", func(s *ihui.Session, event ihui.Event) {
-		for _, item := range menu.Items {
-			if item.Name == event.Value() {
-				s.ShowPage(item.Name, item.Drawer, nil)
-				break
-			}
-		}
+		menu.ShowPage(s, event.Value())
 	})
 
 	page.On("click", "#connect", func(s *ihui.Session, _ ihui.Event) {
