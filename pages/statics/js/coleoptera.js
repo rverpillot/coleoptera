@@ -1,24 +1,32 @@
 
-$(document).on("page-create page-update", function(event, data){
-    doSemanticUI($("#"+data.page))
+$(document).on("page-create page-update", function (event, data) {
+    doSemanticUI($("#" + data.page))
 })
 
 var map_individus;
 var gmarkers = [];
 
-function mapIGN(map) {
+function mapIGN(map, controls) {
     L.geoportalLayer.WMTS({
-        layer: "GEOGRAPHICALGRIDSYSTEMS.MAPS"
+        layer: "ELEVATION.SLOPES"
     }).addTo(map);
     L.geoportalLayer.WMTS({
         layer: "ORTHOIMAGERY.ORTHOPHOTOS"
-    }).addTo(map);    
+    }).addTo(map);
+    L.geoportalLayer.WMTS({
+        layer: "GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN-EXPRESS.STANDARD"
+    }).addTo(map);
 
     var layerSwitcher = L.geoportalControl.LayerSwitcher();
     map.addControl(layerSwitcher);
 
-    var mp = L.geoportalControl.MousePosition();
-    map.addControl(mp);
+    if (controls) {
+        var mp = L.geoportalControl.MousePosition();
+        map.addControl(mp);
+
+        var search = L.geoportalControl.SearchEngine();
+        map.addControl(search);
+    }
 }
 
 function showMarkers(tag, markers) {
@@ -41,16 +49,17 @@ function showMarkers(tag, markers) {
     })
 
     var bounds = L.latLngBounds(positions)
-    map_individus.fitBounds(bounds, {maxZoom: 6, padding: [10,10]})
+    // map_individus.fitBounds(bounds, { maxZoom: 6, padding: [5, 5] })
+    map_individus.fitBounds(bounds, { maxZoom: 6 })
 }
 
 function createMap(tag, center, zoom) {
     if ($(tag).length == 0) return;
 
     map_individus = L.map($(tag)[0]).setView([center.lat, center.lng], zoom);
-    mapIGN(map_individus)
+    mapIGN(map_individus, true)
 
-    map_individus.on("moveend zoomend", function(ev){
+    map_individus.on("moveend zoomend", function (ev) {
         var center = map_individus.getCenter()
         var data = { lat: center.lat, lng: center.lng, zoom: map_individus.getZoom() }
         ihui.trigger("map-changed", "page", data)
@@ -61,7 +70,7 @@ function createMap(tag, center, zoom) {
 
 function refreshMap(center, zoom) {
     console.log("refreshMap")
-//    map_individus.setView(center, zoom)
+    //    map_individus.setView(center, zoom)
     map_individus.invalidateSize()
 }
 
@@ -85,7 +94,7 @@ function createEditMap(tag) {
     editMap = L.map($(tag)[0], {
         scrollWheelZoom: false
     }).setView(position, 10);
-    mapIGN(editMap);
+    mapIGN(editMap, true);
 
     editMarker = L.marker(position, {
         // title: position.toString(),
@@ -105,9 +114,9 @@ function createPreviewMap(tag, longitude, latitude) {
     var position = { lat: latitude, lng: longitude };
 
     var previewMap = L.map($(tag)[0], {
-        scrollWheelZoom: false 
+        scrollWheelZoom: false
     }).setView(position, 6);
-    mapIGN(previewMap);
+    mapIGN(previewMap, false);
 
     var marker = L.marker(position, {})
     marker.addTo(previewMap)

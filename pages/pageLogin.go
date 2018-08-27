@@ -18,17 +18,17 @@ func NewPageLogin() *PageLogin {
 func (page *PageLogin) Render(p ihui.Page) {
 	page.tmpl.Render(p)
 
-	p.On("submit", "form", func(s *ihui.Session, event ihui.Event) {
+	p.On("submit", "form", func(s *ihui.Session, event ihui.Event) bool {
 		data := event.Data.(map[string]interface{})
 		username := data["username"].(string)
 		password := data["password"].(string)
 		if username == "" {
 			page.Error = "Le nom d'utilisateur est vide!"
-			return
+			return true
 		}
 		if password == "" {
 			page.Error = "Le mot de passe est vide!"
-			return
+			return true
 		}
 		if page.authenticate(username, password) {
 			s.Set("admin", true)
@@ -36,10 +36,11 @@ func (page *PageLogin) Render(p ihui.Page) {
 		} else {
 			page.Error = "Utilisateur ou mot de passe inconnu!"
 		}
+		return true
 	})
 
-	p.On("click", "#cancel", func(s *ihui.Session, event ihui.Event) {
-		s.QuitPage()
+	p.On("click", "#cancel", func(s *ihui.Session, event ihui.Event) bool {
+		return s.QuitPage()
 	})
 }
 

@@ -27,11 +27,11 @@ func (page *PageClassification) Render(p ihui.Page) {
 
 	page.tmpl.Render(p)
 
-	p.On("click", "close", func(s *ihui.Session, event ihui.Event) {
-		s.QuitPage()
+	p.On("click", "close", func(s *ihui.Session, event ihui.Event) bool {
+		return s.QuitPage()
 	})
 
-	p.On("submit", "form", func(s *ihui.Session, event ihui.Event) {
+	p.On("submit", "form", func(s *ihui.Session, event ihui.Event) bool {
 		data := event.Data.(map[string]interface{})
 		page.classification.Nom = data["classification"].(string)
 		if err := db.Create(page.classification).Error; err != nil {
@@ -40,5 +40,6 @@ func (page *PageClassification) Render(p ihui.Page) {
 		} else {
 			s.QuitPage()
 		}
+		return true
 	})
 }

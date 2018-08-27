@@ -25,10 +25,10 @@ func (page *PageEspeces) Render(p ihui.Page) {
 	page.tmpl.Render(p)
 	p.Add("#menu", page.menu)
 
-	p.On("click", ".espece", func(session *ihui.Session, event ihui.Event) {
+	p.On("click", ".espece", func(session *ihui.Session, event ihui.Event) bool {
 		var espece model.Espece
 		db.First(&espece, event.Value())
 		session.Set("search_espece", espece.ID)
-		page.menu.ShowPage(session, "individus")
+		return page.menu.ShowPage(session, "individus")
 	})
 }

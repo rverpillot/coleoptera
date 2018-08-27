@@ -63,47 +63,53 @@ func (page *PageIndividus) Render(p ihui.Page) {
 	page.tmpl.Render(p)
 	p.Add("#menu", page.menu)
 
-	p.On("create", "page", func(s *ihui.Session, _ ihui.Event) {
+	p.On("create", "page", func(s *ihui.Session, _ ihui.Event) bool {
 		page.Pagination.SetPage(1)
+		return false
 	})
 
-	p.On("input", ".search", func(s *ihui.Session, event ihui.Event) {
+	p.On("input", ".search", func(s *ihui.Session, event ihui.Event) bool {
 		s.Set("search_individus", event.Value())
 		s.Set("search_espece", uint(0))
 		page.Pagination.SetPage(1)
+		return true
 	})
 
-	p.On("click", ".detail", func(s *ihui.Session, event ihui.Event) {
+	p.On("click", ".detail", func(s *ihui.Session, event ihui.Event) bool {
 		id := event.Value()
 		var individu model.Individu
 		db.Preload("Espece").Preload("Departement").Find(&individu, id)
-		s.ShowPage("individu", newPageIndividu(individu, false), &ihui.Options{Modal: true})
+		return s.ShowPage("individu", newPageIndividu(individu, false), &ihui.Options{Modal: true})
 	})
 
-	p.On("check", ".select", func(s *ihui.Session, event ihui.Event) {
+	p.On("check", ".select", func(s *ihui.Session, event ihui.Event) bool {
 		ID, _ := strconv.Atoi(event.Id)
 		if event.Data.(bool) {
 			page.selection[uint(ID)] = true
 		} else {
 			delete(page.selection, uint(ID))
 		}
+		return true
 	})
 
-	p.On("click", "#reset", func(s *ihui.Session, event ihui.Event) {
+	p.On("click", "#reset", func(s *ihui.Session, event ihui.Event) bool {
 		s.Set("search_individus", "")
 		s.Set("search_espece", uint(0))
 		page.Pagination.SetPage(1)
+		return true
 	})
 
-	p.On("click", "#next", func(s *ihui.Session, event ihui.Event) {
+	p.On("click", "#next", func(s *ihui.Session, event ihui.Event) bool {
 		page.Pagination.NextPage()
+		return true
 	})
 
-	p.On("click", "#previous", func(s *ihui.Session, event ihui.Event) {
+	p.On("click", "#previous", func(s *ihui.Session, event ihui.Event) bool {
 		page.Pagination.PreviousPage()
+		return true
 	})
 
-	p.On("click", "#add", func(s *ihui.Session, event ihui.Event) {
+	p.On("click", "#add", func(s *ihui.Session, event ihui.Event) bool {
 		individu := model.Individu{
 			Date:      time.Now(),
 			Sexe:      "M",
@@ -111,6 +117,6 @@ func (page *PageIndividus) Render(p ihui.Page) {
 			Longitude: 6.997305,
 			Altitude:  sql.NullInt64{100, true},
 		}
-		s.ShowPage("individu", newPageIndividu(individu, true), &ihui.Options{Modal: true})
+		return s.ShowPage("individu", newPageIndividu(individu, true), &ihui.Options{Modal: true})
 	})
 }

@@ -48,20 +48,21 @@ func (page *PageEspece) Render(p ihui.Page) {
 
 	page.tmpl.Render(p)
 
-	p.On("click", "[id=add-classification]", func(s *ihui.Session, ev ihui.Event) {
+	p.On("click", "[id=add-classification]", func(s *ihui.Session, ev ihui.Event) bool {
 		var classification model.Classification
 		s.ShowPage("classification", newPageClassification(&classification), &ihui.Options{Modal: true})
 		if !db.NewRecord(classification) {
 			page.Espece.Classification = classification
 			page.Espece.ClassificationID = classification.ID
 		}
+		return true
 	})
 
-	p.On("click", "[id=cancel]", func(s *ihui.Session, ev ihui.Event) {
-		s.QuitPage()
+	p.On("click", "[id=cancel]", func(s *ihui.Session, ev ihui.Event) bool {
+		return s.QuitPage()
 	})
 
-	p.On("submit", "formm", func(s *ihui.Session, ev ihui.Event) {
+	p.On("submit", "formm", func(s *ihui.Session, ev ihui.Event) bool {
 		data := ev.Data.(map[string]interface{})
 		id, _ := strconv.Atoi(data["classification"].(string))
 
@@ -75,15 +76,15 @@ func (page *PageEspece) Render(p ihui.Page) {
 
 		if page.Espece.ClassificationID == 0 || page.Espece.Genre == "" || page.Espece.Espece == "" || page.Espece.Descripteur == "" {
 			page.Error = "Informations incomplètes !"
-			return
+			return true
 		}
 
 		log.Println(page.Espece)
 		if err := db.Create(page.Espece).Error; err != nil {
 			log.Println(err)
 			page.Error = err.Error()
-			return
+			return true
 		}
-		s.QuitPage()
+		return s.QuitPage()
 	})
 }
