@@ -20,9 +20,10 @@ div.ui.container style="margin-top: 7em;"
     thead
       tr
         th
-        th Date
-        th Genre/Espèce
-        th Site
+        th.sort data-id="date" Date
+        th.sort data-id="especes.genre" Genre/Espèce
+        th.sort data-id="commune" Commune
+        th.sort data-id="code" Code
         th
     tbody
     {{range .Individus}}
@@ -36,7 +37,8 @@ div.ui.container style="margin-top: 7em;"
             {{end}}
         td {{.Date.Format "02/01/2006"}}
         td {{.Espece.NomEspece}}
-        td {{printf "%s - %s (%s)" .Site .Commune .Code}}
+        td {{.Commune}}
+        td {{.Code}}
         td 
           a href="#" data-id="{{.ID}}" class="detail"
             i.icon.zoom

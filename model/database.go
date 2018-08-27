@@ -6,23 +6,25 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-func LoadIndividus(db *gorm.DB, individus *[]Individu, index int, size int, search string, espece_id uint) int {
+func LoadIndividus(db *gorm.DB, individus *[]Individu, index int, size int, search string, espece_id uint, order string) int {
+	db = db.Joins("join especes on espece_id=especes.id")
+
 	if espece_id != 0 {
 		db = db.
-			Joins("join especes on espece_id=especes.id").
 			Where("especes.id = ?", espece_id)
 	} else {
 		if search != "" {
+			search = "%" + search + "%"
 			db = db.
-				Joins("join especes on espece_id=especes.id").
-				Where("especes.genre like ? or especes.sous_genre like ? or especes.espece like ? or especes.sous_espece like ? or site like ? or commune like ?", "%"+search+"%", "%"+search+"%", "%"+search+"%", "%"+search+"%", "%"+search+"%", "%"+search+"%")
+				Where("especes.genre like ? or especes.sous_genre like ? or especes.espece like ? or especes.sous_espece like ? or site like ? or commune like ?",
+					search, search, search, search, search, search)
 		}
 	}
 
 	var count int
 	if err := db.Model(&Individu{}).Count(&count).
 		Offset(index).Limit(size).
-		Order("date desc").
+		Order(order).
 		Preload("Espece").
 		Find(individus).Error; err != nil {
 		log.Println(err)

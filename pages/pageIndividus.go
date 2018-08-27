@@ -19,6 +19,7 @@ type PageIndividus struct {
 	Admin         bool
 	Search        string
 	ShowAllButton bool
+	order         string
 }
 
 func NewPageIndividus(menu *Menu) *PageIndividus {
@@ -27,6 +28,7 @@ func NewPageIndividus(menu *Menu) *PageIndividus {
 		menu:       menu,
 		selection:  make(map[uint]bool),
 		Pagination: ihui.NewPaginator(60),
+		order:      "date desc",
 	}
 }
 
@@ -49,7 +51,7 @@ func (page *PageIndividus) Render(p ihui.Page) {
 
 	page.ShowAllButton = page.Search != "" || espece_id != 0
 
-	total := model.LoadIndividus(db, &page.Individus, page.Pagination.Current.Index, page.Pagination.PageSize, page.Search, espece_id)
+	total := model.LoadIndividus(db, &page.Individus, page.Pagination.Current.Index, page.Pagination.PageSize, page.Search, espece_id, page.order)
 
 	page.Pagination.SetTotal(total)
 
@@ -106,6 +108,17 @@ func (page *PageIndividus) Render(p ihui.Page) {
 
 	p.On("click", "#previous", func(s *ihui.Session, event ihui.Event) bool {
 		page.Pagination.PreviousPage()
+		return true
+	})
+
+	p.On("click", ".sort", func(s *ihui.Session, event ihui.Event) bool {
+		name := event.Id
+		order := name + " asc"
+		if page.order == order {
+			page.order = name + " desc"
+		} else {
+			page.order = order
+		}
 		return true
 	})
 

@@ -8,13 +8,13 @@ var gmarkers = [];
 
 function mapIGN(map, controls) {
     L.geoportalLayer.WMTS({
-        layer: "ELEVATION.SLOPES"
+        layer: "GEOGRAPHICALGRIDSYSTEMS.MAPS"
     }).addTo(map);
     L.geoportalLayer.WMTS({
         layer: "ORTHOIMAGERY.ORTHOPHOTOS"
     }).addTo(map);
     L.geoportalLayer.WMTS({
-        layer: "GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN-EXPRESS.STANDARD"
+        layer: "GEOGRAPHICALGRIDSYSTEMS.PLANIGN"
     }).addTo(map);
 
     var layerSwitcher = L.geoportalControl.LayerSwitcher();
