@@ -82,7 +82,7 @@ func (page *PageIndividus) Render(p ihui.Page) {
 	})
 
 	p.On("check", ".select", func(s *ihui.Session, event ihui.Event) {
-		ID, _ := strconv.Atoi(event.Source)
+		ID, _ := strconv.Atoi(event.Id)
 		if event.Data.(bool) {
 			page.selection[uint(ID)] = true
 		} else {
