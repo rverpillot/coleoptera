@@ -61,7 +61,6 @@ func (page *PageIndividus) Render(p ihui.Page) {
 
 	page.tmpl.SetModel(page)
 	page.tmpl.Render(p)
-	page.menu.SetActive("individus")
 	p.Add("#menu", page.menu)
 
 	p.On("create", "page", func(s *ihui.Session, _ ihui.Event) {

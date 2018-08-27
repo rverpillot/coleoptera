@@ -35,7 +35,6 @@ func NewPagePlan(menu *Menu) *PagePlan {
 
 func (page *PagePlan) Render(p ihui.Page) {
 	page.tmpl.Render(p)
-	page.menu.SetActive("plan")
 	p.Add("#menu", page.menu)
 
 	p.On("create", "page", func(s *ihui.Session, event ihui.Event) {

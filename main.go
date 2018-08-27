@@ -32,14 +32,10 @@ func start(session *ihui.Session) {
 	session.Set("admin", *debug)
 
 	menu := pages.NewMenu()
-	pageIndividus := pages.NewPageIndividus(menu)
-	pageEspeces := pages.NewPageEspeces(menu)
-	pagePlan := pages.NewPagePlan(menu)
-	menu.Add("especes", "Espèces", pageEspeces)
-	menu.Add("individus", "Individus", pageIndividus)
-	menu.Add("plan", "Plan", pagePlan)
-
-	session.ShowPage("individus", pageIndividus, nil)
+	menu.Add("especes", "Espèces", pages.NewPageEspeces(menu))
+	menu.Add("individus", "Individus", pages.NewPageIndividus(menu))
+	menu.Add("plan", "Plan", pages.NewPagePlan(menu))
+	menu.ShowPage(session, "individus")
 }
 
 func main() {

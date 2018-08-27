@@ -29,14 +29,19 @@ function showMarkers(tag, markers) {
     })
 
     gmarkers = []
+    positions = []
     $.each(markers, function (i, location) {
         var position = location.Location
         var marker = L.marker(position, {
             title: location.Infos.join("\n")
         })
+        positions.push(position)
         gmarkers.push(marker)
         marker.addTo(map_individus)
     })
+
+    var bounds = L.latLngBounds(positions)
+    map_individus.fitBounds(bounds, {maxZoom: 6, padding: [10,10]})
 }
 
 function createMap(tag, center, zoom) {
