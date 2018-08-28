@@ -22,6 +22,7 @@ div.ui.container style="margin-top: 7em;"
         th
         th.sort data-id="date" Date
         th.sort data-id="especes.genre" Genre/Espèce
+        th.sort data-id="site" Site
         th.sort data-id="commune" Commune
         th.sort data-id="code" Code
         th
@@ -37,6 +38,7 @@ div.ui.container style="margin-top: 7em;"
             {{end}}
         td {{.Date.Format "02/01/2006"}}
         td {{.Espece.NomEspece}}
+        td {{.Site}}
         td {{.Commune}}
         td {{.Code}}
         td 

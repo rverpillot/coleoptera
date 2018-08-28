@@ -44,12 +44,14 @@ func Markers(db *gorm.DB, search string, espece_id uint) ([]Marker, error) {
 			Where("especes.id = ?", espece_id)
 	} else {
 		if search != "" {
+			search = "%" + search + "%"
 			db = db.
-				Where("especes.genre like ? or especes.sous_genre like ? or especes.espece like ? or especes.sous_espece like ? or site like ? or commune like ?", "%"+search+"%", "%"+search+"%", "%"+search+"%", "%"+search+"%", "%"+search+"%", "%"+search+"%")
+				Where("especes.genre like ? or especes.sous_genre like ? or especes.espece like ? or especes.sous_espece like ? or site like ? or commune like ? or code like ?",
+					search, search, search, search, search, search, search)
 		}
 	}
 
-	rows, err := db.Select("sexe,genre,sous_genre,espece,sous_espece,date,latitude,longitude").Order("date").Rows()
+	rows, err := db.Select("sexe,genre,sous_genre,espece,sous_espece,date,latitude,longitude").Rows()
 	if err != nil {
 		return nil, nil
 	}
@@ -87,7 +89,7 @@ func postGeoportail(xml string) (mxj.Map, error) {
 	}
 	req.Header.Add("Referer", "http://localhost")
 	req.Header.Add("Content-Type", "application/xml")
-	log.Println(req)
+	// log.Println(req)
 	client := new(http.Client)
 	res, err := client.Do(req)
 	if err != nil {
@@ -98,8 +100,8 @@ func postGeoportail(xml string) (mxj.Map, error) {
 	if err != nil {
 		return nil, err
 	}
-	data, _ := mv.Xml()
-	log.Println(string(data))
+	// data, _ := mv.Xml()
+	// log.Println(string(data))
 	return mv, nil
 }
 
@@ -167,6 +169,11 @@ func FindLocation(lat float64, lng float64) (string, string, int64, error) {
 		commune = communes[0].(map[string]interface{})["#text"].(string)
 		codes, _ := res.ValuesForKey("PostalCode")
 		code = codes[0].(string)
+	}
+	codes, _ := res.ValuesForKey("Place", "-type:Departement")
+	log.Print(codes)
+	if len(codes) > 0 {
+		code = codes[0].(map[string]interface{})["#text"].(string)
 	}
 
 	altitude, err := getAltitude(lat, lng)
