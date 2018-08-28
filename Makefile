@@ -3,7 +3,8 @@ all: build
 
 build:
 	go build -v -o coleoptera .
-	cd pages && rice append --exec ../coleoptera
+	# cd pages && rice append --exec ../coleoptera
+	cd pages && rice embed-go
 
 static: 
 	go build -ldflags "-linkmode external -extldflags -static" -v
