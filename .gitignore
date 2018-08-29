@@ -1,8 +1,5 @@
 vendor/
-data/
 Gopkg.lock
 coleoptera
 coleoptera.v3
-.DS_Store
-pages/.DS_Store
 pages/rice-box.go
