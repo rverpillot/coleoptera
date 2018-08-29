@@ -8,13 +8,10 @@ var gmarkers = [];
 
 function mapIGN(map, controls) {
     L.geoportalLayer.WMTS({
-        layer: "GEOGRAPHICALGRIDSYSTEMS.MAPS"
+       layer: "GEOGRAPHICALGRIDSYSTEMS.MAPS"
     }).addTo(map);
     L.geoportalLayer.WMTS({
         layer: "ORTHOIMAGERY.ORTHOPHOTOS"
-    }).addTo(map);
-    L.geoportalLayer.WMTS({
-        layer: "GEOGRAPHICALGRIDSYSTEMS.PLANIGN"
     }).addTo(map);
 
     var layerSwitcher = L.geoportalControl.LayerSwitcher();
@@ -27,10 +24,11 @@ function mapIGN(map, controls) {
         var search = L.geoportalControl.SearchEngine();
         map.addControl(search);
     }
+    return map
 }
 
 function showMarkers(tag, markers) {
-    console.log("show markers")
+    // console.log("show markers")
 
     $.each(gmarkers, function (i, marker) {
         marker.remove()
@@ -56,7 +54,10 @@ function showMarkers(tag, markers) {
 function createMap(tag, center, zoom) {
     if ($(tag).length == 0) return;
 
-    map_individus = L.map($(tag)[0]).setView([center.lat, center.lng], zoom);
+    map_individus = L.map($(tag)[0], { 
+        center: [center.lat, center.lng], 
+        zoom: zoom
+    })
     mapIGN(map_individus, true)
 
     map_individus.on("moveend zoomend", function (ev) {
@@ -92,8 +93,10 @@ function createEditMap(tag) {
         position = { lat: latitude, lng: longitude };
     }
     editMap = L.map($(tag)[0], {
+        center: position,
+        zoom: 10,
         scrollWheelZoom: false
-    }).setView(position, 10);
+    })
     mapIGN(editMap, true);
 
     editMarker = L.marker(position, {
@@ -101,7 +104,7 @@ function createEditMap(tag) {
         draggable: true
     });
     editMarker.addTo(editMap);
-    console.log("createEditMap")
+    // console.log("createEditMap")
 
     editMarker.on('dragend', function (event) {
         var position = editMarker.getLatLng()
@@ -114,13 +117,15 @@ function createPreviewMap(tag, longitude, latitude) {
     var position = { lat: latitude, lng: longitude };
 
     var previewMap = L.map($(tag)[0], {
+        center: position,
+        zoom: 6,
         scrollWheelZoom: false
-    }).setView(position, 6);
+    })
     mapIGN(previewMap, false);
 
     var marker = L.marker(position, {})
     marker.addTo(previewMap)
-    console.log("createPreviewMap")
+    // console.log("createPreviewMap")
 }
 
 
