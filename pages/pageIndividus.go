@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/jinzhu/gorm"
-	"rverpi/coleoptera.v3/model"
-	"rverpi/ihui.v2"
+	"rverpi90/coleoptera.v3/model"
+	"rverpi90/ihui.v2"
 )
 
 type PageIndividus struct {

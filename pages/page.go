@@ -1,7 +1,7 @@
 package pages
 
 import (
-	"rverpi/ihui.v2"
+	"rverpi90/ihui.v2"
 
 	rice "github.com/GeertJohan/go.rice"
 )

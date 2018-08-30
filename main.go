@@ -12,8 +12,8 @@ import (
 	"runtime/pprof"
 	"strings"
 
-	"rverpi/coleoptera.v3/pages"
-	"rverpi/ihui.v2"
+	"rverpi90/coleoptera.v3/pages"
+	"rverpi90/ihui.v2"
 
 	_ "net/http/pprof"
 
