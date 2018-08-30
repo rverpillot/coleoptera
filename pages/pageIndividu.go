@@ -99,14 +99,6 @@ func (page *PageIndividu) Render(p ihui.Page) {
 		return true
 	})
 
-	p.On("input", "#search", func(s *ihui.Session, event ihui.Event) bool {
-		val := event.Value()
-		log.Println(val)
-		page.Individu.Latitude, page.Individu.Longitude, _ = model.FindLatLng(val)
-		s.Script("updateEditMap(%f,%f)", page.Individu.Latitude, page.Individu.Longitude)
-		return true
-	})
-
 	p.On("click", "#cancel", func(s *ihui.Session, event ihui.Event) bool {
 		return s.QuitPage()
 	})

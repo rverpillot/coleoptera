@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -100,8 +101,8 @@ func postGeoportail(xml string) (mxj.Map, error) {
 	if err != nil {
 		return nil, err
 	}
-	// data, _ := mv.Xml()
-	// log.Println(string(data))
+	data, _ := mv.Xml()
+	log.Println(string(data))
 	return mv, nil
 }
 
@@ -196,5 +197,12 @@ func FindLatLng(commune string) (float64, float64, error) {
 		return 0, 0, err
 	}
 	log.Println(res)
-	return 47.000, 22.000, err
+	positions, _ := res.ValuesForKey("pos")
+	if len(positions) == 0 {
+		return 0, 0, fmt.Errorf("%s not found", commune)
+	}
+	pos := strings.Split(positions[0].(string), " ")
+	lat, err := strconv.ParseFloat(pos[0], 64)
+	lng, err := strconv.ParseFloat(pos[1], 64)
+	return lat, lng, err
 }

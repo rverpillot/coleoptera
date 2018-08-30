@@ -21,7 +21,7 @@ function mapIGN(map, controls) {
         var mp = L.geoportalControl.MousePosition();
         map.addControl(mp);
 
-        var search = L.geoportalControl.SearchEngine();
+        var search = L.geoportalControl.SearchEngine({displayMarker: false});
         map.addControl(search);
     }
     return map
@@ -76,14 +76,6 @@ function refreshMap(center, zoom) {
 }
 
 
-var editMap;
-var editMarker;
-function updateEditMap(latitude, longitude) {
-    var pos = { lat: latitude, lng: longitude }
-    editMarker.setPosition(pos)
-    editMap.setCenter(pos)
-}
-
 function createEditMap(tag) {
     var latitude = parseFloat($("[name=latitude]").val())
     var longitude = parseFloat($("[name=longitude]").val())
@@ -92,14 +84,14 @@ function createEditMap(tag) {
     if (!isNaN(longitude) && !isNaN(latitude)) {
         position = { lat: latitude, lng: longitude };
     }
-    editMap = L.map($(tag)[0], {
+    var editMap = L.map($(tag)[0], {
         center: position,
         zoom: 10,
         scrollWheelZoom: false
     })
     mapIGN(editMap, true);
 
-    editMarker = L.marker(position, {
+    var editMarker = L.marker(position, {
         // title: position.toString(),
         draggable: true
     });
@@ -111,6 +103,12 @@ function createEditMap(tag) {
         // editMarker.setTitle(position.toString())
         ihui.trigger("position", "page", position)
     })
+
+    editMap.on("moveend", function (ev) {
+        var pos = editMap.getCenter()
+        editMarker.setLatLng(pos)
+    })
+
 }
 
 function createPreviewMap(tag, longitude, latitude) {
