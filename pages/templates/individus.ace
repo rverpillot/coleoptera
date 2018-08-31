@@ -20,11 +20,11 @@ div.ui.container style="margin-top: 7em;"
     thead
       tr
         th
-        th.sort data-id="date" Date
-        th.sort data-id="especes.genre" Genre/Espèce
-        th.sort data-id="site" Site
-        th.sort data-id="commune" Commune
-        th.sort data-id="code" Code
+        th class={{ .ShowSort "date" }} data-id="date" Date
+        th class={{ .ShowSort "especes.genre" }} data-id="especes.genre" Genre/Espèce
+        th class={{ .ShowSort "site" }} data-id="site" Site
+        th class={{ .ShowSort "commune" }} data-id="commune" Commune
+        th class={{ .ShowSort "code" }} data-id="code" Code
         th
     tbody
     {{range .Individus}}

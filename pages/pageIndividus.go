@@ -19,7 +19,8 @@ type PageIndividus struct {
 	Admin         bool
 	Search        string
 	ShowAllButton bool
-	order         string
+	fieldSort     string
+	ascendingSort bool
 }
 
 func NewPageIndividus(menu *Menu) *PageIndividus {
@@ -28,8 +29,19 @@ func NewPageIndividus(menu *Menu) *PageIndividus {
 		menu:       menu,
 		selection:  make(map[uint]bool),
 		Pagination: ihui.NewPaginator(60),
-		order:      "date desc",
+		fieldSort:  "date",
 	}
+}
+
+func (page *PageIndividus) ShowSort(name string) string {
+	if name == page.fieldSort {
+		if page.ascendingSort {
+			return "sortable sorted ascending"
+		} else {
+			return "sortable sorted descending"
+		}
+	}
+	return "sortable"
 }
 
 func (page *PageIndividus) Render(p ihui.Page) {
@@ -51,7 +63,11 @@ func (page *PageIndividus) Render(p ihui.Page) {
 
 	page.ShowAllButton = page.Search != "" || espece_id != 0
 
-	total := model.LoadIndividus(db, &page.Individus, page.Pagination.Current.Index, page.Pagination.PageSize, page.Search, espece_id, page.order)
+	order := page.fieldSort
+	if !page.ascendingSort {
+		order += " desc"
+	}
+	total := model.LoadIndividus(db, &page.Individus, page.Pagination.Current.Index, page.Pagination.PageSize, page.Search, espece_id, order)
 
 	page.Pagination.SetTotal(total)
 
@@ -111,13 +127,13 @@ func (page *PageIndividus) Render(p ihui.Page) {
 		return true
 	})
 
-	p.On("click", ".sort", func(s *ihui.Session, event ihui.Event) bool {
+	p.On("click", "table .sortable", func(s *ihui.Session, event ihui.Event) bool {
 		name := event.Id
-		order := name + " asc"
-		if page.order == order {
-			page.order = name + " desc"
+		if name == page.fieldSort {
+			page.ascendingSort = !page.ascendingSort
 		} else {
-			page.order = order
+			page.fieldSort = name
+			page.ascendingSort = true
 		}
 		return true
 	})
