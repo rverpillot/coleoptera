@@ -9,10 +9,12 @@ var gmarkers = [];
 
 function mapIGN(map, controls) {
     L.geoportalLayer.WMTS({
-       layer: "GEOGRAPHICALGRIDSYSTEMS.MAPS"
+        layer: "ORTHOIMAGERY.ORTHOPHOTOS"
     }).addTo(map);
     L.geoportalLayer.WMTS({
-        layer: "ORTHOIMAGERY.ORTHOPHOTOS"
+        layer: "GEOGRAPHICALGRIDSYSTEMS.MAPS"
+    },{
+        opacity: 0
     }).addTo(map);
 
     var layerSwitcher = L.geoportalControl.LayerSwitcher();
@@ -22,7 +24,7 @@ function mapIGN(map, controls) {
         var mp = L.geoportalControl.MousePosition();
         map.addControl(mp);
 
-        var search = L.geoportalControl.SearchEngine({displayMarker: false});
+        var search = L.geoportalControl.SearchEngine({ displayMarker: false });
         map.addControl(search);
     }
     return map
@@ -55,8 +57,8 @@ function showMarkers(tag, markers) {
 function createMap(tag, center, zoom) {
     if ($(tag).length == 0) return;
 
-    map_individus = L.map($(tag)[0], { 
-        center: [center.lat, center.lng], 
+    map_individus = L.map($(tag)[0], {
+        center: [center.lat, center.lng],
         zoom: zoom
     })
     mapIGN(map_individus, true)

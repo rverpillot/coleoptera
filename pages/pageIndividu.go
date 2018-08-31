@@ -12,18 +12,19 @@ import (
 )
 
 type PageIndividu struct {
-	tmpl         *ihui.PageAce
-	Individu     model.Individu
-	Admin        bool
-	Edit         bool
-	Delete       bool
-	Especes      []model.Espece
-	Departements []model.Departement
-	Sites        []string
-	Communes     []string
-	Recolteurs   []string
-	Error        string
-	Search       string
+	tmpl           *ihui.PageAce
+	Individu       model.Individu
+	Admin          bool
+	Edit           bool
+	EditMapCreated bool
+	Delete         bool
+	Especes        []model.Espece
+	Departements   []model.Departement
+	Sites          []string
+	Communes       []string
+	Recolteurs     []string
+	Error          string
+	Search         string
 }
 
 func newPageIndividu(individu model.Individu, editMode bool) *PageIndividu {
@@ -48,7 +49,19 @@ func (page *PageIndividu) Render(p ihui.Page) {
 	page.tmpl.Render(p)
 
 	p.On("create", "page", func(s *ihui.Session, event ihui.Event) bool {
-		s.Script(`createPreviewMap("#mappreview",%f,%f)`, page.Individu.Longitude, page.Individu.Latitude)
+		if page.Edit {
+			s.Script(`createEditMap("#mapedit")`)
+		} else {
+			s.Script(`createPreviewMap("#mappreview",%f,%f)`, page.Individu.Longitude, page.Individu.Latitude)
+		}
+		return false
+	})
+
+	p.On("update", "page", func(s *ihui.Session, event ihui.Event) bool {
+		if page.Edit && !page.EditMapCreated {
+			s.Script(`createEditMap("#mapedit")`)
+		}
+		page.EditMapCreated = true
 		return false
 	})
 

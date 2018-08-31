@@ -91,7 +91,6 @@ div.ui.container style="margin-top: 5em;"
     div.field.twelve.wide.noupdate
       label Plan :
       div#mapedit style="margin-top:10px; width: 100%; height: 450px"
-      script createEditMap("#mapedit")
 
     div.field.two.wide
       label Altitude :
