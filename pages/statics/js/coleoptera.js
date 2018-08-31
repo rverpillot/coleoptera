@@ -1,5 +1,6 @@
 
 $(document).on("page-create page-update", function (event, data) {
+    console.log(data)
     doSemanticUI($("#" + data.page))
 })
 
