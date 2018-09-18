@@ -14,10 +14,10 @@ import (
 
 	_ "net/http/pprof"
 
+	"bitbucket.org/rverpi90/coleoptera.v3/pages"
 	"bitbucket.org/rverpi90/ihui"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"rverpi90/coleoptera.v3/pages"
 )
 
 var (

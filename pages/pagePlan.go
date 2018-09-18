@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/jinzhu/gorm"
-	"rverpi90/coleoptera.v3/model"
+	"bitbucket.org/rverpi90/coleoptera.v3/model"
 	"bitbucket.org/rverpi90/ihui"
 )
 
