@@ -164,37 +164,3 @@ func AllCommunes(db *gorm.DB) []string {
 	}
 	return communes
 }
-
-/*
-func UpdateLocations(db *gorm.DB) {
-	var individus []Individu
-	if err := db.Where("longitude is null or latitude is null").Find(&individus).Error; err != nil {
-		log.Println(err)
-		return
-	}
-	c, err := maps.NewClient(maps.WithAPIKey("AIzaSyCP7koK86PlGmkHnO6EciwaUQI43laSmZo"))
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
-	for _, i := range individus {
-		t := transform.Chain(norm.NFD, runes.Remove(runes.In(unicode.Mn)), norm.NFC)
-		//		address, _, _ := transform.String(t, fmt.Sprintf("%s. %s. %s", i.Site, i.Code, i.Commune))
-		address, _, _ := transform.String(t, fmt.Sprintf("%s. %s", i.Code, i.Commune))
-		log.Println(address)
-		rs, err := c.Geocode(context.Background(), &maps.GeocodingRequest{Region: "fr", Address: address})
-		if err != nil {
-			log.Println(err)
-			continue
-		}
-		log.Println(rs)
-		for _, r := range rs {
-			i.Longitude = r.Geometry.Location.Lng
-			i.Latitude = r.Geometry.Location.Lat
-			db.Set("gorm:save_associations", false).Save(i)
-			break
-		}
-	}
-}
-*/

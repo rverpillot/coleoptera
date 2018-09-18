@@ -5,9 +5,10 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/jinzhu/gorm"
 	"bitbucket.org/rverpi90/coleoptera.v3/model"
 	"bitbucket.org/rverpi90/ihui"
+	"github.com/jinzhu/gorm"
+	"github.com/jung-kurt/gofpdf"
 )
 
 type PageIndividus struct {
@@ -148,4 +149,53 @@ func (page *PageIndividus) Render(p ihui.Page) {
 		}
 		return s.ShowPage("individu", newPageIndividu(individu, true), &ihui.Options{Modal: true})
 	})
+}
+
+func (page *PageIndividus) printLabels(db *gorm.DB) {
+	const width = 20
+	const height = 10
+	const cols = 18
+	const rows = 25
+	const leftMargin = (210 - width*cols) / 2
+	const topMargin = (297 - height*rows) / 2
+
+	pdf := gofpdf.New("Portrait", "mm", "A4", "")
+	pdf.AddPage()
+	pdf.SetFont("Helvetica", "", 8)
+
+	col := 0
+	row := 0
+	for id := range page.selection {
+		var individu model.Individu
+		if err := db.First(&individu, id).Error; err != nil {
+			continue
+		}
+		printLabels := []func(*gofpdf.Fpdf, int, int, *model.Individu){printLabel1, printLabel2}
+		for _, printLabel := range printLabels {
+			if col == 0 && row == 0 {
+				pdf.AddPage()
+			}
+
+			x := leftMargin + col*width
+			y := topMargin + row*height
+			printLabel(pdf, x, y, &individu)
+
+			col++
+			if col >= cols {
+				col = 0
+				row++
+			}
+			if row >= rows {
+				row = 0
+			}
+		}
+	}
+}
+
+func printLabel1(pdf *gofpdf.Fpdf, x, y int, individu *model.Individu) {
+
+}
+
+func printLabel2(pdf *gofpdf.Fpdf, x, y int, individu *model.Individu) {
+
 }
