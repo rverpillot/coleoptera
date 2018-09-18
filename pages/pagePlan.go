@@ -5,7 +5,7 @@ import (
 
 	"github.com/jinzhu/gorm"
 	"rverpi90/coleoptera.v3/model"
-	"rverpi90/ihui.v2"
+	"bitbucket.org/rverpi90/ihui"
 )
 
 type infoMap struct {

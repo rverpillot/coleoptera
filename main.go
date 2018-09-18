@@ -12,13 +12,12 @@ import (
 	"runtime/pprof"
 	"strings"
 
-	"rverpi90/coleoptera.v3/pages"
-	"rverpi90/ihui.v2"
-
 	_ "net/http/pprof"
 
+	"bitbucket.org/rverpi90/ihui"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"rverpi90/coleoptera.v3/pages"
 )
 
 var (

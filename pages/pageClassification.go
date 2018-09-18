@@ -3,9 +3,10 @@ package pages
 import (
 	"log"
 
+	"bitbucket.org/rverpi90/ihui"
+
 	"github.com/jinzhu/gorm"
 	"rverpi90/coleoptera.v3/model"
-	"rverpi90/ihui.v2"
 )
 
 type PageClassification struct {

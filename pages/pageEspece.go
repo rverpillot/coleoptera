@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"rverpi90/coleoptera.v3/model"
-	"rverpi90/ihui.v2"
+	"bitbucket.org/rverpi90/ihui"
 
 	"github.com/jinzhu/gorm"
 )
