@@ -180,23 +180,29 @@ func (page *PageIndividus) Render(p ihui.Page) {
 func (page *PageIndividus) printLabels(db *gorm.DB, output io.Writer) error {
 	const width = 20
 	const height = 10
-	const cols = 18
+	const cols = 8
 	const rows = 25
 	const leftMargin = (210 - width*cols) / 2
 	const topMargin = (297 - height*rows) / 2
 
 	pdf := gofpdf.New("Portrait", "mm", "A4", "")
 	defer pdf.Close()
-	pdf.SetFont("Helvetica", "", 6)
+	pdf.SetFont("Helvetica", "", 5)
+	pdf.SetLineWidth(0.1)
 
 	col := 0
 	row := 0
 	for id := range page.selection {
 		var individu model.Individu
-		if err := db.First(&individu, id).Error; err != nil {
+		if err := db.Preload("Departement").First(&individu, id).Error; err != nil {
 			continue
 		}
-		printLabels := []func(*gofpdf.Fpdf, float64, float64, float64, float64, *model.Individu){printLabel1, printLabel2}
+
+		printLabels := []func(*gofpdf.Fpdf, float64, float64, float64, float64, *model.Individu){
+			printLabel1,
+			printLabel2,
+		}
+
 		for _, printLabel := range printLabels {
 			if col == 0 && row == 0 {
 				pdf.AddPage()
@@ -204,6 +210,7 @@ func (page *PageIndividus) printLabels(db *gorm.DB, output io.Writer) error {
 
 			x := float64(leftMargin + col*width)
 			y := float64(topMargin + row*height)
+			pdf.Rect(x, y, width, height, "D")
 			printLabel(pdf, x, y, width, height, &individu)
 
 			col++
@@ -220,18 +227,27 @@ func (page *PageIndividus) printLabels(db *gorm.DB, output io.Writer) error {
 }
 
 func printLabel1(pdf *gofpdf.Fpdf, x, y, width, height float64, individu *model.Individu) {
-	pdf.Circle(x+2, y+5, 0.2, "F")
-	pdf.SetXY(x, y+1)
-	pdf.CellFormat(width, 2, individu.Commune, "", 1, "C", false, 0, "")
-	pdf.CellFormat(width, 2, individu.Departement.Nom, "", 1, "C", false, 0, "")
-	pdf.CellFormat(width, 2, "France", "", 1, "C", false, 0, "")
-	pdf.CellFormat(width, 2, individu.Recolteur, "", 1, "C", false, 0, "")
+	tr := pdf.UnicodeTranslatorFromDescriptor("")
+	pdf.Circle(x+2, y+height/2, 0.2, "F")
+	pdf.SetXY(x, y)
+	pdf.CellFormat(width, 2.5, tr(individu.Commune), "", 2, "C", false, 0, "")
+	pdf.CellFormat(width, 2.5, tr(individu.Departement.Nom), "", 2, "C", false, 0, "")
+	pdf.CellFormat(width, 2.5, "France", "", 2, "C", false, 0, "")
+	pdf.CellFormat(width, 2.5, tr(individu.Recolteur), "", 2, "C", false, 0, "")
 }
 
 func printLabel2(pdf *gofpdf.Fpdf, x, y, width, height float64, individu *model.Individu) {
+	tr := pdf.UnicodeTranslatorFromDescriptor("")
 	pdf.Circle(x+2, y+5, 0.2, "F")
-	pdf.SetXY(x, y+1)
-	pdf.CellFormat(width, 2, individu.Site, "", 1, "C", false, 0, "")
-	pdf.CellFormat(width, 2, fmt.Sprintf("%dm", individu.Altitude.Int64), "", 1, "C", false, 0, "")
-	pdf.CellFormat(width, 2, individu.Date.String(), "", 1, "C", false, 0, "")
+	pdf.SetXY(x, y)
+	pdf.CellFormat(width, 3.3, tr(individu.Site), "", 2, "C", false, 0, "")
+	pdf.CellFormat(width, 3.3, fmt.Sprintf("%dm", individu.Altitude.Int64), "", 2, "C", false, 0, "")
+	pdf.CellFormat(width, 3.3, fmtDate(individu.Date), "", 2, "C", false, 0, "")
+}
+
+func fmtDate(date time.Time) string {
+	romans := []string{
+		"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII",
+	}
+	return fmt.Sprintf("%d-%s-%d", date.Day(), romans[date.Month()], date.Year())
 }
