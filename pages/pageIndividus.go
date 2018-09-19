@@ -214,6 +214,8 @@ func (page *PageIndividus) printLabels(db *gorm.DB, output io.Writer) error {
 			x := float64(leftMargin + col*width)
 			y := float64(topMargin + row*height)
 			pdf.Rect(x, y, width, height, "D")
+			pdf.Circle(x+1, y+height/2, 0.2, "F")
+			pdf.SetXY(x, y)
 			printLabel(pdf, x, y, width, height, &individu)
 
 			col++
@@ -231,8 +233,6 @@ func (page *PageIndividus) printLabels(db *gorm.DB, output io.Writer) error {
 
 func printLabel1(pdf *gofpdf.Fpdf, x, y, width, height float64, individu *model.Individu) {
 	tr := pdf.UnicodeTranslatorFromDescriptor("")
-	pdf.Circle(x+2, y+height/2, 0.2, "F")
-	pdf.SetXY(x, y)
 	pdf.CellFormat(width, 2.5, tr(individu.Commune), "", 2, "C", false, 0, "")
 	pdf.CellFormat(width, 2.5, "("+tr(individu.Departement.Nom)+")", "", 2, "C", false, 0, "")
 	pdf.CellFormat(width, 2.5, "France", "", 2, "C", false, 0, "")
@@ -241,8 +241,6 @@ func printLabel1(pdf *gofpdf.Fpdf, x, y, width, height float64, individu *model.
 
 func printLabel2(pdf *gofpdf.Fpdf, x, y, width, height float64, individu *model.Individu) {
 	tr := pdf.UnicodeTranslatorFromDescriptor("")
-	pdf.Circle(x+2, y+5, 0.2, "F")
-	pdf.SetXY(x, y)
 	pdf.CellFormat(width, 3.3, tr(individu.Site), "", 2, "C", false, 0, "")
 	pdf.CellFormat(width, 3.3, fmt.Sprintf("%dm", individu.Altitude.Int64), "", 2, "C", false, 0, "")
 	pdf.CellFormat(width, 3.3, fmtDate(individu.Date), "", 2, "C", false, 0, "")
