@@ -11,6 +11,7 @@ import (
 	"runtime"
 	"runtime/pprof"
 	"strings"
+	"time"
 
 	_ "net/http/pprof"
 
@@ -24,11 +25,13 @@ var (
 	db          *gorm.DB
 	contextRoot *string
 	debug       *bool
+	tmpDir      = path.Join(os.TempDir(), "coleoptera")
 )
 
 func start(session *ihui.Session) {
 	session.Set("db", db)
 	session.Set("admin", *debug)
+	session.Set("tmpDir", tmpDir)
 
 	menu := pages.NewMenu()
 	menu.Add("especes", "Espèces", pages.NewPageEspeces(menu))
@@ -95,11 +98,21 @@ func main() {
 	defer db.Close()
 	db.LogMode(*debug)
 
+	// Create & purge tmp dir
+	os.MkdirAll(tmpDir, 0755)
+	go func() {
+		for now := range time.Tick(time.Minute * 20) {
+			if err := purgeTmp(tmpDir, now); err != nil {
+				log.Print(err)
+			}
+		}
+	}()
+
 	if !strings.HasSuffix(*contextRoot, "/") {
 		*contextRoot += "/"
 	}
 	http.Handle(*contextRoot, http.StripPrefix(*contextRoot, http.FileServer(pages.ResourcesBox.HTTPBox())))
-	http.Handle(*contextRoot+"pdf/", http.StripPrefix(*contextRoot+"pdf", http.FileServer(http.Dir("/tmp"))))
+	http.Handle(*contextRoot+"pdf/", http.StripPrefix(*contextRoot+"pdf", http.FileServer(http.Dir(tmpDir))))
 	http.Handle(*contextRoot+"app/", ihui.NewHTTPHandler(start))
 
 	c := make(chan os.Signal, 1)
@@ -119,4 +132,23 @@ func main() {
 		log.Fatal(http.ListenAndServe(*address, nil))
 	}
 
+}
+
+func purgeTmp(dirName string, now time.Time) error {
+	tmpDir, err := os.Open(dirName)
+	if err != nil {
+		return err
+	}
+	defer tmpDir.Close()
+
+	files, err := tmpDir.Readdir(0)
+	if err != nil {
+		return err
+	}
+	for _, file := range files {
+		if now.Sub(file.ModTime()).Hours() > 48 {
+			os.Remove(path.Join(dirName, file.Name()))
+		}
+	}
+	return nil
 }

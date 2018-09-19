@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/ioutil"
 	"log"
+	"os"
 	"path"
 	"strconv"
 	"time"
@@ -158,7 +159,9 @@ func (page *PageIndividus) Render(p ihui.Page) {
 	})
 
 	p.On("click", "#printLabels", func(s *ihui.Session, event ihui.Event) bool {
-		f, err := ioutil.TempFile("", "coleoptera*.pdf")
+		tmpDir := path.Join(os.TempDir(), "coleoptera")
+
+		f, err := ioutil.TempFile(tmpDir, "etiquettes-*.pdf")
 		if err != nil {
 			log.Print(err)
 			return false
