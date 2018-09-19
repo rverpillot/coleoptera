@@ -234,7 +234,7 @@ func printLabel1(pdf *gofpdf.Fpdf, x, y, width, height float64, individu *model.
 	pdf.Circle(x+2, y+height/2, 0.2, "F")
 	pdf.SetXY(x, y)
 	pdf.CellFormat(width, 2.5, tr(individu.Commune), "", 2, "C", false, 0, "")
-	pdf.CellFormat(width, 2.5, tr(individu.Departement.Nom), "", 2, "C", false, 0, "")
+	pdf.CellFormat(width, 2.5, "("+tr(individu.Departement.Nom)+")", "", 2, "C", false, 0, "")
 	pdf.CellFormat(width, 2.5, "France", "", 2, "C", false, 0, "")
 	pdf.CellFormat(width, 2.5, tr(individu.Recolteur), "", 2, "C", false, 0, "")
 }
