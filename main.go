@@ -99,6 +99,7 @@ func main() {
 		*contextRoot += "/"
 	}
 	http.Handle(*contextRoot, http.StripPrefix(*contextRoot, http.FileServer(pages.ResourcesBox.HTTPBox())))
+	http.Handle(*contextRoot+"pdf/", http.StripPrefix(*contextRoot+"pdf", http.FileServer(http.Dir("/tmp"))))
 	http.Handle(*contextRoot+"app/", ihui.NewHTTPHandler(start))
 
 	c := make(chan os.Signal, 1)

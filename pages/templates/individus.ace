@@ -11,10 +11,17 @@ div.ui.container style="margin-top: 7em;"
         {{if .ShowAllButton}}
         div.ui.button.fluid id="reset" Tout
         {{end}}
-      div.right.floated.column.four.wide
-        {{if and (not .ShowAllButton) .Admin}}
-        div.ui.button.primary.fluid id="add" Ajouter une donnée
+      {{if and (not .ShowAllButton) .Admin}}
+      div.right.floated.column.five.wide
+        div.ui.button.basic.primary id="add" 
+          i.icon.plus
+          | Ajouter une donnée
+        {{if (gt .SelectCount 0)}}
+        a.ui.secondary.basic.button id="printLabels" target="print"
+          i.icon.print
+          | Etiquettes
         {{end}}
+      {{end}}
 
   table.ui.striped.compact.sortable.table.small
     thead

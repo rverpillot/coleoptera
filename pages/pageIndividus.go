@@ -4,6 +4,9 @@ import (
 	"database/sql"
 	"fmt"
 	"io"
+	"io/ioutil"
+	"log"
+	"path"
 	"strconv"
 	"time"
 
@@ -17,6 +20,7 @@ type PageIndividus struct {
 	tmpl          *ihui.PageAce
 	menu          *Menu
 	selection     map[uint]bool
+	SelectCount   int
 	Pagination    *ihui.Paginator
 	Individus     []model.Individu
 	Admin         bool
@@ -110,6 +114,7 @@ func (page *PageIndividus) Render(p ihui.Page) {
 		} else {
 			delete(page.selection, uint(ID))
 		}
+		page.SelectCount = len(page.selection)
 		return true
 	})
 
@@ -150,6 +155,25 @@ func (page *PageIndividus) Render(p ihui.Page) {
 			Altitude:  sql.NullInt64{100, true},
 		}
 		return s.ShowPage("individu", newPageIndividu(individu, true), &ihui.Options{Modal: true})
+	})
+
+	p.On("click", "#printLabels", func(s *ihui.Session, event ihui.Event) bool {
+		f, err := ioutil.TempFile("", "coleoptera*.pdf")
+		if err != nil {
+			log.Print(err)
+			return false
+		}
+		defer f.Close()
+
+		if err := page.printLabels(db, f); err != nil {
+			log.Print(err)
+			return false
+		}
+		s.Script(`
+		win = window.open("","print")
+		if (win) {win.location = "/pdf/%s"}
+		`, path.Base(f.Name()))
+		return false
 	})
 }
 

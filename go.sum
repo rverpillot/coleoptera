@@ -1,5 +1,5 @@
-bitbucket.org/rverpi90/ihui v1.1.0 h1:r7FylNPtZhmvygTRefrmVyNi9KKZBGhHr5czB2Xe/Nw=
-bitbucket.org/rverpi90/ihui v1.1.0/go.mod h1:Qc8wTgini/liU7NS5rCUrYkt83MoRHAH6nq2GY20Hmc=
+bitbucket.org/rverpi90/ihui v0.0.0-20180919123052-df7b86011af2 h1:C9rfiX747w1bycYUCIC8hecsNqGp43TOFPfozQf3PYY=
+bitbucket.org/rverpi90/ihui v0.0.0-20180919123052-df7b86011af2/go.mod h1:8R+n3TV5NX3Z2KSsWJEMEOUVR3b5d6QXOSlQTvWXbIE=
 cloud.google.com/go v0.28.0 h1:KZ/88LWSw8NxMkjdQyX7LQSGR9PkHr4PaVuNm8zgFq0=
 cloud.google.com/go v0.28.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 github.com/GeertJohan/go.rice v0.0.0-20170420135705-c02ca9a983da h1:UVU3a9pRUyLdnBtn60WjRl0s4SEyJc2ChCY56OAR6wI=
@@ -36,7 +36,6 @@ github.com/lib/pq v1.0.0 h1:X5PMW56eZitiTeO7tKzZxFCSpbFZJtkMMooicw2us9A=
 github.com/lib/pq v1.0.0/go.mod h1:5WUZQaWbwv1U+lTReE5YruASi9Al49XbQIvNi/34Woo=
 github.com/mattn/go-sqlite3 v1.9.0 h1:pDRiWfl+++eC2FEFRy6jXmQlvp4Yh3z1MJKg4UeYM/4=
 github.com/mattn/go-sqlite3 v1.9.0/go.mod h1:FPy6KqzDD04eiIsT53CuJW3U88zkxoIYsOqkbpncsNc=
-github.com/satori/go.uuid v1.2.0/go.mod h1:dA0hQrYB0VpLJoorglMZABFdXlWrHn1NEOzdhQKdks0=
 github.com/yosssi/ace v0.0.5 h1:tUkIP/BLdKqrlrPwcmH0shwEEhTRHoGnc1wFIWmaBUA=
 github.com/yosssi/ace v0.0.5/go.mod h1:ALfIzm2vT7t5ZE7uoIZqF3TQ7SAOyupFZnkrF5id+K0=
 golang.org/x/crypto v0.0.0-20180910181607-0e37d006457b h1:2b9XGzhjiYsYPnKXoEfL7klWZQIt8IfyRCz62gCqqlQ=
