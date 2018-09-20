@@ -22,6 +22,7 @@ type PageIndividus struct {
 	menu          *Menu
 	selection     map[uint]bool
 	SelectCount   int
+	AllSelected   bool
 	Pagination    *ihui.Paginator
 	Individus     []model.Individu
 	Admin         bool
@@ -98,6 +99,30 @@ func (page *PageIndividus) Render(p ihui.Page) {
 		s.Set("search_individus", event.Value())
 		s.Set("search_espece", uint(0))
 		page.Pagination.SetPage(1)
+		return true
+	})
+
+	p.On("check", ".selectAll", func(s *ihui.Session, event ihui.Event) bool {
+		page.AllSelected = event.Data.(bool)
+
+		if page.AllSelected {
+			rows, err := db.Table("individus").Select("id").Rows()
+			if err != nil {
+				log.Print(err)
+				return false
+			}
+			defer rows.Close()
+			for rows.Next() {
+				var id uint
+				rows.Scan(&id)
+				page.selection[id] = true
+			}
+		} else {
+			page.selection = make(map[uint]bool)
+			page.SelectCount = 0
+		}
+
+		page.SelectCount = len(page.selection)
 		return true
 	})
 
@@ -231,24 +256,35 @@ func (page *PageIndividus) printLabels(db *gorm.DB, output io.Writer) error {
 	return pdf.Output(output)
 }
 
-func printLabel1(pdf *gofpdf.Fpdf, x, y, width, height float64, individu *model.Individu) {
+func printText(pdf *gofpdf.Fpdf, width, height float64, text string) {
 	tr := pdf.UnicodeTranslatorFromDescriptor("")
-	pdf.CellFormat(width, 2.5, tr(individu.Commune), "", 2, "C", false, 0, "")
-	pdf.CellFormat(width, 2.5, "("+tr(individu.Departement.Nom)+")", "", 2, "C", false, 0, "")
-	pdf.CellFormat(width, 2.5, "France", "", 2, "C", false, 0, "")
-	pdf.CellFormat(width, 2.5, tr(individu.Recolteur), "", 2, "C", false, 0, "")
+	text = tr(text)
+	for size := float64(5); size > 4; size -= 0.5 {
+		pdf.SetFontSize(size)
+		if pdf.GetStringWidth(text) < width {
+			break
+		}
+	}
+	pdf.CellFormat(width, height, text, "", 2, "C", false, 0, "")
+}
+
+func printLabel1(pdf *gofpdf.Fpdf, x, y, width, height float64, individu *model.Individu) {
+	printText(pdf, width, 2.5, individu.Commune)
+	printText(pdf, width, 2.5, "("+individu.Departement.Nom+")")
+	printText(pdf, width, 2.5, "France")
+	printText(pdf, width, 2.5, individu.Recolteur)
 }
 
 func printLabel2(pdf *gofpdf.Fpdf, x, y, width, height float64, individu *model.Individu) {
-	tr := pdf.UnicodeTranslatorFromDescriptor("")
-	pdf.CellFormat(width, 3.3, tr(individu.Site), "", 2, "C", false, 0, "")
-	pdf.CellFormat(width, 3.3, fmt.Sprintf("%dm", individu.Altitude.Int64), "", 2, "C", false, 0, "")
-	pdf.CellFormat(width, 3.3, fmtDate(individu.Date), "", 2, "C", false, 0, "")
+	printText(pdf, width, 3.3, individu.Site)
+	printText(pdf, width, 3.3, fmt.Sprintf("%dm", individu.Altitude.Int64))
+	printText(pdf, width, 3.3, fmtDate(individu.Date))
 }
 
 func fmtDate(date time.Time) string {
 	romans := []string{
-		"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII",
+
+		"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII",
 	}
 	return fmt.Sprintf("%d-%s-%d", date.Day(), romans[date.Month()], date.Year())
 }
