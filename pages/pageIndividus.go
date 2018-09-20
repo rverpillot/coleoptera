@@ -199,7 +199,7 @@ func (page *PageIndividus) Render(p ihui.Page) {
 		}
 		s.Script(`
 		win = window.open("","print")
-		if (win) {win.location = "/pdf/%s"}
+		if (win) {win.location = "pdf/%s"}
 		`, path.Base(f.Name()))
 		return false
 	})
