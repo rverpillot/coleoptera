@@ -2,6 +2,8 @@ bitbucket.org/rverpi90/ihui v0.0.0-20180919123052-df7b86011af2 h1:C9rfiX747w1byc
 bitbucket.org/rverpi90/ihui v0.0.0-20180919123052-df7b86011af2/go.mod h1:8R+n3TV5NX3Z2KSsWJEMEOUVR3b5d6QXOSlQTvWXbIE=
 bitbucket.org/rverpi90/ihui v0.0.0-20180920121344-479cafaa8a60 h1:OALyS9HJrJxWpLCOe8zCjQ6/kIlt01AYS6jQwHevbKw=
 bitbucket.org/rverpi90/ihui v0.0.0-20180920121344-479cafaa8a60/go.mod h1:Fq8nU2Y8N096S5v/5CLAx5FT3DBYY9Z5BXXpVcYc5Ho=
+bitbucket.org/rverpi90/ihui v0.0.0-20180920124425-cdb4b558449a h1:IWL9BDSl5C8HM7Q3nzfA7pmHGt8MnqTMOZauu5jGKJQ=
+bitbucket.org/rverpi90/ihui v0.0.0-20180920124425-cdb4b558449a/go.mod h1:Fq8nU2Y8N096S5v/5CLAx5FT3DBYY9Z5BXXpVcYc5Ho=
 cloud.google.com/go v0.28.0 h1:KZ/88LWSw8NxMkjdQyX7LQSGR9PkHr4PaVuNm8zgFq0=
 cloud.google.com/go v0.28.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 github.com/GeertJohan/go.rice v0.0.0-20170420135705-c02ca9a983da h1:UVU3a9pRUyLdnBtn60WjRl0s4SEyJc2ChCY56OAR6wI=

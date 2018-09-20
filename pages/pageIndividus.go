@@ -103,7 +103,7 @@ func (page *PageIndividus) Render(p ihui.Page) {
 	})
 
 	p.On("check", ".selectAll", func(s *ihui.Session, event ihui.Event) bool {
-		page.AllSelected = event.Data.(bool)
+		page.AllSelected = event.IsChecked()
 
 		if page.AllSelected {
 			rows, err := db.Table("individus").Select("id").Rows()
@@ -135,7 +135,7 @@ func (page *PageIndividus) Render(p ihui.Page) {
 
 	p.On("check", ".select", func(s *ihui.Session, event ihui.Event) bool {
 		ID, _ := strconv.Atoi(event.Id)
-		if event.Data.(bool) {
+		if event.IsChecked() {
 			page.selection[uint(ID)] = true
 		} else {
 			delete(page.selection, uint(ID))
