@@ -13,11 +13,11 @@ div.ui.container style="margin-top: 7em;"
         {{end}}
       {{if and (not .ShowAllButton) .Admin}}
       div.right.floated.column.five.wide
-        div.ui.button.basic.primary id="add" 
+        div.ui.button.basic.primary.right.floated id="add" 
           i.icon.plus
           | Ajouter une donnée
         {{if (gt .SelectCount 0)}}
-        a.ui.secondary.basic.button id="printLabels" target="print"
+        a.ui.secondary.basic.button.right.floated id="printLabels" target="print"
           i.icon.print
           | Etiquettes
         {{end}}

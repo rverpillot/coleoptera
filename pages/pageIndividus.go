@@ -117,12 +117,11 @@ func (page *PageIndividus) Render(p ihui.Page) {
 				rows.Scan(&id)
 				page.selection[id] = true
 			}
+			page.SelectCount = len(page.selection)
 		} else {
-			page.selection = make(map[uint]bool)
-			page.SelectCount = 0
+			page.clearSelection()
 		}
 
-		page.SelectCount = len(page.selection)
 		return true
 	})
 
@@ -201,8 +200,15 @@ func (page *PageIndividus) Render(p ihui.Page) {
 		win = window.open("","print")
 		if (win) {win.location = "pdf/%s"}
 		`, path.Base(f.Name()))
-		return false
+
+		page.clearSelection()
+		return true
 	})
+}
+
+func (page *PageIndividus) clearSelection() {
+	page.selection = make(map[uint]bool)
+	page.SelectCount = 0
 }
 
 func (page *PageIndividus) printLabels(db *gorm.DB, output io.Writer) error {
