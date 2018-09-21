@@ -1,7 +1,7 @@
 module bitbucket.org/rverpi90/coleoptera.v3
 
 require (
-	bitbucket.org/rverpi90/ihui v0.0.0-20180921171906-5faa5bb70838
+	bitbucket.org/rverpi90/ihui v0.0.0-20180921214914-f693b6147c9b
 	cloud.google.com/go v0.28.0 // indirect
 	github.com/GeertJohan/go.rice v0.0.0-20170420135705-c02ca9a983da
 	github.com/clbanning/mxj v1.8.2

@@ -17,7 +17,7 @@ div.ui.container style="margin-top: 7em;"
           i.icon.plus
           | Ajouter une donnée
         {{if (gt .SelectCount 0)}}
-        a.ui.secondary.basic.button.right.floated id="printLabels" target="print"
+        a.ui.secondary.basic.button.right.floated id="printLabels" href="labels.html" target="print"
           i.icon.print
           | Etiquettes
         {{end}}
