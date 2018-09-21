@@ -59,7 +59,7 @@ func (page *PageEspece) Render(p ihui.Page) {
 	})
 
 	p.On("click", "[id=cancel]", func(s *ihui.Session, ev ihui.Event) bool {
-		return s.QuitPage()
+		return s.CloseModalPage()
 	})
 
 	p.On("submit", "formm", func(s *ihui.Session, ev ihui.Event) bool {
@@ -85,6 +85,6 @@ func (page *PageEspece) Render(p ihui.Page) {
 			page.Error = err.Error()
 			return true
 		}
-		return s.QuitPage()
+		return s.CloseModalPage()
 	})
 }

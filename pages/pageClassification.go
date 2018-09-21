@@ -29,7 +29,7 @@ func (page *PageClassification) Render(p ihui.Page) {
 	page.tmpl.Render(p)
 
 	p.On("click", "close", func(s *ihui.Session, event ihui.Event) bool {
-		return s.QuitPage()
+		return s.CloseModalPage()
 	})
 
 	p.On("submit", "form", func(s *ihui.Session, event ihui.Event) bool {
@@ -39,7 +39,7 @@ func (page *PageClassification) Render(p ihui.Page) {
 			log.Println(err)
 			page.Error = err.Error()
 		} else {
-			s.QuitPage()
+			s.CloseModalPage()
 		}
 		return true
 	})

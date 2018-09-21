@@ -32,7 +32,7 @@ func (page *PageLogin) Render(p ihui.Page) {
 		}
 		if page.authenticate(username, password) {
 			s.Set("admin", true)
-			s.QuitPage()
+			s.CloseModalPage()
 		} else {
 			page.Error = "Utilisateur ou mot de passe inconnu!"
 		}
@@ -40,7 +40,7 @@ func (page *PageLogin) Render(p ihui.Page) {
 	})
 
 	p.On("click", "#cancel", func(s *ihui.Session, event ihui.Event) bool {
-		return s.QuitPage()
+		return s.CloseModalPage()
 	})
 }
 

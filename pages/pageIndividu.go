@@ -113,7 +113,7 @@ func (page *PageIndividu) Render(p ihui.Page) {
 	})
 
 	p.On("click", "#cancel", func(s *ihui.Session, event ihui.Event) bool {
-		return s.QuitPage()
+		return s.CloseModalPage()
 	})
 
 	p.On("click", "#edit", func(s *ihui.Session, event ihui.Event) bool {
@@ -129,7 +129,7 @@ func (page *PageIndividu) Render(p ihui.Page) {
 				return true
 			}
 		}
-		return s.QuitPage()
+		return s.CloseModalPage()
 	})
 
 	p.On("click", "#cancel-delete", func(s *ihui.Session, event ihui.Event) bool {
@@ -169,7 +169,7 @@ func (page *PageIndividu) Render(p ihui.Page) {
 			page.Error = err.Error()
 			return true
 		}
-		return s.QuitPage()
+		return s.CloseModalPage()
 	})
 
 	p.On("position", "page", func(s *ihui.Session, event ihui.Event) bool {
