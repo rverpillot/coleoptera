@@ -1,9 +1,5 @@
-bitbucket.org/rverpi90/ihui v0.0.0-20180919123052-df7b86011af2 h1:C9rfiX747w1bycYUCIC8hecsNqGp43TOFPfozQf3PYY=
-bitbucket.org/rverpi90/ihui v0.0.0-20180919123052-df7b86011af2/go.mod h1:8R+n3TV5NX3Z2KSsWJEMEOUVR3b5d6QXOSlQTvWXbIE=
-bitbucket.org/rverpi90/ihui v0.0.0-20180920121344-479cafaa8a60 h1:OALyS9HJrJxWpLCOe8zCjQ6/kIlt01AYS6jQwHevbKw=
-bitbucket.org/rverpi90/ihui v0.0.0-20180920121344-479cafaa8a60/go.mod h1:Fq8nU2Y8N096S5v/5CLAx5FT3DBYY9Z5BXXpVcYc5Ho=
-bitbucket.org/rverpi90/ihui v0.0.0-20180920124425-cdb4b558449a h1:IWL9BDSl5C8HM7Q3nzfA7pmHGt8MnqTMOZauu5jGKJQ=
-bitbucket.org/rverpi90/ihui v0.0.0-20180920124425-cdb4b558449a/go.mod h1:Fq8nU2Y8N096S5v/5CLAx5FT3DBYY9Z5BXXpVcYc5Ho=
+bitbucket.org/rverpi90/ihui v0.0.0-20180921124014-8a616d3486c6 h1:oJFzwM0M0X0pgy2+vsy7iU9sqzGPvKcIVG/8OFeWqs8=
+bitbucket.org/rverpi90/ihui v0.0.0-20180921124014-8a616d3486c6/go.mod h1:Fq8nU2Y8N096S5v/5CLAx5FT3DBYY9Z5BXXpVcYc5Ho=
 cloud.google.com/go v0.28.0 h1:KZ/88LWSw8NxMkjdQyX7LQSGR9PkHr4PaVuNm8zgFq0=
 cloud.google.com/go v0.28.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 github.com/GeertJohan/go.rice v0.0.0-20170420135705-c02ca9a983da h1:UVU3a9pRUyLdnBtn60WjRl0s4SEyJc2ChCY56OAR6wI=
@@ -36,6 +32,11 @@ github.com/jung-kurt/gofpdf v1.0.0 h1:EroSdlP9BOoL5ssLYf3uLJXhCQMMM2fFxCJDKA3Rhn
 github.com/jung-kurt/gofpdf v1.0.0/go.mod h1:7Id9E/uU8ce6rXgefFLlgrJj/GYY22cpxn+r32jIOes=
 github.com/kardianos/osext v0.0.0-20170510131534-ae77be60afb1 h1:PJPDf8OUfOK1bb/NeTKd4f1QXZItOX389VN3B6qC8ro=
 github.com/kardianos/osext v0.0.0-20170510131534-ae77be60afb1/go.mod h1:1NbS8ALrpOvjt0rHPNLyCIeMtbizbir8U//inJ+zuB8=
+github.com/kr/pretty v0.1.0 h1:L/CwN0zerZDmRFUapSPitk6f+Q3+0za1rQkzVuMiMFI=
+github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
+github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
+github.com/kr/text v0.1.0 h1:45sCR5RtlFHMR4UwH9sdQ5TC8v0qDQCHnXt+kaKSTVE=
+github.com/kr/text v0.1.0/go.mod h1:4Jbv+DJW3UT/LiOwJeYQe1efqtUx/iVham/4vfdArNI=
 github.com/lib/pq v1.0.0 h1:X5PMW56eZitiTeO7tKzZxFCSpbFZJtkMMooicw2us9A=
 github.com/lib/pq v1.0.0/go.mod h1:5WUZQaWbwv1U+lTReE5YruASi9Al49XbQIvNi/34Woo=
 github.com/mattn/go-sqlite3 v1.9.0 h1:pDRiWfl+++eC2FEFRy6jXmQlvp4Yh3z1MJKg4UeYM/4=
@@ -49,5 +50,9 @@ golang.org/x/crypto v0.0.0-20180910181607-0e37d006457b/go.mod h1:6SG95UA2DQfeDnf
 golang.org/x/net v0.0.0-20180218175443-cbe0f9307d01/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
 golang.org/x/net v0.0.0-20180911220305-26e67e76b6c3 h1:czFLhve3vsQetD6JOJ8NZZvGQIXlnN3/yXxbT6/awxI=
 golang.org/x/net v0.0.0-20180911220305-26e67e76b6c3/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
+golang.org/x/net v0.0.0-20180921000356-2f5d2388922f h1:QM2QVxvDoW9PFSPp/zy9FgxJLfaWTZlS61KEPtBwacM=
+golang.org/x/net v0.0.0-20180921000356-2f5d2388922f/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
 google.golang.org/appengine v1.1.0 h1:igQkv0AAhEIvTEpD5LIpAfav2eeVO9HBTjvKHVJPRSs=
 google.golang.org/appengine v1.1.0/go.mod h1:EbEs0AVv82hx2wNQdGPgUI5lhzA/G0D9YwlJXL52JkM=
+gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 h1:qIbj1fsPNlZgppZ+VLlY7N33q108Sa+fhmuc+sWQYwY=
+gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=

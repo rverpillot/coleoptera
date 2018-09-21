@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"time"
 
+	"bitbucket.org/rverpi90/coleoptera.v3/model"
 	"bitbucket.org/rverpi90/ihui"
 	"github.com/jinzhu/gorm"
-	"bitbucket.org/rverpi90/coleoptera.v3/model"
 )
 
 type PageIndividu struct {
