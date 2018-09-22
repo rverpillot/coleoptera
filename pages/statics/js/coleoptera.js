@@ -1,7 +1,8 @@
 
-$(document).on("page-create page-update", function (event, data) {
-    doSemanticUI($("#" + data.page))
+$(document).on("page-create page-update", function (event) {
+    doSemanticUI($("#" + event.detail.page))
 })
+
 
 var map_individus;
 var gmarkers = [];

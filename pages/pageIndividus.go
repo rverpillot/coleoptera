@@ -209,6 +209,7 @@ func (page *PageIndividus) Render(p ihui.Page) {
 func (page *PageIndividus) clearSelection() {
 	page.selection = make(map[uint]bool)
 	page.SelectCount = 0
+	page.AllSelected = false
 }
 
 func (page *PageIndividus) printLabels(db *gorm.DB, output io.Writer) error {
