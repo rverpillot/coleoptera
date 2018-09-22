@@ -113,7 +113,7 @@ func main() {
 	}
 	http.Handle(*contextRoot, http.StripPrefix(*contextRoot, http.FileServer(pages.ResourcesBox.HTTPBox())))
 	http.Handle(*contextRoot+"pdf/", http.StripPrefix(*contextRoot+"pdf", http.FileServer(http.Dir(tmpDir))))
-	http.Handle(*contextRoot+"app/", ihui.NewHTTPHandler(start))
+	http.Handle(*contextRoot+"ihui/", ihui.NewHTTPHandler(start))
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
