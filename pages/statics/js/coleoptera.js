@@ -14,7 +14,7 @@ function mapIGN(map, controls) {
     L.geoportalLayer.WMTS({
         layer: "GEOGRAPHICALGRIDSYSTEMS.MAPS"
     },{
-        opacity: 0
+        opacity: 100
     }).addTo(map);
 
     var layerSwitcher = L.geoportalControl.LayerSwitcher();
