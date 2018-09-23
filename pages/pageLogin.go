@@ -1,6 +1,9 @@
 package pages
 
 import (
+	"bytes"
+	"crypto/sha256"
+
 	"bitbucket.org/rverpi90/ihui"
 )
 
@@ -45,7 +48,10 @@ func (page *PageLogin) Render(p ihui.Page) {
 }
 
 func (page *PageLogin) authenticate(username string, password string) bool {
-	if username == "admin" && password == "longicornes" {
+	ref := []byte{149, 247, 20, 30, 104, 99, 228, 222, 33, 243, 48, 132, 125, 204, 248, 211, 26, 247, 51, 254, 100, 182, 64, 47, 199, 119, 60, 197, 4, 127, 234, 167}
+	h := sha256.New()
+	h.Write([]byte(password))
+	if username == "admin" && bytes.Equal(h.Sum(nil), ref) {
 		return true
 	}
 	return false
