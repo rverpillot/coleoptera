@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"strings"
 
-	"bitbucket.org/rverpi90/coleoptera.v3/model"
-	"bitbucket.org/rverpi90/ihui"
+	"github.com/rverpillot/coleoptera.v3/model"
+	"github.com/rverpillot/ihui"
 
 	"github.com/jinzhu/gorm"
 )

@@ -2,8 +2,8 @@ package pages
 
 import (
 	"github.com/jinzhu/gorm"
-	"bitbucket.org/rverpi90/coleoptera.v3/model"
-	"bitbucket.org/rverpi90/ihui"
+	"github.com/rverpillot/coleoptera.v3/model"
+	"github.com/rverpillot/ihui"
 )
 
 type PageEspeces struct {

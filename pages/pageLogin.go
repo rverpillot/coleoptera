@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"crypto/sha256"
 
-	"bitbucket.org/rverpi90/ihui"
+	"github.com/rverpillot/ihui"
 )
 
 type PageLogin struct {

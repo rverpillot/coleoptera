@@ -1,7 +1,7 @@
 package pages
 
 import (
-	"bitbucket.org/rverpi90/ihui"
+	"github.com/rverpillot/ihui"
 )
 
 type Item struct {
