@@ -1,5 +1,4 @@
 vendor/
-go.sum
 coleoptera
 coleoptera.v3
 pages/rice-box.go
