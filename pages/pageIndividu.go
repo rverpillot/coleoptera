@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/rverpillot/coleoptera.v3/model"
+	"github.com/rverpillot/coleoptera/model"
 	"github.com/rverpillot/ihui"
 	"github.com/jinzhu/gorm"
 )

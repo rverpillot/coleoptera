@@ -2,7 +2,7 @@ package pages
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/rverpillot/coleoptera.v3/model"
+	"github.com/rverpillot/coleoptera/model"
 	"github.com/rverpillot/ihui"
 )
 

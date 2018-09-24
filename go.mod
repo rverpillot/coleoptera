@@ -1,8 +1,6 @@
-module github.com/rverpillot/coleoptera.v3
+module github.com/rverpillot/coleoptera
 
 require (
-	bitbucket.org/rverpi90/coleoptera.v3 v3.0.3+incompatible // indirect
-	bitbucket.org/rverpi90/ihui v0.0.0-20180922114418-d7d09ee549b3
 	cloud.google.com/go v0.28.0 // indirect
 	github.com/GeertJohan/go.rice v0.0.0-20170420135705-c02ca9a983da
 	github.com/clbanning/mxj v1.8.2
@@ -19,7 +17,7 @@ require (
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/lib/pq v1.0.0 // indirect
 	github.com/mattn/go-sqlite3 v1.9.0 // indirect
-	github.com/rverpillot/ihui v0.0.0-20180923123051-8946e7dd2f8a
+	github.com/rverpillot/ihui v0.0.0-20180924070055-6733fd771485
 	golang.org/x/crypto v0.0.0-20180910181607-0e37d006457b // indirect
 	golang.org/x/net v0.0.0-20180921000356-2f5d2388922f // indirect
 	google.golang.org/appengine v1.1.0 // indirect

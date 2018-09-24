@@ -15,7 +15,7 @@ import (
 
 	_ "net/http/pprof"
 
-	"github.com/rverpillot/coleoptera.v3/pages"
+	"github.com/rverpillot/coleoptera/pages"
 	"github.com/rverpillot/ihui"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
