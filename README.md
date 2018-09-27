@@ -5,7 +5,7 @@ Edition d'étiquettes.
 - CSS: [semantic UI](https://semantic-ui.com)
 - Framework: [ihui](https://github.com/rverpillot/ihui)
 
-# Vue des especes
+# Vue des espèces
 ![Especes](/doc/especes.png)
 
 # Vue des individus
