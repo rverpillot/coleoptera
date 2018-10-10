@@ -135,11 +135,11 @@ div.ui.container style="margin-top: 5em;"
     div.content 
       p Supprimer cette donnée ?
     div.actions
-      div.ui.positive.button id="cancel-delete" Non
-      div.ui.red.right.button id="confirm-delete" Oui
-
+      div.ui.deny.button id="cancel-delete" Non
+      div.ui.red.right.approve.button id="confirm-delete" Oui
 
   {{else}}
+
   {{with .Individu}}
   h3.ui.top.attached.header {{.Espece.NomEspece}}
   div.ui.segment.attached 

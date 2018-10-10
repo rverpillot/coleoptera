@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/jinzhu/gorm"
 	"github.com/rverpillot/coleoptera/model"
 	"github.com/rverpillot/ihui"
-	"github.com/jinzhu/gorm"
 )
 
 type PageIndividu struct {
@@ -121,6 +121,11 @@ func (page *PageIndividu) Render(p ihui.Page) {
 		return true
 	})
 
+	p.On("click", "#delete", func(s *ihui.Session, event ihui.Event) bool {
+		page.Delete = true
+		return true
+	})
+
 	p.On("click", "#confirm-delete", func(s *ihui.Session, event ihui.Event) bool {
 		if page.Individu.ID > 0 {
 			if err := db.Delete(page.Individu).Error; err != nil {
@@ -133,13 +138,7 @@ func (page *PageIndividu) Render(p ihui.Page) {
 	})
 
 	p.On("click", "#cancel-delete", func(s *ihui.Session, event ihui.Event) bool {
-		page.Delete = false
-		return true
-	})
-
-	p.On("click", "#delete", func(s *ihui.Session, event ihui.Event) bool {
-		page.Delete = false
-		return true
+		return s.CloseModalPage()
 	})
 
 	p.On("click", "#add-espece", func(s *ihui.Session, event ihui.Event) bool {
