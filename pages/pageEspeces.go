@@ -10,6 +10,7 @@ type PageEspeces struct {
 	tmpl            *ihui.PageAce
 	menu            *Menu
 	Classifications []model.Classification
+	Nb              int
 }
 
 func NewPageEspeces(menu *Menu) *PageEspeces {
@@ -20,6 +21,7 @@ func NewPageEspeces(menu *Menu) *PageEspeces {
 
 func (page *PageEspeces) Render(p ihui.Page) {
 	db := p.Get("db").(*gorm.DB)
+	page.Nb = model.CountAllEspeces(db)
 	page.Classifications = model.AllClassifications(db)
 
 	page.tmpl.Render(p)

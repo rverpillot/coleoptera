@@ -52,6 +52,12 @@ func AllEspeces(db *gorm.DB) []Espece {
 	return especes
 }
 
+func CountAllEspeces(db *gorm.DB) int {
+	nb := 0
+	db.Model(&Espece{}).Count(&nb)
+	return nb
+}
+
 func AllDepartements(db *gorm.DB) []Departement {
 	var departements []Departement
 	if err := db.Order("code").Find(&departements).Error; err != nil {

@@ -1,6 +1,7 @@
 div#menu
 
-div.ui.container style="margin-top: 7em;"  
+div.ui.container style="margin-top: 7em;"
+  {{printf "%d espèces." .Nb}}
   ul
     {{range .Classifications}}
     li.classification {{.Nom}}
