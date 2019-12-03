@@ -62,7 +62,7 @@ func (page *PageEspece) Render(p ihui.Page) {
 		return s.CloseModalPage()
 	})
 
-	p.On("submit", "formm", func(s *ihui.Session, ev ihui.Event) bool {
+	p.On("submit", "form", func(s *ihui.Session, ev ihui.Event) bool {
 		data := ev.Data.(map[string]interface{})
 		id, _ := strconv.Atoi(data["classification"].(string))
 
