@@ -67,8 +67,8 @@ func (page *PageEspece) Render(p ihui.Page) {
 		id, _ := strconv.Atoi(data["classification"].(string))
 
 		page.Espece.ClassificationID = uint(id)
-		page.Espece.Genre = data["genre"].(string)
-		page.Espece.SousGenre = strings.Trim(data["sous_genre"].(string), "()")
+		page.Espece.Genre = strings.Title(data["genre"].(string))
+		page.Espece.SousGenre = strings.Title(strings.Trim(data["sous_genre"].(string), "()"))
 
 		page.Espece.Espece = data["espece"].(string)
 		page.Espece.SousEspece = data["sous_espece"].(string)
