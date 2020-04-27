@@ -15,8 +15,8 @@ func LoadIndividus(db *gorm.DB, individus *[]Individu, index int, size int, sear
 	} else {
 		if search != "" {
 			search = "%" + search + "%"
-			db = db.Where("especes.genre like ? or especes.sous_genre like ? or especes.espece like ? or especes.sous_espece like ? or site like ? or commune like ? or code like ?",
-				search, search, search, search, search, search, search)
+			whereClause := `especes.genre like ? or especes.sous_genre like ? or especes.espece like ? or especes.sous_espece like ? or site like ? or commune like ? or code like ? or classifications.nom like ?`
+			db = db.Where(whereClause, search, search, search, search, search, search, search, search)
 		}
 	}
 
