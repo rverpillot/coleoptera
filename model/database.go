@@ -8,16 +8,15 @@ import (
 
 func LoadIndividus(db *gorm.DB, individus *[]Individu, index int, size int, search string, espece_id uint, order string) int {
 	db = db.Joins("join especes on espece_id=especes.id")
+	db = db.Joins("join classifications on especes.classification_id=classifications.id")
 
 	if espece_id != 0 {
-		db = db.
-			Where("especes.id = ?", espece_id)
+		db = db.Where("especes.id = ?", espece_id)
 	} else {
 		if search != "" {
 			search = "%" + search + "%"
-			db = db.
-				Where("especes.genre like ? or especes.sous_genre like ? or especes.espece like ? or especes.sous_espece like ? or site like ? or commune like ? or code like ?",
-					search, search, search, search, search, search, search)
+			db = db.Where("especes.genre like ? or especes.sous_genre like ? or especes.espece like ? or especes.sous_espece like ? or site like ? or commune like ? or code like ?",
+				search, search, search, search, search, search, search)
 		}
 	}
 
@@ -25,6 +24,7 @@ func LoadIndividus(db *gorm.DB, individus *[]Individu, index int, size int, sear
 	if err := db.Model(&Individu{}).Count(&count).
 		Offset(index).Limit(size).
 		Order(order).
+		Preload("Espece.Classification").
 		Preload("Espece").
 		Find(individus).Error; err != nil {
 		log.Println(err)

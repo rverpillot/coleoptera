@@ -33,6 +33,7 @@ div.ui.container style="margin-top: 7em;"
             {{else}}
             input.hidden tabindex="0" type="checkbox" class="selectAll"
             {{end}}
+        th class={{ .ShowSort "classifications.nom" }} data-id="classifications.nom" Classification
         th class={{ .ShowSort "date" }} data-id="date" Date
         th class={{ .ShowSort "especes.genre" }} data-id="especes.genre" Genre/Espèce
         th class={{ .ShowSort "site" }} data-id="site" Site
@@ -49,6 +50,7 @@ div.ui.container style="margin-top: 7em;"
             {{else}}
             input.hidden tabindex="0" type="checkbox" class="select" data-id="{{.ID}}"
             {{end}}
+        td {{.Espece.Classification.Nom}}
         td {{.Date.Format "02/01/2006"}}
         td {{.Espece.NomEspece}}
         td {{.Site}}
