@@ -12,10 +12,13 @@ div.ui.container style="margin-top: 7em;"
         div.ui.button.fluid id="reset" Tout
         {{end}}
       {{if and (not .ShowAllButton) .Admin}}
-      div.right.floated.column.five.wide
+      div.right.floated.column.six.wide
         div.ui.button.basic.primary.right.floated id="add" 
           i.icon.plus
-          | Ajouter une donnée
+          | Ajouter
+        div.ui.button.basic.primary.right.floated id="export" target="export"
+          i.icon class="save icon"
+          | Exporter
         {{if (gt .SelectCount 0)}}
         a.ui.secondary.basic.button.right.floated id="printLabels" href="labels.html" target="print"
           i.icon.print

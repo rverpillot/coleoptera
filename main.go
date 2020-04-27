@@ -15,10 +15,10 @@ import (
 
 	_ "net/http/pprof"
 
-	"github.com/rverpillot/coleoptera/pages"
-	"github.com/rverpillot/ihui"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"github.com/rverpillot/coleoptera/pages"
+	"github.com/rverpillot/ihui"
 )
 
 var (
@@ -112,7 +112,7 @@ func main() {
 		*contextRoot += "/"
 	}
 	http.Handle(*contextRoot, http.StripPrefix(*contextRoot, http.FileServer(pages.ResourcesBox.HTTPBox())))
-	http.Handle(*contextRoot+"pdf/", http.StripPrefix(*contextRoot+"pdf", http.FileServer(http.Dir(tmpDir))))
+	http.Handle(*contextRoot+"tmp/", http.StripPrefix(*contextRoot+"tmp", http.FileServer(http.Dir(tmpDir))))
 	http.Handle(*contextRoot+"ihui/", ihui.NewHTTPHandler(start))
 
 	c := make(chan os.Signal, 1)

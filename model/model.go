@@ -3,6 +3,7 @@ package model
 import (
 	"bytes"
 	"database/sql"
+	"fmt"
 	"time"
 )
 
@@ -60,4 +61,8 @@ type Individu struct {
 	Latitude    float64
 	Recolteur   string
 	Selected    bool `gorm:"-"`
+}
+
+func (individu *Individu) Localization() string {
+	return fmt.Sprintf("%f,%f", individu.Latitude, individu.Longitude)
 }

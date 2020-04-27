@@ -9,36 +9,39 @@ import (
 	"os"
 	"path"
 	"strconv"
+	"strings"
 	"time"
 
-	"github.com/rverpillot/coleoptera/model"
-	"github.com/rverpillot/ihui"
 	"github.com/jinzhu/gorm"
 	"github.com/jung-kurt/gofpdf"
+	"github.com/rverpillot/coleoptera/model"
+	"github.com/rverpillot/ihui"
 )
 
 type PageIndividus struct {
-	tmpl          *ihui.PageAce
-	menu          *Menu
-	selection     map[uint]bool
-	SelectCount   int
-	AllSelected   bool
-	Pagination    *ihui.Paginator
-	Individus     []model.Individu
-	Admin         bool
-	Search        string
-	ShowAllButton bool
-	fieldSort     string
-	ascendingSort bool
+	tmpl           *ihui.PageAce
+	menu           *Menu
+	selection      map[uint]bool
+	SelectCount    int
+	AllSelected    bool
+	Pagination     *ihui.Paginator
+	Individus      []model.Individu
+	Admin          bool
+	Search         string
+	ShowAllButton  bool
+	fieldSort      string
+	ascendingSort  bool
+	ExportFilename string
 }
 
 func NewPageIndividus(menu *Menu) *PageIndividus {
 	return &PageIndividus{
-		tmpl:       newAceTemplate("individus.ace", nil),
-		menu:       menu,
-		selection:  make(map[uint]bool),
-		Pagination: ihui.NewPaginator(60),
-		fieldSort:  "date",
+		tmpl:           newAceTemplate("individus.ace", nil),
+		menu:           menu,
+		selection:      make(map[uint]bool),
+		Pagination:     ihui.NewPaginator(60),
+		fieldSort:      "date",
+		ExportFilename: "export.csv",
 	}
 }
 
@@ -198,12 +201,77 @@ func (page *PageIndividus) Render(p ihui.Page) {
 		}
 		s.Script(`
 		win = window.open("","print")
-		if (win) {win.location = "pdf/%s"}
+		if (win) {win.location = "tmp/%s"}
 		`, path.Base(f.Name()))
 
 		page.clearSelection()
 		return true
 	})
+
+	p.On("click", "#export", func(s *ihui.Session, event ihui.Event) bool {
+		tmpDir := path.Join(os.TempDir(), "coleoptera")
+
+		f, err := ioutil.TempFile(tmpDir, "coleoptera-*.csv")
+		if err != nil {
+			log.Print(err)
+			return false
+		}
+		defer f.Close()
+
+		if err := export(db, f); err != nil {
+			log.Print(err)
+			return false
+		}
+		s.Script(`
+		win = window.open("","export")
+		if (win) {win.location = "tmp/%s"}
+		`, path.Base(f.Name()))
+		return true
+	})
+}
+
+func export(db *gorm.DB, output io.Writer) error {
+	var count int
+	var individus []model.Individu
+
+	if err := db.Model(&model.Individu{}).Count(&count).
+		Preload("Espece.Classification").
+		Preload("Espece").
+		Find(&individus).Error; err != nil {
+		return err
+	}
+	headers := []string{
+		"Classification",
+		"Espece",
+		"Date",
+		"Site",
+		"GPS",
+		"Altitude",
+		"Commune",
+		"Code",
+		"Sexe",
+		"Commentaire",
+		"Recolteur",
+	}
+	output.Write([]byte(strings.Join(headers, "\t") + "\n"))
+
+	for _, individu := range individus {
+		data := []string{
+			individu.Espece.Classification.Nom,
+			individu.Espece.NomEspece(),
+			individu.Date.Format("02/01/2006"),
+			individu.Site,
+			individu.Localization(),
+			fmt.Sprintf("%d", individu.Altitude.Int64),
+			individu.Commune,
+			individu.Code,
+			individu.Sexe,
+			individu.Commentaire.String,
+			individu.Recolteur,
+		}
+		output.Write([]byte(strings.Join(data, "\t") + "\n"))
+	}
+	return nil
 }
 
 func (page *PageIndividus) clearSelection() {
