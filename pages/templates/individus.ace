@@ -37,11 +37,11 @@ div.ui.container style="margin-top: 7em;"
             input.hidden tabindex="0" type="checkbox" class="selectAll"
             {{end}}
         th class={{ .ShowSort "classifications.nom" }} data-id="classifications.nom" Classification
-        th class={{ .ShowSort "date" }} data-id="date" Date
         th class={{ .ShowSort "especes.genre" }} data-id="especes.genre" Genre/Espèce
         th class={{ .ShowSort "site" }} data-id="site" Site
         th class={{ .ShowSort "commune" }} data-id="commune" Commune
         th class={{ .ShowSort "code" }} data-id="code" Code
+        th class={{ .ShowSort "date" }} data-id="date" Date
         th
     tbody
     {{range .Individus}}
@@ -54,11 +54,11 @@ div.ui.container style="margin-top: 7em;"
             input.hidden tabindex="0" type="checkbox" class="select" data-id="{{.ID}}"
             {{end}}
         td {{.Espece.Classification.Nom}}
-        td {{.Date.Format "02/01/2006"}}
         td {{.Espece.NomEspece}}
         td {{.Site}}
         td {{.Commune}}
         td {{.Code}}
+        td {{.Date.Format "02/01/2006"}}
         td 
           a href="#" data-id="{{.ID}}" class="detail"
             i.icon.zoom

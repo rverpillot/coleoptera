@@ -19,29 +19,27 @@ import (
 )
 
 type PageIndividus struct {
-	tmpl           *ihui.PageAce
-	menu           *Menu
-	selection      map[uint]bool
-	SelectCount    int
-	AllSelected    bool
-	Pagination     *ihui.Paginator
-	Individus      []model.Individu
-	Admin          bool
-	Search         string
-	ShowAllButton  bool
-	fieldSort      string
-	ascendingSort  bool
-	ExportFilename string
+	tmpl          *ihui.PageAce
+	menu          *Menu
+	selection     map[uint]bool
+	SelectCount   int
+	AllSelected   bool
+	Pagination    *ihui.Paginator
+	Individus     []model.Individu
+	Admin         bool
+	Search        string
+	ShowAllButton bool
+	fieldSort     string
+	ascendingSort bool
 }
 
 func NewPageIndividus(menu *Menu) *PageIndividus {
 	return &PageIndividus{
-		tmpl:           newAceTemplate("individus.ace", nil),
-		menu:           menu,
-		selection:      make(map[uint]bool),
-		Pagination:     ihui.NewPaginator(60),
-		fieldSort:      "date",
-		ExportFilename: "export.csv",
+		tmpl:       newAceTemplate("individus.ace", nil),
+		menu:       menu,
+		selection:  make(map[uint]bool),
+		Pagination: ihui.NewPaginator(60),
+		fieldSort:  "date",
 	}
 }
 
@@ -222,10 +220,7 @@ func (page *PageIndividus) Render(p ihui.Page) {
 			log.Print(err)
 			return false
 		}
-		s.Script(`
-		win = window.open("","export")
-		if (win) {win.location = "tmp/%s"}
-		`, path.Base(f.Name()))
+		s.Script(`window.open("/tmp/%s","export")`, path.Base(f.Name()))
 		return true
 	})
 }
@@ -243,13 +238,13 @@ func export(db *gorm.DB, output io.Writer) error {
 	headers := []string{
 		"Classification",
 		"Espece",
-		"Date",
 		"Site",
 		"GPS",
 		"Altitude",
 		"Commune",
 		"Code",
 		"Sexe",
+		"Date",
 		"Commentaire",
 		"Recolteur",
 	}
@@ -259,13 +254,13 @@ func export(db *gorm.DB, output io.Writer) error {
 		data := []string{
 			individu.Espece.Classification.Nom,
 			individu.Espece.NomEspece(),
-			individu.Date.Format("02/01/2006"),
 			individu.Site,
 			individu.Localization(),
 			fmt.Sprintf("%d", individu.Altitude.Int64),
 			individu.Commune,
 			individu.Code,
 			individu.Sexe,
+			individu.Date.Format("02/01/2006"),
 			individu.Commentaire.String,
 			individu.Recolteur,
 		}
