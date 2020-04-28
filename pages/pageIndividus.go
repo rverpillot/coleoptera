@@ -220,7 +220,7 @@ func (page *PageIndividus) Render(p ihui.Page) {
 			log.Print(err)
 			return false
 		}
-		s.Script(`window.open("/tmp/%s","export")`, path.Base(f.Name()))
+		s.Script(`window.open("tmp/%s","export")`, path.Base(f.Name()))
 		return true
 	})
 }
