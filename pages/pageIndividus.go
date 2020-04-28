@@ -261,7 +261,7 @@ func export(db *gorm.DB, output io.Writer) error {
 			individu.Code,
 			individu.Sexe,
 			individu.Date.Format("02/01/2006"),
-			individu.Commentaire.String,
+			strings.Replace(individu.Commentaire.String, "\n", "", -1),
 			individu.Recolteur,
 		}
 		output.Write([]byte(strings.Join(data, "\t") + "\n"))
