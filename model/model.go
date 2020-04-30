@@ -15,6 +15,7 @@ type Departement struct {
 type Classification struct {
 	ID      uint
 	Nom     string
+	Ordre   sql.NullInt64
 	Especes []Espece
 }
 

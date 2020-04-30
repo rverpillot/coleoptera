@@ -237,6 +237,7 @@ func export(db *gorm.DB, output io.Writer) error {
 	}
 	headers := []string{
 		"Classification",
+		"Ordre",
 		"Espece",
 		"Site",
 		"GPS",
@@ -251,8 +252,13 @@ func export(db *gorm.DB, output io.Writer) error {
 	output.Write([]byte(strings.Join(headers, "\t") + "\n"))
 
 	for _, individu := range individus {
+		ordre := ""
+		if individu.Espece.Classification.Ordre.Valid {
+			ordre = fmt.Sprintf("%d", individu.Espece.Classification.Ordre.Int64)
+		}
 		data := []string{
 			individu.Espece.Classification.Nom,
+			ordre,
 			individu.Espece.NomEspece(),
 			individu.Site,
 			individu.Localization(),
