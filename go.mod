@@ -1,19 +1,38 @@
 module github.com/rverpillot/coleoptera
 
+go 1.18
+
 require (
-	github.com/GeertJohan/go.rice v1.0.0
+	github.com/GeertJohan/go.rice v1.0.2
 	github.com/clbanning/mxj v1.8.4
-	github.com/denisenkom/go-mssqldb v0.0.0-20200206145737-bbfc9a55622e // indirect
-	github.com/erikstmartin/go-testdb v0.0.0-20160219214506-8d10e4a1bae5 // indirect
-	github.com/go-sql-driver/mysql v1.5.0 // indirect
-	github.com/jinzhu/gorm v1.9.1
-	github.com/jinzhu/inflection v1.0.0 // indirect
-	github.com/jinzhu/now v1.1.1 // indirect
+	github.com/jinzhu/gorm v1.9.16
 	github.com/jung-kurt/gofpdf v1.16.2
-	github.com/lib/pq v1.2.0 // indirect
-	github.com/mattn/go-sqlite3 v1.12.0 // indirect
-	github.com/rverpillot/ihui v0.0.0-20190928101859-32ae70653eeb
-	golang.org/x/net v0.0.0-20190603091049-60506f45cf65 // indirect
+	github.com/rverpillot/ihui v1.0.0
 )
 
-go 1.13
+require (
+	github.com/GeertJohan/go.incremental v1.0.0 // indirect
+	github.com/PuerkitoBio/goquery v1.8.0 // indirect
+	github.com/akavel/rsrc v0.8.0 // indirect
+	github.com/andybalholm/cascadia v1.3.1 // indirect
+	github.com/daaku/go.zipexe v1.0.1 // indirect
+	github.com/denisenkom/go-mssqldb v0.12.0 // indirect
+	github.com/elazarl/go-bindata-assetfs v1.0.1 // indirect
+	github.com/erikstmartin/go-testdb v0.0.0-20160219214506-8d10e4a1bae5 // indirect
+	github.com/go-sql-driver/mysql v1.6.0 // indirect
+	github.com/golang-sql/civil v0.0.0-20220223132316-b832511892a9 // indirect
+	github.com/golang-sql/sqlexp v0.0.0-20170517235910-f1bb20e5a188 // indirect
+	github.com/google/uuid v1.3.0 // indirect
+	github.com/gorilla/websocket v1.5.0 // indirect
+	github.com/jessevdk/go-flags v1.4.0 // indirect
+	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.5 // indirect
+	github.com/lib/pq v1.10.5 // indirect
+	github.com/mattn/go-sqlite3 v1.14.13 // indirect
+	github.com/nkovacs/streamquote v1.0.0 // indirect
+	github.com/valyala/bytebufferpool v1.0.0 // indirect
+	github.com/valyala/fasttemplate v1.0.1 // indirect
+	github.com/yosssi/ace v0.0.5 // indirect
+	golang.org/x/crypto v0.0.0-20220513210258-46612604a0f9 // indirect
+	golang.org/x/net v0.0.0-20220513224357-95641704303c // indirect
+)

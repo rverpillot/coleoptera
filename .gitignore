@@ -1,6 +1,6 @@
+.DS_Store
 vendor/
 coleoptera
 coleoptera.v3
 pages/rice-box.go
-
 pages/statics/autoconf.json

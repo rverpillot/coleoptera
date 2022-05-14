@@ -1,7 +1,7 @@
 div.ui.inverted.fixed.menu
   div.header.item  
     img src="images/icon.png"
-    p data-position="right bottom" data-tooltip="3.1.9 © Régis Verpillot" data-inverted="" Coleoptera 
+    p data-position="right bottom" data-tooltip="3.1.10 © Régis Verpillot" data-inverted="" Coleoptera 
   {{range .Items}}
   a.item class="menu-item {{if .Active}}active teal{{end}}" data-id="{{.Name}}" {{.Label}}
   {{end}}

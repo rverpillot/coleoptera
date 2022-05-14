@@ -6,7 +6,7 @@ build:
 	cd pages && rice embed-go
 
 static: 
-	go build -ldflags "-linkmode external -extldflags -static" -v
+	CGO_ENABLED=0 go build -v
 	cd pages && rice append --exec ../coleoptera
 
 docker: static Dockerfile
