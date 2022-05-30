@@ -84,7 +84,7 @@ func Markers(db *gorm.DB, search string, espece_id uint) ([]Marker, error) {
 func postGeoportail(xml string) (mxj.Map, error) {
 	log.Println(xml)
 
-	req, err := http.NewRequest("POST", "http://wxs.ign.fr/1zt39dn13glty5q8zjcbcsbs/geoportail/ols", strings.NewReader(xml))
+	req, err := http.NewRequest("POST", "http://wxs.ign.fr/calcul/geoportail/ols", strings.NewReader(xml))
 	if err != nil {
 		return nil, err
 	}
@@ -107,7 +107,7 @@ func postGeoportail(xml string) (mxj.Map, error) {
 }
 
 func getAltitude(lat float64, lng float64) (int64, error) {
-	url := fmt.Sprintf("http://wxs.ign.fr/1zt39dn13glty5q8zjcbcsbs/alti/rest/elevation.json?lat=%f&lon=%f&zonly=true", lat, lng)
+	url := fmt.Sprintf("http://wxs.ign.fr/calcul/alti/rest/elevation.json?lat=%f&lon=%f&zonly=true", lat, lng)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return 0, err
