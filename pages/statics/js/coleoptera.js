@@ -9,6 +9,9 @@ var gmarkers = [];
 
 function mapIGN(map, controls) {
     L.geoportalLayer.WMTS({
+        layer: "ORTHOIMAGERY.ORTHO-SAT.SPOT.2021"
+    }).addTo(map);
+    L.geoportalLayer.WMTS({
         layer: "ORTHOIMAGERY.ORTHOPHOTOS"
     }).addTo(map);
     L.geoportalLayer.WMTS({
