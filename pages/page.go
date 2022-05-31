@@ -1,18 +1,20 @@
 package pages
 
 import (
+	"embed"
+	"path"
+
 	"github.com/rverpillot/ihui"
-
-	rice "github.com/GeertJohan/go.rice"
 )
 
-var (
-	templateBox  = rice.MustFindBox("templates")
-	ResourcesBox = rice.MustFindBox("statics")
-)
+//go:embed templates
+var TemplatesFs embed.FS
+
+//go:embed statics
+var ResourcesFs embed.FS
 
 func newAceTemplate(name string, model interface{}) *ihui.PageAce {
-	content, err := templateBox.Bytes(name)
+	content, err := TemplatesFs.ReadFile(path.Join("templates", name))
 	if err != nil {
 		panic(err)
 	}

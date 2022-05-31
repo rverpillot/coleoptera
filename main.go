@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io/fs"
 	"log"
 	"net/http"
 	"os"
@@ -111,7 +112,8 @@ func main() {
 	if !strings.HasSuffix(*contextRoot, "/") {
 		*contextRoot += "/"
 	}
-	http.Handle(*contextRoot, http.StripPrefix(*contextRoot, http.FileServer(pages.ResourcesBox.HTTPBox())))
+	staticsFS, _ := fs.Sub(pages.ResourcesFs, "statics")
+	http.Handle(*contextRoot, http.StripPrefix(*contextRoot, http.FileServer(http.FS(staticsFS))))
 	http.Handle(*contextRoot+"tmp/", http.StripPrefix(*contextRoot+"tmp", http.FileServer(http.Dir(tmpDir))))
 	http.Handle(*contextRoot+"ihui/", ihui.NewHTTPHandler(start))
 
