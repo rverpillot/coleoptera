@@ -23,7 +23,7 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.13 // indirect
 	github.com/yosssi/ace v0.0.5 // indirect
 	golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e // indirect
-	golang.org/x/net v0.0.0-20220526153639-5463443f8c37 // indirect
+	golang.org/x/net v0.7.0 // indirect
 )
 
 // replace github.com/rverpillot/ihui v1.1.0 => ../ihui
