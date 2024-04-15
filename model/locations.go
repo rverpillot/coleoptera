@@ -1,15 +1,11 @@
 package model
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
-	"net/http"
-	"strconv"
-	"strings"
 	"time"
 
-	"github.com/clbanning/mxj"
+	"github.com/go-resty/resty/v2"
 	"github.com/jinzhu/gorm"
 )
 
@@ -22,18 +18,6 @@ type Marker struct {
 	Location Location
 	Infos    []string
 }
-
-const apiKey = "1zt39dn13glty5q8zjcbcsbs"
-
-const xmlPost = `<?xml version="1.0" encoding="UTF-8"?>
-<XLS version="1.2"
-  xmlns="http://www.opengis.net/xls"
-  xmlns:gml="http://www.opengis.net/gml"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.opengis.net/xls http://schemas.opengis.net/ols/1.2/olsAll.xsd">
-    <RequestHeader/>
-    %s
-</XLS>`
 
 func Markers(db *gorm.DB, search string, espece_id uint) ([]Marker, error) {
 	locations := make(map[Location][]string)
@@ -81,128 +65,66 @@ func Markers(db *gorm.DB, search string, espece_id uint) ([]Marker, error) {
 	return result, nil
 }
 
-func postGeoportail(xml string) (mxj.Map, error) {
-	log.Println(xml)
-
-	req, err := http.NewRequest("POST", "http://wxs.ign.fr/calcul/geoportail/ols", strings.NewReader(xml))
+func getAltitude(lng, lat float64) (int64, error) {
+	url := "https://data.geopf.fr/altimetrie/1.0/calcul/alti/rest/elevation.json"
+	resMap := make(map[string]interface{})
+	client := resty.New()
+	resp, err := client.R().
+		SetHeader("Accept", "application/json").
+		SetQueryParams(map[string]string{
+			"lat":      fmt.Sprintf("%f", lat),
+			"lon":      fmt.Sprintf("%f", lng),
+			"resource": "ign_rge_alti_wld",
+			"zonly":    "true",
+		}).
+		SetResult(&resMap).
+		Get(url)
 	if err != nil {
-		return nil, err
+		return 0, err
 	}
-	req.Header.Add("Referer", "http://localhost")
-	req.Header.Add("Content-Type", "application/xml")
-	// log.Println(req)
-	client := new(http.Client)
-	res, err := client.Do(req)
-	if err != nil {
-		return nil, err
+	if resp.StatusCode() != 200 {
+		return 0, fmt.Errorf("error %d", resp.StatusCode())
 	}
-
-	mv, err := mxj.NewMapXmlReader(res.Body)
-	if err != nil {
-		return nil, err
+	elevations := resMap["elevations"].([]interface{})
+	if len(elevations) == 0 {
+		return 0, fmt.Errorf("no elevation found")
 	}
-	data, _ := mv.Xml()
-	log.Println(string(data))
-	return mv, nil
+	elevation := elevations[0].(float64)
+	return int64(elevation), nil
 }
 
-func getAltitude(lat float64, lng float64) (int64, error) {
-	url := fmt.Sprintf("http://wxs.ign.fr/calcul/alti/rest/elevation.json?lat=%f&lon=%f&zonly=true", lat, lng)
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return 0, err
-	}
-	req.Header.Add("Referer", "http://localhost")
-	client := new(http.Client)
-	res, err := client.Do(req)
-	if err != nil {
-		return 0, err
-	}
-
-	type Altitude struct {
-		Elevations []float64
-	}
-	var elevation Altitude
-	dec := json.NewDecoder(res.Body)
-	err = dec.Decode(&elevation)
-	if err != nil {
-		return 0, err
-	}
-
-	log.Println(elevation)
-
-	altitude := int64(0)
-	if len(elevation.Elevations) > 0 {
-		altitude = int64(elevation.Elevations[0])
-	}
-
-	return altitude, nil
-}
-
-func FindLocation(lat float64, lng float64) (string, string, int64, error) {
-	requestXML := fmt.Sprintf(`
-    <Request methodName="ReverseGeocodeRequest" maximumResponses="1" requestID="1" version="1.2">
-       <ReverseGeocodeRequest>
-          <ReverseGeocodePreference>PositionOfInterest</ReverseGeocodePreference>
-          <Position>
-             <gml:Point>
-                <gml:pos>%f %f</gml:pos>
-			 </gml:Point>
-			 <gml:CircleByCenterPoint>
-                <gml:pos>%f %f</gml:pos>
-                <gml:radius>500</gml:radius>
-             </gml:CircleByCenterPoint>
-          </Position>
-       </ReverseGeocodeRequest>
-  </Request>`, lat, lng, lat, lng)
-	xml := fmt.Sprintf(xmlPost, requestXML)
-	res, err := postGeoportail(xml)
+func FindLocation(lng, lat float64) (string, string, int64, error) {
+	url := "https://data.geopf.fr/geocodage/reverse"
+	resMap := make(map[string]interface{})
+	client := resty.New()
+	// client.AllowGetMethodPayload = true
+	// client.SetDebug(true)
+	resp, err := client.R().
+		SetHeader("Accept", "application/json").
+		SetQueryParam("searchgeom", fmt.Sprintf(`{"type": "Circle", "coordinates": [%f,%f], "radius": 500}`, lng, lat)).
+		SetResult(&resMap).
+		Get(url)
 	if err != nil {
 		return "", "", 0, err
 	}
+	if resp.StatusCode() != 200 {
+		return "", "", 0, fmt.Errorf("error %d", resp.StatusCode())
+	}
+	log.Println("findLocation", resMap)
+	features := resMap["features"].([]interface{})
+	if len(features) == 0 {
+		return "", "", 0, fmt.Errorf("no location found")
+	}
+	properties := features[0].(map[string]interface{})["properties"].(map[string]interface{})
 
 	commune := ""
 	code := ""
-
-	communes, _ := res.ValuesForKey("Place", "-type:Commune")
-	log.Print(communes)
-	if len(communes) > 0 {
-		commune = communes[0].(map[string]interface{})["#text"].(string)
-		codes, _ := res.ValuesForKey("PostalCode")
-		code = codes[0].(string)
+	if properties["city"] != nil {
+		commune = properties["city"].(string)
 	}
-	codes, _ := res.ValuesForKey("Place", "-type:Departement")
-	log.Print(codes)
-	if len(codes) > 0 {
-		code = codes[0].(map[string]interface{})["#text"].(string)
+	if properties["citycode"] != nil {
+		code = properties["citycode"].(string)[0.:2]
 	}
-
-	altitude, err := getAltitude(lat, lng)
-
+	altitude, err := getAltitude(lng, lat)
 	return commune, code, altitude, err
-}
-
-func FindLatLng(commune string) (float64, float64, error) {
-	requestXML := fmt.Sprintf(`
-    <Request methodName="LocationUtilityService" requestID="2" version="1.2">
-       <GeocodeRequest returnFreeForm="false">
-         <Address countryCode="PositionOfInterest">
-                <freeFormAddress>%s</freeFormAddress>
-         </Address>
-       </GeocodeRequest>
-	</Request>`, commune)
-	xml := fmt.Sprintf(xmlPost, requestXML)
-	res, err := postGeoportail(xml)
-	if err != nil {
-		return 0, 0, err
-	}
-	log.Println(res)
-	positions, _ := res.ValuesForKey("pos")
-	if len(positions) == 0 {
-		return 0, 0, fmt.Errorf("%s not found", commune)
-	}
-	pos := strings.Split(positions[0].(string), " ")
-	lat, err := strconv.ParseFloat(pos[0], 64)
-	lng, err := strconv.ParseFloat(pos[1], 64)
-	return lat, lng, err
 }

@@ -33,6 +33,7 @@ func start(session *ihui.Session) {
 	session.Set("db", db)
 	session.Set("admin", *debug)
 	session.Set("tmpDir", tmpDir)
+	session.Set("debug", *debug)
 
 	menu := pages.NewMenu()
 	menu.Add("especes", "Espèces", pages.NewPageEspeces(menu))

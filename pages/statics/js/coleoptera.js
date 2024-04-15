@@ -1,5 +1,5 @@
 
-$(document).on("page-create page-update", function (event) {
+$(document).on("page-created page-updated", function (event) {
     doSemanticUI($("#" + event.detail.page))
 })
 
@@ -69,7 +69,7 @@ function createMap(tag, center, zoom) {
     map_individus.on("moveend zoomend", function (ev) {
         var center = map_individus.getCenter()
         var data = { lat: center.lat, lng: center.lng, zoom: map_individus.getZoom() }
-        ihui.trigger("map-changed", "page", data)
+        ihui.trigger("map-changed", "page", data, false)
     })
 
     console.log("createMap")

@@ -38,7 +38,8 @@ func (menu *Menu) ShowPage(s *ihui.Session, name string) bool {
 	for _, item := range menu.Items {
 		if item.Name == name {
 			menu.SetActive(name)
-			return s.ShowPage(item.Name, item.Drawer, nil)
+			s.ShowPage(item.Name, item.Drawer, nil)
+			return true
 		}
 	}
 	return false
@@ -49,17 +50,16 @@ func (menu *Menu) Render(page ihui.Page) {
 
 	menu.tmpl.Render(page)
 
-	page.On("click", ".menu-item", func(s *ihui.Session, event ihui.Event) bool {
-		return menu.ShowPage(s, event.Value())
+	page.On("click", ".menu-item", func(s *ihui.Session, event ihui.Event)  {
+		menu.ShowPage(s, event.Value())
 	})
 
-	page.On("click", "#connect", func(s *ihui.Session, _ ihui.Event) bool {
-		return s.ShowPage("login", NewPageLogin(), &ihui.Options{Modal: true})
+	page.On("click", "#connect", func(s *ihui.Session, _ ihui.Event)  {
+		s.ShowPage("login", NewPageLogin(), &ihui.Options{Modal: true})
 	})
 
-	page.On("click", "#disconnect", func(s *ihui.Session, _ ihui.Event) bool {
+	page.On("click", "#disconnect", func(s *ihui.Session, _ ihui.Event)  {
 		s.Set("admin", false)
-		return true
 	})
 
 }
