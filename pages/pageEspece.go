@@ -58,7 +58,7 @@ func (page *PageEspece) Render(p *ihui.Page) {
 	})
 
 	p.On("click", "[id=cancel]", func(s *ihui.Session, ev ihui.Event) {
-		s.CloseModalPage()
+		s.CurrentPage().Close()
 	})
 
 	p.On("submit", "form", func(s *ihui.Session, ev ihui.Event) {
@@ -82,6 +82,6 @@ func (page *PageEspece) Render(p *ihui.Page) {
 			log.Println(err)
 			page.Error = err.Error()
 		}
-		s.CloseModalPage()
+		s.CurrentPage().Close()
 	})
 }
