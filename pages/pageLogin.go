@@ -18,7 +18,7 @@ func NewPageLogin() *PageLogin {
 	return page
 }
 
-func (page *PageLogin) Render(p ihui.Page) {
+func (page *PageLogin) Render(p *ihui.Page) {
 	page.tmpl.Render(p)
 
 	p.On("submit", "form", func(s *ihui.Session, event ihui.Event) {

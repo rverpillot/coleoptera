@@ -37,7 +37,7 @@ func (page *PageEspece) ID() string {
 	return strconv.Itoa(int(page.Espece.ID))
 }
 
-func (page *PageEspece) Render(p ihui.Page) {
+func (page *PageEspece) Render(p *ihui.Page) {
 	db := p.Get("db").(*gorm.DB)
 
 	page.Classifications = model.AllClassifications(db)

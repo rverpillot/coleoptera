@@ -54,7 +54,7 @@ func (page *PageIndividus) ShowSort(name string) string {
 	return "sortable"
 }
 
-func (page *PageIndividus) Render(p ihui.Page) {
+func (page *PageIndividus) Render(p *ihui.Page) {
 	db := p.Get("db").(*gorm.DB)
 
 	var espece_id uint

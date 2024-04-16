@@ -33,7 +33,7 @@ func NewPagePlan(menu *Menu) *PagePlan {
 	return page
 }
 
-func (page *PagePlan) Render(p ihui.Page) {
+func (page *PagePlan) Render(p *ihui.Page) {
 	page.tmpl.Render(p)
 	p.Add("#menu", page.menu)
 

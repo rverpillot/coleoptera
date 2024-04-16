@@ -19,7 +19,7 @@ func NewPageEspeces(menu *Menu) *PageEspeces {
 	return page
 }
 
-func (page *PageEspeces) Render(p ihui.Page) {
+func (page *PageEspeces) Render(p *ihui.Page) {
 	db := p.Get("db").(*gorm.DB)
 	page.Nb = model.CountAllEspeces(db)
 	page.Classifications = model.AllClassifications(db)

@@ -36,7 +36,7 @@ func newPageIndividu(individu model.Individu, editMode bool) *PageIndividu {
 	return page
 }
 
-func (page *PageIndividu) Render(p ihui.Page) {
+func (page *PageIndividu) Render(p *ihui.Page) {
 	db := p.Get("db").(*gorm.DB)
 	page.Especes = model.AllEspeces(db)
 
