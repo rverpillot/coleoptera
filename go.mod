@@ -6,7 +6,7 @@ require (
 	github.com/go-resty/resty/v2 v2.12.0
 	github.com/jinzhu/gorm v1.9.16
 	github.com/jung-kurt/gofpdf v1.16.2
-	github.com/rverpillot/ihui v1.1.2
+	github.com/rverpillot/ihui v1.2.0
 )
 
 require (
@@ -25,4 +25,4 @@ require (
 	golang.org/x/net v0.24.0 // indirect
 )
 
-replace github.com/rverpillot/ihui v1.1.2 => ../ihui
+// replace github.com/rverpillot/ihui v1.1.2 => ../ihui
