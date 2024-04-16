@@ -19,7 +19,7 @@ func NewPageEspeces(menu *Menu) *PageEspeces {
 	return page
 }
 
-func (page *PageEspeces) Render(p ihui.Page) {
+func (page *PageEspeces) Render(p *ihui.Page) {
 	db := p.Get("db").(*gorm.DB)
 	page.Nb = model.CountAllEspeces(db)
 	page.Classifications = model.AllClassifications(db)
@@ -27,10 +27,10 @@ func (page *PageEspeces) Render(p ihui.Page) {
 	page.tmpl.Render(p)
 	p.Add("#menu", page.menu)
 
-	p.On("click", ".espece", func(session *ihui.Session, event ihui.Event) bool {
+	p.On("click", ".espece", func(session *ihui.Session, event ihui.Event) {
 		var espece model.Espece
 		db.First(&espece, event.Value())
 		session.Set("search_espece", espece.ID)
-		return page.menu.ShowPage(session, "individus")
+		page.menu.ShowPage(session, "individus")
 	})
 }

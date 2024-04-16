@@ -31,6 +31,6 @@ func NewPage(pageTemplate string, model interface{}) *Page {
 	}
 }
 
-func (p *Page) Render(page ihui.Page) {
+func (p *Page) Render(page *ihui.Page) {
 	p.tmpl.Render(page)
 }

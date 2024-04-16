@@ -54,7 +54,7 @@ func (page *PageIndividus) ShowSort(name string) string {
 	return "sortable"
 }
 
-func (page *PageIndividus) Render(p ihui.Page) {
+func (page *PageIndividus) Render(p *ihui.Page) {
 	db := p.Get("db").(*gorm.DB)
 
 	var espece_id uint
@@ -91,26 +91,24 @@ func (page *PageIndividus) Render(p ihui.Page) {
 	page.tmpl.Render(p)
 	p.Add("#menu", page.menu)
 
-	p.On("create", "page", func(s *ihui.Session, _ ihui.Event) bool {
+	p.On("create", "page", func(s *ihui.Session, _ ihui.Event) {
 		page.Pagination.SetPage(1)
-		return false
 	})
 
-	p.On("input", ".search", func(s *ihui.Session, event ihui.Event) bool {
+	p.On("input", ".search", func(s *ihui.Session, event ihui.Event) {
 		s.Set("search_individus", event.Value())
 		s.Set("search_espece", uint(0))
 		page.Pagination.SetPage(1)
-		return true
 	})
 
-	p.On("check", ".selectAll", func(s *ihui.Session, event ihui.Event) bool {
+	p.On("check", ".selectAll", func(s *ihui.Session, event ihui.Event) {
 		page.AllSelected = event.IsChecked()
 
 		if page.AllSelected {
 			rows, err := db.Table("individus").Select("id").Rows()
 			if err != nil {
 				log.Print(err)
-				return false
+				return
 			}
 			defer rows.Close()
 			for rows.Next() {
@@ -122,18 +120,16 @@ func (page *PageIndividus) Render(p ihui.Page) {
 		} else {
 			page.clearSelection()
 		}
-
-		return true
 	})
 
-	p.On("click", ".detail", func(s *ihui.Session, event ihui.Event) bool {
+	p.On("click", ".detail", func(s *ihui.Session, event ihui.Event) {
 		id := event.Value()
 		var individu model.Individu
 		db.Preload("Espece").Preload("Departement").Find(&individu, id)
-		return s.ShowPage("individu", newPageIndividu(individu, false), &ihui.Options{Modal: true})
+		s.ShowPage("individu", newPageIndividu(individu, false), &ihui.Options{Modal: true})
 	})
 
-	p.On("check", ".select", func(s *ihui.Session, event ihui.Event) bool {
+	p.On("check", ".select", func(s *ihui.Session, event ihui.Event) {
 		ID, _ := strconv.Atoi(event.Id)
 		if event.IsChecked() {
 			page.selection[uint(ID)] = true
@@ -141,27 +137,24 @@ func (page *PageIndividus) Render(p ihui.Page) {
 			delete(page.selection, uint(ID))
 		}
 		page.SelectCount = len(page.selection)
-		return true
+
 	})
 
-	p.On("click", "#reset", func(s *ihui.Session, event ihui.Event) bool {
+	p.On("click", "#reset", func(s *ihui.Session, event ihui.Event) {
 		s.Set("search_individus", "")
 		s.Set("search_espece", uint(0))
 		page.Pagination.SetPage(1)
-		return true
 	})
 
-	p.On("click", "#next", func(s *ihui.Session, event ihui.Event) bool {
+	p.On("click", "#next", func(s *ihui.Session, event ihui.Event) {
 		page.Pagination.NextPage()
-		return true
 	})
 
-	p.On("click", "#previous", func(s *ihui.Session, event ihui.Event) bool {
+	p.On("click", "#previous", func(s *ihui.Session, event ihui.Event) {
 		page.Pagination.PreviousPage()
-		return true
 	})
 
-	p.On("click", "table .sortable", func(s *ihui.Session, event ihui.Event) bool {
+	p.On("click", "table .sortable", func(s *ihui.Session, event ihui.Event) {
 		name := event.Id
 		if name == page.fieldSort {
 			page.ascendingSort = !page.ascendingSort
@@ -169,10 +162,9 @@ func (page *PageIndividus) Render(p ihui.Page) {
 			page.fieldSort = name
 			page.ascendingSort = true
 		}
-		return true
 	})
 
-	p.On("click", "#add", func(s *ihui.Session, event ihui.Event) bool {
+	p.On("click", "#add", func(s *ihui.Session, event ihui.Event) {
 		individu := model.Individu{
 			Date:      time.Now(),
 			Sexe:      "M",
@@ -180,22 +172,22 @@ func (page *PageIndividus) Render(p ihui.Page) {
 			Longitude: 6.997305,
 			Altitude:  sql.NullInt64{100, true},
 		}
-		return s.ShowPage("individu", newPageIndividu(individu, true), &ihui.Options{Modal: true})
+		s.ShowPage("individu", newPageIndividu(individu, true), &ihui.Options{Modal: true})
 	})
 
-	p.On("click", "#printLabels", func(s *ihui.Session, event ihui.Event) bool {
+	p.On("click", "#printLabels", func(s *ihui.Session, event ihui.Event) {
 		tmpDir := path.Join(os.TempDir(), "coleoptera")
 
 		f, err := ioutil.TempFile(tmpDir, "etiquettes-*.pdf")
 		if err != nil {
 			log.Print(err)
-			return false
+			return
 		}
 		defer f.Close()
 
 		if err := page.printLabels(db, f); err != nil {
 			log.Print(err)
-			return false
+			return
 		}
 		s.Script(`
 		win = window.open("","print")
@@ -203,25 +195,23 @@ func (page *PageIndividus) Render(p ihui.Page) {
 		`, path.Base(f.Name()))
 
 		page.clearSelection()
-		return true
 	})
 
-	p.On("click", "#export", func(s *ihui.Session, event ihui.Event) bool {
+	p.On("click", "#export", func(s *ihui.Session, event ihui.Event) {
 		tmpDir := path.Join(os.TempDir(), "coleoptera")
 
 		f, err := ioutil.TempFile(tmpDir, "coleoptera-*.csv")
 		if err != nil {
 			log.Print(err)
-			return false
+			return
 		}
 		defer f.Close()
 
 		if err := export(db, f); err != nil {
 			log.Print(err)
-			return false
+			return
 		}
 		s.Script(`window.open("tmp/%s","export")`, path.Base(f.Name()))
-		return true
 	})
 }
 

@@ -23,24 +23,23 @@ func newPageClassification(classification *model.Classification) *PageClassifica
 	return page
 }
 
-func (page *PageClassification) Render(p ihui.Page) {
+func (page *PageClassification) Render(p *ihui.Page) {
 	db := p.Get("db").(*gorm.DB)
 
 	page.tmpl.Render(p)
 
-	p.On("click", "close", func(s *ihui.Session, event ihui.Event) bool {
-		return s.CloseModalPage()
+	p.On("click", "close", func(s *ihui.Session, event ihui.Event) {
+		s.CurrentPage().Close()
 	})
 
-	p.On("submit", "form", func(s *ihui.Session, event ihui.Event) bool {
+	p.On("submit", "form", func(s *ihui.Session, event ihui.Event) {
 		data := event.Data.(map[string]interface{})
 		page.classification.Nom = data["classification"].(string)
 		if err := db.Create(page.classification).Error; err != nil {
 			log.Println(err)
 			page.Error = err.Error()
 		} else {
-			s.CloseModalPage()
+			s.CurrentPage().Close()
 		}
-		return true
 	})
 }

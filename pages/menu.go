@@ -8,7 +8,7 @@ type Item struct {
 	Name   string
 	Label  string
 	Active bool
-	Drawer ihui.PageRenderer
+	Drawer ihui.HTMLRenderer
 }
 
 type Menu struct {
@@ -23,7 +23,7 @@ func NewMenu() *Menu {
 	return menu
 }
 
-func (menu *Menu) Add(name string, label string, drawer ihui.PageRenderer) {
+func (menu *Menu) Add(name string, label string, drawer ihui.HTMLRenderer) {
 	active := len(menu.Items) == 0
 	menu.Items = append(menu.Items, &Item{Name: name, Label: label, Active: active, Drawer: drawer})
 }
@@ -38,28 +38,28 @@ func (menu *Menu) ShowPage(s *ihui.Session, name string) bool {
 	for _, item := range menu.Items {
 		if item.Name == name {
 			menu.SetActive(name)
-			return s.ShowPage(item.Name, item.Drawer, nil)
+			s.ShowPage(item.Name, item.Drawer, nil)
+			return true
 		}
 	}
 	return false
 }
 
-func (menu *Menu) Render(page ihui.Page) {
+func (menu *Menu) Render(page *ihui.Page) {
 	menu.Connected = page.Get("admin").(bool)
 
 	menu.tmpl.Render(page)
 
-	page.On("click", ".menu-item", func(s *ihui.Session, event ihui.Event) bool {
-		return menu.ShowPage(s, event.Value())
+	page.On("click", ".menu-item", func(s *ihui.Session, event ihui.Event) {
+		menu.ShowPage(s, event.Value())
 	})
 
-	page.On("click", "#connect", func(s *ihui.Session, _ ihui.Event) bool {
-		return s.ShowPage("login", NewPageLogin(), &ihui.Options{Modal: true})
+	page.On("click", "#connect", func(s *ihui.Session, _ ihui.Event) {
+		s.ShowPage("login", NewPageLogin(), &ihui.Options{Modal: true})
 	})
 
-	page.On("click", "#disconnect", func(s *ihui.Session, _ ihui.Event) bool {
+	page.On("click", "#disconnect", func(s *ihui.Session, _ ihui.Event) {
 		s.Set("admin", false)
-		return true
 	})
 
 }

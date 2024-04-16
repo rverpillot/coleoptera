@@ -36,7 +36,7 @@ func newPageIndividu(individu model.Individu, editMode bool) *PageIndividu {
 	return page
 }
 
-func (page *PageIndividu) Render(p ihui.Page) {
+func (page *PageIndividu) Render(p *ihui.Page) {
 	db := p.Get("db").(*gorm.DB)
 	page.Especes = model.AllEspeces(db)
 
@@ -48,24 +48,22 @@ func (page *PageIndividu) Render(p ihui.Page) {
 
 	page.tmpl.Render(p)
 
-	p.On("create", "page", func(s *ihui.Session, event ihui.Event) bool {
+	p.On("created", "page", func(s *ihui.Session, event ihui.Event) {
 		if page.Edit {
 			s.Script(`createEditMap("#mapedit")`)
 		} else {
 			s.Script(`createPreviewMap("#mappreview",%f,%f)`, page.Individu.Longitude, page.Individu.Latitude)
 		}
-		return false
 	})
 
-	p.On("update", "page", func(s *ihui.Session, event ihui.Event) bool {
+	p.On("updated", "page", func(s *ihui.Session, event ihui.Event) {
 		if page.Edit && !page.EditMapCreated {
 			s.Script(`createEditMap("#mapedit")`)
 		}
 		page.EditMapCreated = true
-		return false
 	})
 
-	p.On("form", "form", func(s *ihui.Session, event ihui.Event) bool {
+	p.On("form", "form", func(s *ihui.Session, event ihui.Event) {
 		data := event.Data.(map[string]interface{})
 		name := data["name"].(string)
 		val := data["val"].(string)
@@ -87,13 +85,13 @@ func (page *PageIndividu) Render(p ihui.Page) {
 			page.Individu.Altitude = sql.NullInt64{Int64: int64(altitude), Valid: true}
 		case "commune":
 			page.Individu.Commune = val
-			lat, lng, err := model.FindLatLng(page.Individu.Commune)
-			if err != nil {
-				log.Println(err)
-				break
-			}
-			page.Individu.Latitude = lat
-			page.Individu.Longitude = lng
+			// lat, lng, err := model.FindLatLng(page.Individu.Commune)
+			// if err != nil {
+			// 	log.Println(err)
+			// 	break
+			// }
+			// page.Individu.Latitude = lat
+			// page.Individu.Longitude = lng
 		case "longitude":
 			long, _ := strconv.ParseFloat(val, 64)
 			page.Individu.Longitude = long
@@ -107,55 +105,49 @@ func (page *PageIndividu) Render(p ihui.Page) {
 		case "recolteur":
 			page.Individu.Recolteur = val
 		case "commentaire":
-			page.Individu.Commentaire = sql.NullString{val, true}
+			page.Individu.Commentaire = sql.NullString{String: val, Valid: true}
 		}
-		return true
 	})
 
-	p.On("click", "#cancel", func(s *ihui.Session, event ihui.Event) bool {
-		return s.CloseModalPage()
+	p.On("click", "#cancel", func(s *ihui.Session, event ihui.Event) {
+		s.CurrentPage().Close()
 	})
 
-	p.On("click", "#edit", func(s *ihui.Session, event ihui.Event) bool {
+	p.On("click", "#edit", func(s *ihui.Session, event ihui.Event) {
 		page.Edit = true
-		return true
 	})
 
-	p.On("click", "#delete", func(s *ihui.Session, event ihui.Event) bool {
+	p.On("click", "#delete", func(s *ihui.Session, event ihui.Event) {
 		page.Delete = true
-		return true
 	})
 
-	p.On("click", "#confirm-delete", func(s *ihui.Session, event ihui.Event) bool {
+	p.On("click", "#confirm-delete", func(s *ihui.Session, event ihui.Event) {
 		if page.Individu.ID > 0 {
 			if err := db.Delete(page.Individu).Error; err != nil {
 				log.Println(err)
 				page.Error = err.Error()
-				return true
 			}
 		}
-		return s.CloseModalPage()
+		s.CurrentPage().Close()
 	})
 
-	p.On("click", "#cancel-delete", func(s *ihui.Session, event ihui.Event) bool {
-		return s.CloseModalPage()
+	p.On("click", "#cancel-delete", func(s *ihui.Session, event ihui.Event) {
+		s.CurrentPage().Close()
 	})
 
-	p.On("click", "#add-espece", func(s *ihui.Session, event ihui.Event) bool {
+	p.On("click", "#add-espece", func(s *ihui.Session, event ihui.Event) {
 		espece := model.Espece{}
 		s.ShowPage("espece", newPageEspece(&espece), &ihui.Options{Modal: true})
 		if !db.NewRecord(espece) {
 			page.Individu.Espece = espece
 			page.Individu.EspeceID = espece.ID
 		}
-		return true
 	})
 
-	p.On("click", "#validation", func(s *ihui.Session, event ihui.Event) bool {
+	p.On("click", "#validation", func(s *ihui.Session, event ihui.Event) {
 		log.Println(page.Individu)
 		if page.Individu.Espece.ID == 0 {
 			page.Error = "Genre/espèce absent !"
-			return true
 		}
 		var err error
 		if db.NewRecord(page.Individu) {
@@ -166,25 +158,23 @@ func (page *PageIndividu) Render(p ihui.Page) {
 		if err != nil {
 			log.Println(err)
 			page.Error = err.Error()
-			return true
 		}
-		return s.CloseModalPage()
+		s.CurrentPage().Close()
 	})
 
-	p.On("position", "page", func(s *ihui.Session, event ihui.Event) bool {
+	p.On("position", "page", func(s *ihui.Session, event ihui.Event) {
 		pos := event.Data.(map[string]interface{})
 		log.Println(pos)
-		page.Individu.Latitude = pos["lat"].(float64)
 		page.Individu.Longitude = pos["lng"].(float64)
+		page.Individu.Latitude = pos["lat"].(float64)
 
 		var altitude int64
 		var err error
-		page.Individu.Commune, page.Individu.Code, altitude, err = model.FindLocation(page.Individu.Latitude, page.Individu.Longitude)
+		page.Individu.Commune, page.Individu.Code, altitude, err = model.FindLocation(page.Individu.Longitude, page.Individu.Latitude)
 		if err != nil {
 			log.Println(err)
 		}
-		page.Individu.Altitude = sql.NullInt64{altitude, true}
-		return true
+		page.Individu.Altitude = sql.NullInt64{Int64: altitude, Valid: true}
 	})
 
 }

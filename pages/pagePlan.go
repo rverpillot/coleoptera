@@ -33,29 +33,26 @@ func NewPagePlan(menu *Menu) *PagePlan {
 	return page
 }
 
-func (page *PagePlan) Render(p ihui.Page) {
+func (page *PagePlan) Render(p *ihui.Page) {
 	page.tmpl.Render(p)
 	p.Add("#menu", page.menu)
 
-	p.On("create", "page", func(s *ihui.Session, event ihui.Event) bool {
+	p.On("created", "page", func(s *ihui.Session, event ihui.Event) {
 		s.Script(`createMap("#map", {lat:%f, lng:%f}, %d)`, page.infoMap.Lat, page.infoMap.Lng, page.infoMap.Zoom)
 		page.showMarkers(s)
-		return false
 	})
 
-	p.On("update", "page", func(s *ihui.Session, event ihui.Event) bool {
+	p.On("updated", "page", func(s *ihui.Session, event ihui.Event) {
 		page.showMarkers(s)
-		return false
 	})
 
-	p.On("map-changed", "page", func(s *ihui.Session, event ihui.Event) bool {
+	p.On("map-changed", "page", func(s *ihui.Session, event ihui.Event) {
 		data := event.Data.(map[string]interface{})
 		page.infoMap = infoMap{
 			Lat:  data["lat"].(float64),
 			Lng:  data["lng"].(float64),
 			Zoom: int(data["zoom"].(float64)),
 		}
-		return false
 	})
 
 }
