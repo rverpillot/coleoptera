@@ -25,7 +25,6 @@ func (page *PageEspeces) Render(p *ihui.Page) {
 	page.Classifications = model.AllClassifications(db)
 
 	page.tmpl.Render(p)
-	p.Add("#menu", page.menu)
 
 	p.On("click", ".espece", func(session *ihui.Session, event ihui.Event) {
 		var espece model.Espece

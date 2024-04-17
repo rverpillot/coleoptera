@@ -34,15 +34,15 @@ func (menu *Menu) SetActive(name string) {
 	}
 }
 
-func (menu *Menu) ShowPage(s *ihui.Session, name string) bool {
+func (menu *Menu) ShowPage(s *ihui.Session, name string) {
 	for _, item := range menu.Items {
 		if item.Name == name {
 			menu.SetActive(name)
-			s.ShowPage(item.Name, item.Drawer, nil)
-			return true
+			s.ShowPage(item.Name, item.Drawer, &ihui.Options{Replace: true, Target: "#" + item.Name, Visible: true})
+		} else {
+			s.HidePage(item.Name)
 		}
 	}
-	return false
 }
 
 func (menu *Menu) Render(page *ihui.Page) {

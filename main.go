@@ -39,6 +39,7 @@ func start(session *ihui.Session) {
 	menu.Add("especes", "Espèces", pages.NewPageEspeces(menu))
 	menu.Add("individus", "Individus", pages.NewPageIndividus(menu))
 	menu.Add("plan", "Plan", pages.NewPagePlan(menu))
+	session.ShowPage("menu", menu, nil)
 	menu.ShowPage(session, "individus")
 }
 

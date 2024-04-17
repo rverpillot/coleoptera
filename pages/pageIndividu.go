@@ -110,7 +110,7 @@ func (page *PageIndividu) Render(p *ihui.Page) {
 	})
 
 	p.On("click", "#cancel", func(s *ihui.Session, event ihui.Event) {
-		s.CurrentPage().Close()
+		p.Close()
 	})
 
 	p.On("click", "#edit", func(s *ihui.Session, event ihui.Event) {
@@ -128,11 +128,11 @@ func (page *PageIndividu) Render(p *ihui.Page) {
 				page.Error = err.Error()
 			}
 		}
-		s.CurrentPage().Close()
+		p.Close()
 	})
 
 	p.On("click", "#cancel-delete", func(s *ihui.Session, event ihui.Event) {
-		s.CurrentPage().Close()
+		p.Close()
 	})
 
 	p.On("click", "#add-espece", func(s *ihui.Session, event ihui.Event) {
@@ -159,7 +159,7 @@ func (page *PageIndividu) Render(p *ihui.Page) {
 			log.Println(err)
 			page.Error = err.Error()
 		}
-		s.CurrentPage().Close()
+		p.Close()
 	})
 
 	p.On("position", "page", func(s *ihui.Session, event ihui.Event) {

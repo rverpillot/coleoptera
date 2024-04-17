@@ -89,7 +89,6 @@ func (page *PageIndividus) Render(p *ihui.Page) {
 
 	page.tmpl.SetModel(page)
 	page.tmpl.Render(p)
-	p.Add("#menu", page.menu)
 
 	p.On("create", "page", func(s *ihui.Session, _ ihui.Event) {
 		page.Pagination.SetPage(1)

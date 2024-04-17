@@ -35,7 +35,6 @@ func NewPagePlan(menu *Menu) *PagePlan {
 
 func (page *PagePlan) Render(p *ihui.Page) {
 	page.tmpl.Render(p)
-	p.Add("#menu", page.menu)
 
 	p.On("created", "page", func(s *ihui.Session, event ihui.Event) {
 		s.Script(`createMap("#map", {lat:%f, lng:%f}, %d)`, page.infoMap.Lat, page.infoMap.Lng, page.infoMap.Zoom)
