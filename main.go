@@ -29,7 +29,7 @@ var (
 	tmpDir      = path.Join(os.TempDir(), "coleoptera")
 )
 
-func start(session *ihui.Session) {
+func start(session *ihui.Session) error {
 	session.Set("db", db)
 	session.Set("admin", *debug)
 	session.Set("tmpDir", tmpDir)
@@ -39,7 +39,10 @@ func start(session *ihui.Session) {
 	menu.Add("especes", "Espèces", pages.NewPageEspeces(menu))
 	menu.Add("individus", "Individus", pages.NewPageIndividus(menu))
 	menu.Add("plan", "Plan", pages.NewPagePlan(menu))
-	menu.ShowPage(session, "individus")
+	if err := session.ShowPage("menu", menu, nil); err != nil {
+		return err
+	}
+	return menu.ShowPage(session, "individus")
 }
 
 func main() {

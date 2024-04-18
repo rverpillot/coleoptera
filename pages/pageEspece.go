@@ -7,12 +7,13 @@ import (
 
 	"github.com/rverpillot/coleoptera/model"
 	"github.com/rverpillot/ihui"
+	"github.com/rverpillot/ihui/templating"
 
 	"github.com/jinzhu/gorm"
 )
 
 type PageEspece struct {
-	tmpl            *ihui.PageAce
+	tmpl            *templating.PageAce
 	Espece          *model.Espece
 	Classifications []model.Classification
 	AllGenres       []string
@@ -37,7 +38,7 @@ func (page *PageEspece) ID() string {
 	return strconv.Itoa(int(page.Espece.ID))
 }
 
-func (page *PageEspece) Render(p *ihui.Page) {
+func (page *PageEspece) Render(p *ihui.Page) error {
 	db := p.Get("db").(*gorm.DB)
 
 	page.Classifications = model.AllClassifications(db)
@@ -46,22 +47,25 @@ func (page *PageEspece) Render(p *ihui.Page) {
 	page.AllEspeces = model.AllNomEspeces(db)
 	page.AllSousEspeces = model.AllSousEspeces(db)
 
-	page.tmpl.Render(p)
+	if err := page.tmpl.Render(p); err != nil {
+		return err
+	}
 
-	p.On("click", "[id=add-classification]", func(s *ihui.Session, ev ihui.Event) {
+	p.On("click", "[id=add-classification]", func(s *ihui.Session, ev ihui.Event) error {
 		var classification model.Classification
 		s.ShowPage("classification", newPageClassification(&classification), &ihui.Options{Modal: true})
 		if !db.NewRecord(classification) {
 			page.Espece.Classification = classification
 			page.Espece.ClassificationID = classification.ID
 		}
+		return nil
 	})
 
-	p.On("click", "[id=cancel]", func(s *ihui.Session, ev ihui.Event) {
-		s.CurrentPage().Close()
+	p.On("click", "[id=cancel]", func(s *ihui.Session, ev ihui.Event) error {
+		return p.Close()
 	})
 
-	p.On("submit", "form", func(s *ihui.Session, ev ihui.Event) {
+	p.On("submit", "form", func(s *ihui.Session, ev ihui.Event) error {
 		data := ev.Data.(map[string]interface{})
 		id, _ := strconv.Atoi(data["classification"].(string))
 
@@ -82,6 +86,8 @@ func (page *PageEspece) Render(p *ihui.Page) {
 			log.Println(err)
 			page.Error = err.Error()
 		}
-		s.CurrentPage().Close()
+		return p.Close()
 	})
+
+	return nil
 }

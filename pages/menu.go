@@ -1,7 +1,10 @@
 package pages
 
 import (
+	"fmt"
+
 	"github.com/rverpillot/ihui"
+	"github.com/rverpillot/ihui/templating"
 )
 
 type Item struct {
@@ -12,7 +15,7 @@ type Item struct {
 }
 
 type Menu struct {
-	tmpl      *ihui.PageAce
+	tmpl      *templating.PageAce
 	Connected bool
 	Items     []*Item
 }
@@ -34,32 +37,39 @@ func (menu *Menu) SetActive(name string) {
 	}
 }
 
-func (menu *Menu) ShowPage(s *ihui.Session, name string) bool {
+func (menu *Menu) ShowPage(s *ihui.Session, name string) error {
 	for _, item := range menu.Items {
 		if item.Name == name {
 			menu.SetActive(name)
-			s.ShowPage(item.Name, item.Drawer, nil)
-			return true
+			if err := s.ShowPage(item.Name, item.Drawer, &ihui.Options{Replace: true, Target: "#" + item.Name, Visible: true}); err != nil {
+				fmt.Println(err)
+				return err
+			}
+		} else {
+			s.HidePage(item.Name)
 		}
 	}
-	return false
+	return nil
 }
 
-func (menu *Menu) Render(page *ihui.Page) {
+func (menu *Menu) Render(page *ihui.Page) error {
 	menu.Connected = page.Get("admin").(bool)
 
-	menu.tmpl.Render(page)
+	if err := menu.tmpl.Render(page); err != nil {
+		return err
+	}
 
-	page.On("click", ".menu-item", func(s *ihui.Session, event ihui.Event) {
-		menu.ShowPage(s, event.Value())
+	page.On("click", ".menu-item", func(s *ihui.Session, event ihui.Event) error {
+		return menu.ShowPage(s, event.Value())
 	})
 
-	page.On("click", "#connect", func(s *ihui.Session, _ ihui.Event) {
-		s.ShowPage("login", NewPageLogin(), &ihui.Options{Modal: true})
+	page.On("click", "#connect", func(s *ihui.Session, _ ihui.Event) error {
+		return s.ShowPage("login", NewPageLogin(), &ihui.Options{Modal: true})
 	})
 
-	page.On("click", "#disconnect", func(s *ihui.Session, _ ihui.Event) {
+	page.On("click", "#disconnect", func(s *ihui.Session, _ ihui.Event) error {
 		s.Set("admin", false)
+		return nil
 	})
-
+	return nil
 }

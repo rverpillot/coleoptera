@@ -69,7 +69,7 @@ function createMap(tag, center, zoom) {
     map_individus.on("moveend zoomend", function (ev) {
         var center = map_individus.getCenter()
         var data = { lat: center.lat, lng: center.lng, zoom: map_individus.getZoom() }
-        ihui.trigger("map-changed", "page", data, false)
+        ihui.trigger("map-changed", "plan", "page", data, false)
     })
 
     console.log("createMap")
@@ -107,7 +107,7 @@ function createEditMap(tag) {
     editMarker.on('dragend', function (event) {
         var position = editMarker.getLatLng()
         // editMarker.setTitle(position.toString())
-        ihui.trigger("position", "page", position)
+        ihui.trigger("position", "individu", "page", position)
     })
 
     editMap.on("moveend", function (ev) {

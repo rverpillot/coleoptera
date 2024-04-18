@@ -6,6 +6,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/rverpillot/coleoptera/model"
 	"github.com/rverpillot/ihui"
+	"github.com/rverpillot/ihui/templating"
 )
 
 type infoMap struct {
@@ -15,7 +16,7 @@ type infoMap struct {
 }
 
 type PagePlan struct {
-	tmpl    *ihui.PageAce
+	tmpl    *templating.PageAce
 	menu    *Menu
 	infoMap infoMap
 }
@@ -33,28 +34,33 @@ func NewPagePlan(menu *Menu) *PagePlan {
 	return page
 }
 
-func (page *PagePlan) Render(p *ihui.Page) {
-	page.tmpl.Render(p)
-	p.Add("#menu", page.menu)
+func (page *PagePlan) Render(p *ihui.Page) error {
+	if err := page.tmpl.Render(p); err != nil {
+		return err
+	}
 
-	p.On("created", "page", func(s *ihui.Session, event ihui.Event) {
+	p.On("created", "page", func(s *ihui.Session, event ihui.Event) error {
 		s.Script(`createMap("#map", {lat:%f, lng:%f}, %d)`, page.infoMap.Lat, page.infoMap.Lng, page.infoMap.Zoom)
 		page.showMarkers(s)
+		return nil
 	})
 
-	p.On("updated", "page", func(s *ihui.Session, event ihui.Event) {
+	p.On("updated", "page", func(s *ihui.Session, event ihui.Event) error {
 		page.showMarkers(s)
+		return nil
 	})
 
-	p.On("map-changed", "page", func(s *ihui.Session, event ihui.Event) {
+	p.On("map-changed", "page", func(s *ihui.Session, event ihui.Event) error {
 		data := event.Data.(map[string]interface{})
 		page.infoMap = infoMap{
 			Lat:  data["lat"].(float64),
 			Lng:  data["lng"].(float64),
 			Zoom: int(data["zoom"].(float64)),
 		}
+		return nil
 	})
 
+	return nil
 }
 
 func (page *PagePlan) showMarkers(session *ihui.Session) {
