@@ -53,7 +53,7 @@ func (page *PageIndividu) Render(p *ihui.Page) error {
 
 	p.On("created", "page", func(s *ihui.Session, event ihui.Event) error {
 		if page.Edit {
-			return s.Script(`createEditMap("#mapedit")`)
+			return s.Script(`createEditMap("#mapedit","%s")`, p.Id)
 		} else {
 			return s.Script(`createPreviewMap("#mappreview",%f,%f)`, page.Individu.Longitude, page.Individu.Latitude)
 		}
@@ -61,7 +61,7 @@ func (page *PageIndividu) Render(p *ihui.Page) error {
 
 	p.On("updated", "page", func(s *ihui.Session, event ihui.Event) error {
 		if page.Edit && !page.EditMapCreated {
-			if err := s.Script(`createEditMap("#mapedit")`); err != nil {
+			if err := s.Script(`createEditMap("#mapedit","%s")`, p.Id); err != nil {
 				return err
 			}
 		}

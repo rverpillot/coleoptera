@@ -177,7 +177,7 @@ func (page *PageIndividus) Render(p *ihui.Page) error {
 			Sexe:      "M",
 			Latitude:  47.626785,
 			Longitude: 6.997305,
-			Altitude:  sql.NullInt64{100, true},
+			Altitude:  sql.NullInt64{Int64: 100, Valid: true},
 		}
 		return s.ShowPage("individu", newPageIndividu(individu, true), &ihui.Options{Modal: true})
 	})

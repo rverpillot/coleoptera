@@ -40,7 +40,8 @@ func (page *PagePlan) Render(p *ihui.Page) error {
 	}
 
 	p.On("created", "page", func(s *ihui.Session, event ihui.Event) error {
-		s.Script(`createMap("#map", {lat:%f, lng:%f}, %d)`, page.infoMap.Lat, page.infoMap.Lng, page.infoMap.Zoom)
+		s.Script(`createMap("#map", {lat:%f, lng:%f}, %d, "%s")`,
+			page.infoMap.Lat, page.infoMap.Lng, page.infoMap.Zoom, p.Id)
 		page.showMarkers(s)
 		return nil
 	})

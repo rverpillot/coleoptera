@@ -57,7 +57,7 @@ function showMarkers(tag, markers) {
     map_individus.fitBounds(bounds, { maxZoom: 6 })
 }
 
-function createMap(tag, center, zoom) {
+function createMap(tag, center, zoom, pageName) {
     if ($(tag).length == 0) return;
 
     map_individus = L.map($(tag)[0], {
@@ -69,7 +69,7 @@ function createMap(tag, center, zoom) {
     map_individus.on("moveend zoomend", function (ev) {
         var center = map_individus.getCenter()
         var data = { lat: center.lat, lng: center.lng, zoom: map_individus.getZoom() }
-        ihui.trigger("map-changed", "plan", "page", data, false)
+        ihui.trigger("map-changed", pageName, "page", data, false)
     })
 
     console.log("createMap")
@@ -82,7 +82,7 @@ function refreshMap(center, zoom) {
 }
 
 
-function createEditMap(tag) {
+function createEditMap(tag, pageName) {
     var latitude = parseFloat($("[name=latitude]").val())
     var longitude = parseFloat($("[name=longitude]").val())
     var position = { lat: 47.626951, lng: 6.997541 }
@@ -107,7 +107,7 @@ function createEditMap(tag) {
     editMarker.on('dragend', function (event) {
         var position = editMarker.getLatLng()
         // editMarker.setTitle(position.toString())
-        ihui.trigger("position", "individu", "page", position)
+        ihui.trigger("position", pageName, "page", position)
     })
 
     editMap.on("moveend", function (ev) {
