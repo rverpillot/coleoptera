@@ -8,4 +8,4 @@ linux:
 	GOOS=linux GOARCH=amd64 go build -v -o bin/coleoptera .
 
 docker:
-	docker build --platform linux/amd64,linux/arm64 -t coleoptera:22.05.3 .
+	docker build --platform linux/amd64,linux/arm64 -t coleoptera:24.04.1 .
