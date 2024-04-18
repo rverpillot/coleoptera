@@ -7,12 +7,13 @@ import (
 
 	"github.com/rverpillot/coleoptera/model"
 	"github.com/rverpillot/ihui"
+	"github.com/rverpillot/ihui/templating"
 
 	"github.com/jinzhu/gorm"
 )
 
 type PageEspece struct {
-	tmpl            *ihui.PageAce
+	tmpl            *templating.PageAce
 	Espece          *model.Espece
 	Classifications []model.Classification
 	AllGenres       []string
@@ -37,7 +38,7 @@ func (page *PageEspece) ID() string {
 	return strconv.Itoa(int(page.Espece.ID))
 }
 
-func (page *PageEspece) Render(p *ihui.Page) {
+func (page *PageEspece) Render(p *ihui.Page) error {
 	db := p.Get("db").(*gorm.DB)
 
 	page.Classifications = model.AllClassifications(db)
@@ -46,7 +47,9 @@ func (page *PageEspece) Render(p *ihui.Page) {
 	page.AllEspeces = model.AllNomEspeces(db)
 	page.AllSousEspeces = model.AllSousEspeces(db)
 
-	page.tmpl.Render(p)
+	if err := page.tmpl.Render(p); err != nil {
+		return err
+	}
 
 	p.On("click", "[id=add-classification]", func(s *ihui.Session, ev ihui.Event) {
 		var classification model.Classification
@@ -84,4 +87,6 @@ func (page *PageEspece) Render(p *ihui.Page) {
 		}
 		p.Close()
 	})
+
+	return nil
 }

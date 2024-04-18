@@ -2,6 +2,7 @@ package pages
 
 import (
 	"github.com/rverpillot/ihui"
+	"github.com/rverpillot/ihui/templating"
 )
 
 type Item struct {
@@ -12,7 +13,7 @@ type Item struct {
 }
 
 type Menu struct {
-	tmpl      *ihui.PageAce
+	tmpl      *templating.PageAce
 	Connected bool
 	Items     []*Item
 }
@@ -45,10 +46,12 @@ func (menu *Menu) ShowPage(s *ihui.Session, name string) {
 	}
 }
 
-func (menu *Menu) Render(page *ihui.Page) {
+func (menu *Menu) Render(page *ihui.Page) error {
 	menu.Connected = page.Get("admin").(bool)
 
-	menu.tmpl.Render(page)
+	if err := menu.tmpl.Render(page); err != nil {
+		return err
+	}
 
 	page.On("click", ".menu-item", func(s *ihui.Session, event ihui.Event) {
 		menu.ShowPage(s, event.Value())
@@ -61,5 +64,5 @@ func (menu *Menu) Render(page *ihui.Page) {
 	page.On("click", "#disconnect", func(s *ihui.Session, _ ihui.Event) {
 		s.Set("admin", false)
 	})
-
+	return nil
 }

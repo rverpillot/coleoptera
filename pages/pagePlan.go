@@ -6,6 +6,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/rverpillot/coleoptera/model"
 	"github.com/rverpillot/ihui"
+	"github.com/rverpillot/ihui/templating"
 )
 
 type infoMap struct {
@@ -15,7 +16,7 @@ type infoMap struct {
 }
 
 type PagePlan struct {
-	tmpl    *ihui.PageAce
+	tmpl    *templating.PageAce
 	menu    *Menu
 	infoMap infoMap
 }
@@ -33,8 +34,10 @@ func NewPagePlan(menu *Menu) *PagePlan {
 	return page
 }
 
-func (page *PagePlan) Render(p *ihui.Page) {
-	page.tmpl.Render(p)
+func (page *PagePlan) Render(p *ihui.Page) error {
+	if err := page.tmpl.Render(p); err != nil {
+		return err
+	}
 
 	p.On("created", "page", func(s *ihui.Session, event ihui.Event) {
 		s.Script(`createMap("#map", {lat:%f, lng:%f}, %d)`, page.infoMap.Lat, page.infoMap.Lng, page.infoMap.Zoom)
@@ -54,6 +57,7 @@ func (page *PagePlan) Render(p *ihui.Page) {
 		}
 	})
 
+	return nil
 }
 
 func (page *PagePlan) showMarkers(session *ihui.Session) {

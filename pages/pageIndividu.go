@@ -9,10 +9,11 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/rverpillot/coleoptera/model"
 	"github.com/rverpillot/ihui"
+	"github.com/rverpillot/ihui/templating"
 )
 
 type PageIndividu struct {
-	tmpl           *ihui.PageAce
+	tmpl           *templating.PageAce
 	Individu       model.Individu
 	Admin          bool
 	Edit           bool
@@ -36,7 +37,7 @@ func newPageIndividu(individu model.Individu, editMode bool) *PageIndividu {
 	return page
 }
 
-func (page *PageIndividu) Render(p *ihui.Page) {
+func (page *PageIndividu) Render(p *ihui.Page) error {
 	db := p.Get("db").(*gorm.DB)
 	page.Especes = model.AllEspeces(db)
 
@@ -46,7 +47,9 @@ func (page *PageIndividu) Render(p *ihui.Page) {
 	page.Departements = model.AllDepartements(db)
 	page.Recolteurs = model.AllRecolteurs(db)
 
-	page.tmpl.Render(p)
+	if err := page.tmpl.Render(p); err != nil {
+		return err
+	}
 
 	p.On("created", "page", func(s *ihui.Session, event ihui.Event) {
 		if page.Edit {
@@ -177,4 +180,5 @@ func (page *PageIndividu) Render(p *ihui.Page) {
 		page.Individu.Altitude = sql.NullInt64{Int64: altitude, Valid: true}
 	})
 
+	return nil
 }

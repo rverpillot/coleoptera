@@ -5,10 +5,11 @@ import (
 	"crypto/sha256"
 
 	"github.com/rverpillot/ihui"
+	"github.com/rverpillot/ihui/templating"
 )
 
 type PageLogin struct {
-	tmpl  *ihui.PageAce
+	tmpl  *templating.PageAce
 	Error string
 }
 
@@ -18,8 +19,10 @@ func NewPageLogin() *PageLogin {
 	return page
 }
 
-func (page *PageLogin) Render(p *ihui.Page) {
-	page.tmpl.Render(p)
+func (page *PageLogin) Render(p *ihui.Page) error {
+	if err := page.tmpl.Render(p); err != nil {
+		return err
+	}
 
 	p.On("submit", "form", func(s *ihui.Session, event ihui.Event) {
 		data := event.Data.(map[string]interface{})
@@ -44,6 +47,8 @@ func (page *PageLogin) Render(p *ihui.Page) {
 	p.On("click", "#cancel", func(s *ihui.Session, event ihui.Event) {
 		p.Close()
 	})
+
+	return nil
 }
 
 func (page *PageLogin) authenticate(username string, password string) bool {

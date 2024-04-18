@@ -4,13 +4,14 @@ import (
 	"log"
 
 	"github.com/rverpillot/ihui"
+	"github.com/rverpillot/ihui/templating"
 
 	"github.com/jinzhu/gorm"
 	"github.com/rverpillot/coleoptera/model"
 )
 
 type PageClassification struct {
-	tmpl           *ihui.PageAce
+	tmpl           *templating.PageAce
 	classification *model.Classification
 	Error          string
 }
@@ -23,10 +24,12 @@ func newPageClassification(classification *model.Classification) *PageClassifica
 	return page
 }
 
-func (page *PageClassification) Render(p *ihui.Page) {
+func (page *PageClassification) Render(p *ihui.Page) error {
 	db := p.Get("db").(*gorm.DB)
 
-	page.tmpl.Render(p)
+	if err := page.tmpl.Render(p); err != nil {
+		return err
+	}
 
 	p.On("click", "close", func(s *ihui.Session, event ihui.Event) {
 		p.Close()
@@ -42,4 +45,6 @@ func (page *PageClassification) Render(p *ihui.Page) {
 			p.Close()
 		}
 	})
+
+	return nil
 }

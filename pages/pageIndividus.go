@@ -16,10 +16,11 @@ import (
 	"github.com/jung-kurt/gofpdf"
 	"github.com/rverpillot/coleoptera/model"
 	"github.com/rverpillot/ihui"
+	"github.com/rverpillot/ihui/templating"
 )
 
 type PageIndividus struct {
-	tmpl          *ihui.PageAce
+	tmpl          *templating.PageAce
 	menu          *Menu
 	selection     map[uint]bool
 	SelectCount   int
@@ -54,7 +55,7 @@ func (page *PageIndividus) ShowSort(name string) string {
 	return "sortable"
 }
 
-func (page *PageIndividus) Render(p *ihui.Page) {
+func (page *PageIndividus) Render(p *ihui.Page) error {
 	db := p.Get("db").(*gorm.DB)
 
 	var espece_id uint
@@ -88,7 +89,9 @@ func (page *PageIndividus) Render(p *ihui.Page) {
 	}
 
 	page.tmpl.SetModel(page)
-	page.tmpl.Render(p)
+	if err := page.tmpl.Render(p); err != nil {
+		return err
+	}
 
 	p.On("create", "page", func(s *ihui.Session, _ ihui.Event) {
 		page.Pagination.SetPage(1)
@@ -212,6 +215,8 @@ func (page *PageIndividus) Render(p *ihui.Page) {
 		}
 		s.Script(`window.open("tmp/%s","export")`, path.Base(f.Name()))
 	})
+
+	return nil
 }
 
 func export(db *gorm.DB, output io.Writer) error {
