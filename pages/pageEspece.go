@@ -51,20 +51,21 @@ func (page *PageEspece) Render(p *ihui.Page) error {
 		return err
 	}
 
-	p.On("click", "[id=add-classification]", func(s *ihui.Session, ev ihui.Event) {
+	p.On("click", "[id=add-classification]", func(s *ihui.Session, ev ihui.Event) error {
 		var classification model.Classification
 		s.ShowPage("classification", newPageClassification(&classification), &ihui.Options{Modal: true})
 		if !db.NewRecord(classification) {
 			page.Espece.Classification = classification
 			page.Espece.ClassificationID = classification.ID
 		}
+		return nil
 	})
 
-	p.On("click", "[id=cancel]", func(s *ihui.Session, ev ihui.Event) {
-		p.Close()
+	p.On("click", "[id=cancel]", func(s *ihui.Session, ev ihui.Event) error {
+		return p.Close()
 	})
 
-	p.On("submit", "form", func(s *ihui.Session, ev ihui.Event) {
+	p.On("submit", "form", func(s *ihui.Session, ev ihui.Event) error {
 		data := ev.Data.(map[string]interface{})
 		id, _ := strconv.Atoi(data["classification"].(string))
 
@@ -85,7 +86,7 @@ func (page *PageEspece) Render(p *ihui.Page) error {
 			log.Println(err)
 			page.Error = err.Error()
 		}
-		p.Close()
+		return p.Close()
 	})
 
 	return nil

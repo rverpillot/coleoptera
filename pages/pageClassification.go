@@ -1,8 +1,6 @@
 package pages
 
 import (
-	"log"
-
 	"github.com/rverpillot/ihui"
 	"github.com/rverpillot/ihui/templating"
 
@@ -31,18 +29,18 @@ func (page *PageClassification) Render(p *ihui.Page) error {
 		return err
 	}
 
-	p.On("click", "close", func(s *ihui.Session, event ihui.Event) {
-		p.Close()
+	p.On("click", "close", func(s *ihui.Session, event ihui.Event) error {
+		return p.Close()
 	})
 
-	p.On("submit", "form", func(s *ihui.Session, event ihui.Event) {
+	p.On("submit", "form", func(s *ihui.Session, event ihui.Event) error {
 		data := event.Data.(map[string]interface{})
 		page.classification.Nom = data["classification"].(string)
 		if err := db.Create(page.classification).Error; err != nil {
-			log.Println(err)
 			page.Error = err.Error()
+			return err
 		} else {
-			p.Close()
+			return p.Close()
 		}
 	})
 

@@ -3,6 +3,7 @@ package pages
 import (
 	"bytes"
 	"crypto/sha256"
+	"fmt"
 
 	"github.com/rverpillot/ihui"
 	"github.com/rverpillot/ihui/templating"
@@ -24,28 +25,29 @@ func (page *PageLogin) Render(p *ihui.Page) error {
 		return err
 	}
 
-	p.On("submit", "form", func(s *ihui.Session, event ihui.Event) {
+	p.On("submit", "form", func(s *ihui.Session, event ihui.Event) error {
 		data := event.Data.(map[string]interface{})
 		username := data["username"].(string)
 		password := data["password"].(string)
 		if username == "" {
 			page.Error = "Le nom d'utilisateur est vide!"
-			return
+			return fmt.Errorf(page.Error)
 		}
 		if password == "" {
 			page.Error = "Le mot de passe est vide!"
-			return
+			return fmt.Errorf(page.Error)
 		}
 		if page.authenticate(username, password) {
 			s.Set("admin", true)
-			p.Close()
+			return p.Close()
 		} else {
 			page.Error = "Utilisateur ou mot de passe inconnu!"
+			return fmt.Errorf(page.Error)
 		}
 	})
 
-	p.On("click", "#cancel", func(s *ihui.Session, event ihui.Event) {
-		p.Close()
+	p.On("click", "#cancel", func(s *ihui.Session, event ihui.Event) error {
+		return p.Close()
 	})
 
 	return nil

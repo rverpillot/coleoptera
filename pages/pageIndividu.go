@@ -51,22 +51,25 @@ func (page *PageIndividu) Render(p *ihui.Page) error {
 		return err
 	}
 
-	p.On("created", "page", func(s *ihui.Session, event ihui.Event) {
+	p.On("created", "page", func(s *ihui.Session, event ihui.Event) error {
 		if page.Edit {
-			s.Script(`createEditMap("#mapedit")`)
+			return s.Script(`createEditMap("#mapedit")`)
 		} else {
-			s.Script(`createPreviewMap("#mappreview",%f,%f)`, page.Individu.Longitude, page.Individu.Latitude)
+			return s.Script(`createPreviewMap("#mappreview",%f,%f)`, page.Individu.Longitude, page.Individu.Latitude)
 		}
 	})
 
-	p.On("updated", "page", func(s *ihui.Session, event ihui.Event) {
+	p.On("updated", "page", func(s *ihui.Session, event ihui.Event) error {
 		if page.Edit && !page.EditMapCreated {
-			s.Script(`createEditMap("#mapedit")`)
+			if err := s.Script(`createEditMap("#mapedit")`); err != nil {
+				return err
+			}
 		}
 		page.EditMapCreated = true
+		return nil
 	})
 
-	p.On("form", "form", func(s *ihui.Session, event ihui.Event) {
+	p.On("form", "form", func(s *ihui.Session, event ihui.Event) error {
 		data := event.Data.(map[string]interface{})
 		name := data["name"].(string)
 		val := data["val"].(string)
@@ -110,44 +113,48 @@ func (page *PageIndividu) Render(p *ihui.Page) error {
 		case "commentaire":
 			page.Individu.Commentaire = sql.NullString{String: val, Valid: true}
 		}
+		return nil
 	})
 
-	p.On("click", "#cancel", func(s *ihui.Session, event ihui.Event) {
-		p.Close()
+	p.On("click", "#cancel", func(s *ihui.Session, event ihui.Event) error {
+		return p.Close()
 	})
 
-	p.On("click", "#edit", func(s *ihui.Session, event ihui.Event) {
+	p.On("click", "#edit", func(s *ihui.Session, event ihui.Event) error {
 		page.Edit = true
+		return nil
 	})
 
-	p.On("click", "#delete", func(s *ihui.Session, event ihui.Event) {
+	p.On("click", "#delete", func(s *ihui.Session, event ihui.Event) error {
 		page.Delete = true
+		return nil
 	})
 
-	p.On("click", "#confirm-delete", func(s *ihui.Session, event ihui.Event) {
+	p.On("click", "#confirm-delete", func(s *ihui.Session, event ihui.Event) error {
 		if page.Individu.ID > 0 {
 			if err := db.Delete(page.Individu).Error; err != nil {
-				log.Println(err)
 				page.Error = err.Error()
+				log.Println(err)
 			}
 		}
-		p.Close()
+		return p.Close()
 	})
 
-	p.On("click", "#cancel-delete", func(s *ihui.Session, event ihui.Event) {
-		p.Close()
+	p.On("click", "#cancel-delete", func(s *ihui.Session, event ihui.Event) error {
+		return p.Close()
 	})
 
-	p.On("click", "#add-espece", func(s *ihui.Session, event ihui.Event) {
+	p.On("click", "#add-espece", func(s *ihui.Session, event ihui.Event) error {
 		espece := model.Espece{}
 		s.ShowPage("espece", newPageEspece(&espece), &ihui.Options{Modal: true})
 		if !db.NewRecord(espece) {
 			page.Individu.Espece = espece
 			page.Individu.EspeceID = espece.ID
 		}
+		return nil
 	})
 
-	p.On("click", "#validation", func(s *ihui.Session, event ihui.Event) {
+	p.On("click", "#validation", func(s *ihui.Session, event ihui.Event) error {
 		log.Println(page.Individu)
 		if page.Individu.Espece.ID == 0 {
 			page.Error = "Genre/espèce absent !"
@@ -162,10 +169,10 @@ func (page *PageIndividu) Render(p *ihui.Page) error {
 			log.Println(err)
 			page.Error = err.Error()
 		}
-		p.Close()
+		return p.Close()
 	})
 
-	p.On("position", "page", func(s *ihui.Session, event ihui.Event) {
+	p.On("position", "page", func(s *ihui.Session, event ihui.Event) error {
 		pos := event.Data.(map[string]interface{})
 		log.Println(pos)
 		page.Individu.Longitude = pos["lng"].(float64)
@@ -178,6 +185,7 @@ func (page *PageIndividu) Render(p *ihui.Page) error {
 			log.Println(err)
 		}
 		page.Individu.Altitude = sql.NullInt64{Int64: altitude, Valid: true}
+		return nil
 	})
 
 	return nil

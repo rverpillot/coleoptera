@@ -1,6 +1,8 @@
 package pages
 
 import (
+	"fmt"
+
 	"github.com/rverpillot/ihui"
 	"github.com/rverpillot/ihui/templating"
 )
@@ -35,15 +37,19 @@ func (menu *Menu) SetActive(name string) {
 	}
 }
 
-func (menu *Menu) ShowPage(s *ihui.Session, name string) {
+func (menu *Menu) ShowPage(s *ihui.Session, name string) error {
 	for _, item := range menu.Items {
 		if item.Name == name {
 			menu.SetActive(name)
-			s.ShowPage(item.Name, item.Drawer, &ihui.Options{Replace: true, Target: "#" + item.Name, Visible: true})
+			if err := s.ShowPage(item.Name, item.Drawer, &ihui.Options{Replace: true, Target: "#" + item.Name, Visible: true}); err != nil {
+				fmt.Println(err)
+				return err
+			}
 		} else {
 			s.HidePage(item.Name)
 		}
 	}
+	return nil
 }
 
 func (menu *Menu) Render(page *ihui.Page) error {
@@ -53,16 +59,17 @@ func (menu *Menu) Render(page *ihui.Page) error {
 		return err
 	}
 
-	page.On("click", ".menu-item", func(s *ihui.Session, event ihui.Event) {
-		menu.ShowPage(s, event.Value())
+	page.On("click", ".menu-item", func(s *ihui.Session, event ihui.Event) error {
+		return menu.ShowPage(s, event.Value())
 	})
 
-	page.On("click", "#connect", func(s *ihui.Session, _ ihui.Event) {
-		s.ShowPage("login", NewPageLogin(), &ihui.Options{Modal: true})
+	page.On("click", "#connect", func(s *ihui.Session, _ ihui.Event) error {
+		return s.ShowPage("login", NewPageLogin(), &ihui.Options{Modal: true})
 	})
 
-	page.On("click", "#disconnect", func(s *ihui.Session, _ ihui.Event) {
+	page.On("click", "#disconnect", func(s *ihui.Session, _ ihui.Event) error {
 		s.Set("admin", false)
+		return nil
 	})
 	return nil
 }

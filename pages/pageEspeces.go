@@ -29,11 +29,11 @@ func (page *PageEspeces) Render(p *ihui.Page) error {
 		return err
 	}
 
-	p.On("click", ".espece", func(session *ihui.Session, event ihui.Event) {
+	p.On("click", ".espece", func(session *ihui.Session, event ihui.Event) error {
 		var espece model.Espece
 		db.First(&espece, event.Value())
 		session.Set("search_espece", espece.ID)
-		page.menu.ShowPage(session, "individus")
+		return page.menu.ShowPage(session, "individus")
 	})
 
 	return nil
