@@ -39,19 +39,19 @@ func (page *PagePlan) Render(p *ihui.Page) error {
 		return err
 	}
 
-	p.On("created", "page", func(s *ihui.Session, event ihui.Event) error {
+	p.On("page-created", "", func(s *ihui.Session, event ihui.Event) error {
 		s.Script(`createMap("#map", {lat:%f, lng:%f}, %d, "%s")`,
 			page.infoMap.Lat, page.infoMap.Lng, page.infoMap.Zoom, p.Id)
 		page.showMarkers(s)
 		return nil
 	})
 
-	p.On("updated", "page", func(s *ihui.Session, event ihui.Event) error {
+	p.On("page-updated", "", func(s *ihui.Session, event ihui.Event) error {
 		page.showMarkers(s)
 		return nil
 	})
 
-	p.On("map-changed", "page", func(s *ihui.Session, event ihui.Event) error {
+	p.On("map-changed", "", func(s *ihui.Session, event ihui.Event) error {
 		data := event.Data.(map[string]interface{})
 		page.infoMap = infoMap{
 			Lat:  data["lat"].(float64),

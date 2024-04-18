@@ -51,7 +51,7 @@ func (page *PageIndividu) Render(p *ihui.Page) error {
 		return err
 	}
 
-	p.On("created", "page", func(s *ihui.Session, event ihui.Event) error {
+	p.On("page-created", "", func(s *ihui.Session, event ihui.Event) error {
 		if page.Edit {
 			return s.Script(`createEditMap("#mapedit","%s")`, p.Id)
 		} else {
@@ -59,7 +59,7 @@ func (page *PageIndividu) Render(p *ihui.Page) error {
 		}
 	})
 
-	p.On("updated", "page", func(s *ihui.Session, event ihui.Event) error {
+	p.On("page-updated", "", func(s *ihui.Session, event ihui.Event) error {
 		if page.Edit && !page.EditMapCreated {
 			if err := s.Script(`createEditMap("#mapedit","%s")`, p.Id); err != nil {
 				return err
@@ -172,7 +172,7 @@ func (page *PageIndividu) Render(p *ihui.Page) error {
 		return p.Close()
 	})
 
-	p.On("position", "page", func(s *ihui.Session, event ihui.Event) error {
+	p.On("position", "", func(s *ihui.Session, event ihui.Event) error {
 		pos := event.Data.(map[string]interface{})
 		log.Println(pos)
 		page.Individu.Longitude = pos["lng"].(float64)

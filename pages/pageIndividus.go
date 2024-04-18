@@ -92,7 +92,7 @@ func (page *PageIndividus) Render(p *ihui.Page) error {
 		return err
 	}
 
-	p.On("create", "page", func(s *ihui.Session, _ ihui.Event) error {
+	p.On("page-created", "", func(s *ihui.Session, _ ihui.Event) error {
 		page.Pagination.SetPage(1)
 		return nil
 	})
