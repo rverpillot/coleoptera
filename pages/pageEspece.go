@@ -24,11 +24,10 @@ type PageEspece struct {
 }
 
 func newPageEspece(espece *model.Espece) *PageEspece {
-	page := &PageEspece{
+	return &PageEspece{
+		tmpl:   newAceTemplate("espece.ace"),
 		Espece: espece,
 	}
-	page.tmpl = newAceTemplate("espece.ace", page)
-	return page
 }
 
 func (page *PageEspece) ID() string {
@@ -47,7 +46,7 @@ func (page *PageEspece) Render(p *ihui.Page) error {
 	page.AllEspeces = model.AllNomEspeces(db)
 	page.AllSousEspeces = model.AllSousEspeces(db)
 
-	if err := page.tmpl.Render(p); err != nil {
+	if err := page.tmpl.Execute(p, page); err != nil {
 		return err
 	}
 

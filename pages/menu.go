@@ -21,9 +21,7 @@ type Menu struct {
 }
 
 func NewMenu() *Menu {
-	menu := &Menu{}
-	menu.tmpl = newAceTemplate("menu.ace", menu)
-	return menu
+	return &Menu{tmpl: newAceTemplate("menu.ace")}
 }
 
 func (menu *Menu) Add(name string, label string, drawer ihui.HTMLRenderer) {
@@ -55,7 +53,7 @@ func (menu *Menu) ShowPage(s *ihui.Session, name string) error {
 func (menu *Menu) Render(page *ihui.Page) error {
 	menu.Connected = page.Get("admin").(bool)
 
-	if err := menu.tmpl.Render(page); err != nil {
+	if err := menu.tmpl.Execute(page, menu); err != nil {
 		return err
 	}
 

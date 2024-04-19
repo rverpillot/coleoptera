@@ -15,13 +15,13 @@ type PageLogin struct {
 }
 
 func NewPageLogin() *PageLogin {
-	page := &PageLogin{}
-	page.tmpl = newAceTemplate("login.ace", page)
-	return page
+	return &PageLogin{
+		tmpl: newAceTemplate("login.ace"),
+	}
 }
 
 func (page *PageLogin) Render(p *ihui.Page) error {
-	if err := page.tmpl.Render(p); err != nil {
+	if err := page.tmpl.Execute(p, page); err != nil {
 		return err
 	}
 

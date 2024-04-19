@@ -13,6 +13,6 @@ var TemplatesFs embed.FS
 //go:embed statics
 var ResourcesFs embed.FS
 
-func newAceTemplate(name string, model interface{}) *templating.PageAce {
-	return templating.NewPageAce(TemplatesFs, path.Join("templates", name), model)
+func newAceTemplate(name string) *templating.PageAce {
+	return templating.NewPageAce(TemplatesFs, path.Join("templates", name))
 }

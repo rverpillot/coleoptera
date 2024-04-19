@@ -35,7 +35,7 @@ type PageIndividus struct {
 
 func NewPageIndividus(menu *Menu) *PageIndividus {
 	return &PageIndividus{
-		tmpl:       newAceTemplate("individus.ace", nil),
+		tmpl:       newAceTemplate("individus.ace"),
 		menu:       menu,
 		selection:  make(map[uint]bool),
 		Pagination: ihui.NewPaginator(60),
@@ -87,8 +87,7 @@ func (page *PageIndividus) Render(p *ihui.Page) error {
 		}
 	}
 
-	page.tmpl.SetModel(page)
-	if err := page.tmpl.Render(p); err != nil {
+	if err := page.tmpl.Execute(p, page); err != nil {
 		return err
 	}
 

@@ -15,17 +15,16 @@ type PageClassification struct {
 }
 
 func newPageClassification(classification *model.Classification) *PageClassification {
-	page := &PageClassification{
+	return &PageClassification{
+		tmpl:           newAceTemplate("classification.ace"),
 		classification: classification,
 	}
-	page.tmpl = newAceTemplate("classification.ace", page)
-	return page
 }
 
 func (page *PageClassification) Render(p *ihui.Page) error {
 	db := p.Get("db").(*gorm.DB)
 
-	if err := page.tmpl.Render(p); err != nil {
+	if err := page.tmpl.Execute(p, page); err != nil {
 		return err
 	}
 

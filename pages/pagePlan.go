@@ -22,7 +22,8 @@ type PagePlan struct {
 }
 
 func NewPagePlan(menu *Menu) *PagePlan {
-	page := &PagePlan{
+	return &PagePlan{
+		tmpl: newAceTemplate("plan.ace"),
 		menu: menu,
 		infoMap: infoMap{
 			Lat:  46.435317,
@@ -30,12 +31,10 @@ func NewPagePlan(menu *Menu) *PagePlan {
 			Zoom: 5,
 		},
 	}
-	page.tmpl = newAceTemplate("plan.ace", page)
-	return page
 }
 
 func (page *PagePlan) Render(p *ihui.Page) error {
-	if err := page.tmpl.Render(p); err != nil {
+	if err := page.tmpl.Execute(p, page); err != nil {
 		return err
 	}
 

@@ -15,9 +15,10 @@ type PageEspeces struct {
 }
 
 func NewPageEspeces(menu *Menu) *PageEspeces {
-	page := &PageEspeces{menu: menu}
-	page.tmpl = newAceTemplate("especes.ace", page)
-	return page
+	return &PageEspeces{
+		tmpl: newAceTemplate("especes.ace"),
+		menu: menu,
+	}
 }
 
 func (page *PageEspeces) Render(p *ihui.Page) error {
@@ -25,7 +26,7 @@ func (page *PageEspeces) Render(p *ihui.Page) error {
 	page.Nb = model.CountAllEspeces(db)
 	page.Classifications = model.AllClassifications(db)
 
-	if err := page.tmpl.Render(p); err != nil {
+	if err := page.tmpl.Execute(p, page); err != nil {
 		return err
 	}
 

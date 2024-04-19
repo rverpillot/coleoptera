@@ -29,12 +29,11 @@ type PageIndividu struct {
 }
 
 func newPageIndividu(individu model.Individu, editMode bool) *PageIndividu {
-	page := &PageIndividu{
+	return &PageIndividu{
+		tmpl:     newAceTemplate("individu.ace"),
 		Individu: individu,
 		Edit:     editMode,
 	}
-	page.tmpl = newAceTemplate("individu.ace", page)
-	return page
 }
 
 func (page *PageIndividu) Render(p *ihui.Page) error {
@@ -47,7 +46,7 @@ func (page *PageIndividu) Render(p *ihui.Page) error {
 	page.Departements = model.AllDepartements(db)
 	page.Recolteurs = model.AllRecolteurs(db)
 
-	if err := page.tmpl.Render(p); err != nil {
+	if err := page.tmpl.Execute(p, page); err != nil {
 		return err
 	}
 
