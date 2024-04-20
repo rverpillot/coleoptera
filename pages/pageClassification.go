@@ -2,14 +2,13 @@ package pages
 
 import (
 	"github.com/rverpillot/ihui"
-	"github.com/rverpillot/ihui/templating"
 
 	"github.com/jinzhu/gorm"
 	"github.com/rverpillot/coleoptera/model"
 )
 
 type PageClassification struct {
-	tmpl           *templating.PageAce
+	tmpl           ihui.Template
 	classification *model.Classification
 	Error          string
 }

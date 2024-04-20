@@ -4,11 +4,10 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/rverpillot/coleoptera/model"
 	"github.com/rverpillot/ihui"
-	"github.com/rverpillot/ihui/templating"
 )
 
 type PageEspeces struct {
-	tmpl            *templating.PageAce
+	tmpl            ihui.Template
 	menu            *Menu
 	Classifications []model.Classification
 	Nb              int

@@ -7,13 +7,12 @@ import (
 
 	"github.com/rverpillot/coleoptera/model"
 	"github.com/rverpillot/ihui"
-	"github.com/rverpillot/ihui/templating"
 
 	"github.com/jinzhu/gorm"
 )
 
 type PageEspece struct {
-	tmpl            *templating.PageAce
+	tmpl            ihui.Template
 	Espece          *model.Espece
 	Classifications []model.Classification
 	AllGenres       []string

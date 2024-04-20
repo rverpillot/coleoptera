@@ -6,7 +6,6 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/rverpillot/coleoptera/model"
 	"github.com/rverpillot/ihui"
-	"github.com/rverpillot/ihui/templating"
 )
 
 type infoMap struct {
@@ -16,7 +15,7 @@ type infoMap struct {
 }
 
 type PagePlan struct {
-	tmpl    *templating.PageAce
+	tmpl    ihui.Template
 	menu    *Menu
 	infoMap infoMap
 }

@@ -6,11 +6,10 @@ import (
 	"fmt"
 
 	"github.com/rverpillot/ihui"
-	"github.com/rverpillot/ihui/templating"
 )
 
 type PageLogin struct {
-	tmpl  *templating.PageAce
+	tmpl  ihui.Template
 	Error string
 }
 

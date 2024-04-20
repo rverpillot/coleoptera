@@ -9,11 +9,10 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/rverpillot/coleoptera/model"
 	"github.com/rverpillot/ihui"
-	"github.com/rverpillot/ihui/templating"
 )
 
 type PageIndividu struct {
-	tmpl           *templating.PageAce
+	tmpl           ihui.Template
 	Individu       model.Individu
 	Admin          bool
 	Edit           bool

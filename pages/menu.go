@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/rverpillot/ihui"
-	"github.com/rverpillot/ihui/templating"
 )
 
 type Item struct {
@@ -15,7 +14,7 @@ type Item struct {
 }
 
 type Menu struct {
-	tmpl      *templating.PageAce
+	tmpl      ihui.Template
 	Connected bool
 	Items     []*Item
 }

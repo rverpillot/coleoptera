@@ -15,11 +15,10 @@ import (
 	"github.com/jung-kurt/gofpdf"
 	"github.com/rverpillot/coleoptera/model"
 	"github.com/rverpillot/ihui"
-	"github.com/rverpillot/ihui/templating"
 )
 
 type PageIndividus struct {
-	tmpl          *templating.PageAce
+	tmpl          ihui.Template
 	menu          *Menu
 	selection     map[uint]bool
 	SelectCount   int
