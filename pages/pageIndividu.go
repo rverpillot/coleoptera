@@ -46,7 +46,7 @@ func (page *PageIndividu) Render(p *ihui.Page) error {
 	page.Departements = model.AllDepartements(db)
 	page.Recolteurs = model.AllRecolteurs(db)
 
-	if err := page.tmpl.Execute(p, page); err != nil {
+	if err := p.WriteTemplate(page.tmpl, page); err != nil {
 		return err
 	}
 

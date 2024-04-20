@@ -53,7 +53,7 @@ func (menu *Menu) ShowPage(s *ihui.Session, name string) error {
 func (menu *Menu) Render(page *ihui.Page) error {
 	menu.Connected = page.Get("admin").(bool)
 
-	if err := menu.tmpl.Execute(page, menu); err != nil {
+	if err := page.WriteTemplate(menu.tmpl, menu); err != nil {
 		return err
 	}
 

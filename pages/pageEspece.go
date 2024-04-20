@@ -46,7 +46,7 @@ func (page *PageEspece) Render(p *ihui.Page) error {
 	page.AllEspeces = model.AllNomEspeces(db)
 	page.AllSousEspeces = model.AllSousEspeces(db)
 
-	if err := page.tmpl.Execute(p, page); err != nil {
+	if err := p.WriteTemplate(page.tmpl, page); err != nil {
 		return err
 	}
 

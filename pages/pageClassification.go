@@ -24,7 +24,7 @@ func newPageClassification(classification *model.Classification) *PageClassifica
 func (page *PageClassification) Render(p *ihui.Page) error {
 	db := p.Get("db").(*gorm.DB)
 
-	if err := page.tmpl.Execute(p, page); err != nil {
+	if err := p.WriteTemplate(page.tmpl, page); err != nil {
 		return err
 	}
 

@@ -87,7 +87,7 @@ func (page *PageIndividus) Render(p *ihui.Page) error {
 		}
 	}
 
-	if err := page.tmpl.Execute(p, page); err != nil {
+	if err := p.WriteTemplate(page.tmpl, page); err != nil {
 		return err
 	}
 
