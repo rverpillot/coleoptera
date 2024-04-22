@@ -51,7 +51,7 @@ func (menu *Menu) ShowPage(s *ihui.Session, name string) error {
 func (menu *Menu) Render(page *ihui.Page) error {
 	menu.Connected = page.Get("admin").(bool)
 
-	if err := page.WriteAce(TemplatesFs, "templates/menu.ace", menu); err != nil {
+	if err := page.WriteMustache(TemplatesFs, "templates/menu.mustache", menu); err != nil {
 		return err
 	}
 
