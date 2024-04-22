@@ -12,7 +12,6 @@ import (
 )
 
 type PageIndividu struct {
-	tmpl           ihui.Template
 	Individu       model.Individu
 	Admin          bool
 	Edit           bool
@@ -29,7 +28,6 @@ type PageIndividu struct {
 
 func newPageIndividu(individu model.Individu, editMode bool) *PageIndividu {
 	return &PageIndividu{
-		tmpl:     newAceTemplate("individu.ace"),
 		Individu: individu,
 		Edit:     editMode,
 	}
@@ -45,7 +43,7 @@ func (page *PageIndividu) Render(p *ihui.Page) error {
 	page.Departements = model.AllDepartements(db)
 	page.Recolteurs = model.AllRecolteurs(db)
 
-	if err := p.WriteTemplate(page.tmpl, page); err != nil {
+	if err := p.WriteAce(TemplatesFs, "templates/individu.ace", page); err != nil {
 		return err
 	}
 

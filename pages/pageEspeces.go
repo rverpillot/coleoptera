@@ -7,7 +7,6 @@ import (
 )
 
 type PageEspeces struct {
-	tmpl            ihui.Template
 	menu            *Menu
 	Classifications []model.Classification
 	Nb              int
@@ -15,7 +14,6 @@ type PageEspeces struct {
 
 func NewPageEspeces(menu *Menu) *PageEspeces {
 	return &PageEspeces{
-		tmpl: newAceTemplate("especes.ace"),
 		menu: menu,
 	}
 }
@@ -25,7 +23,7 @@ func (page *PageEspeces) Render(p *ihui.Page) error {
 	page.Nb = model.CountAllEspeces(db)
 	page.Classifications = model.AllClassifications(db)
 
-	if err := p.WriteTemplate(page.tmpl, page); err != nil {
+	if err := p.WriteAce(TemplatesFs, "templates/especes.ace", page); err != nil {
 		return err
 	}
 

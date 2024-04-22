@@ -15,14 +15,12 @@ type infoMap struct {
 }
 
 type PagePlan struct {
-	tmpl    ihui.Template
 	menu    *Menu
 	infoMap infoMap
 }
 
 func NewPagePlan(menu *Menu) *PagePlan {
 	return &PagePlan{
-		tmpl: newAceTemplate("plan.ace"),
 		menu: menu,
 		infoMap: infoMap{
 			Lat:  46.435317,
@@ -33,7 +31,7 @@ func NewPagePlan(menu *Menu) *PagePlan {
 }
 
 func (page *PagePlan) Render(p *ihui.Page) error {
-	if err := p.WriteTemplate(page.tmpl, page); err != nil {
+	if err := p.WriteAce(TemplatesFs, "templates/plan.ace", page); err != nil {
 		return err
 	}
 

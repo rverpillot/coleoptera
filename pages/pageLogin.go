@@ -9,18 +9,15 @@ import (
 )
 
 type PageLogin struct {
-	tmpl  ihui.Template
 	Error string
 }
 
 func NewPageLogin() *PageLogin {
-	return &PageLogin{
-		tmpl: newAceTemplate("login.ace"),
-	}
+	return &PageLogin{}
 }
 
 func (page *PageLogin) Render(p *ihui.Page) error {
-	if err := p.WriteTemplate(page.tmpl, page); err != nil {
+	if err := p.WriteAce(TemplatesFs, "templates/login.ace", page); err != nil {
 		return err
 	}
 

@@ -12,7 +12,6 @@ import (
 )
 
 type PageEspece struct {
-	tmpl            ihui.Template
 	Espece          *model.Espece
 	Classifications []model.Classification
 	AllGenres       []string
@@ -24,7 +23,6 @@ type PageEspece struct {
 
 func newPageEspece(espece *model.Espece) *PageEspece {
 	return &PageEspece{
-		tmpl:   newAceTemplate("espece.ace"),
 		Espece: espece,
 	}
 }
@@ -45,7 +43,7 @@ func (page *PageEspece) Render(p *ihui.Page) error {
 	page.AllEspeces = model.AllNomEspeces(db)
 	page.AllSousEspeces = model.AllSousEspeces(db)
 
-	if err := p.WriteTemplate(page.tmpl, page); err != nil {
+	if err := p.WriteAce(TemplatesFs, "templates/espace.ace", page); err != nil {
 		return err
 	}
 

@@ -14,13 +14,12 @@ type Item struct {
 }
 
 type Menu struct {
-	tmpl      ihui.Template
 	Connected bool
 	Items     []*Item
 }
 
 func NewMenu() *Menu {
-	return &Menu{tmpl: newAceTemplate("menu.ace")}
+	return &Menu{}
 }
 
 func (menu *Menu) Add(name string, label string, drawer ihui.HTMLRenderer) {
@@ -52,7 +51,7 @@ func (menu *Menu) ShowPage(s *ihui.Session, name string) error {
 func (menu *Menu) Render(page *ihui.Page) error {
 	menu.Connected = page.Get("admin").(bool)
 
-	if err := page.WriteTemplate(menu.tmpl, menu); err != nil {
+	if err := page.WriteAce(TemplatesFs, "templates/menu.ace", menu); err != nil {
 		return err
 	}
 
