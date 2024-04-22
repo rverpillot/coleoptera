@@ -8,7 +8,7 @@ import (
 	"github.com/rverpillot/coleoptera/model"
 	"github.com/rverpillot/ihui"
 
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 type PageEspece struct {
@@ -43,21 +43,11 @@ func (page *PageEspece) Render(p *ihui.Page) error {
 	page.AllEspeces = model.AllNomEspeces(db)
 	page.AllSousEspeces = model.AllSousEspeces(db)
 
-	if err := p.WriteAce(TemplatesFs, "templates/espace.ace", page); err != nil {
+	if err := p.WriteAce(TemplatesFs, "templates/espece.ace", page); err != nil {
 		return err
 	}
 
-	p.On("click", "[id=add-classification]", func(s *ihui.Session, ev ihui.Event) error {
-		var classification model.Classification
-		s.ShowPage("classification", newPageClassification(&classification), &ihui.Options{Modal: true})
-		if !db.NewRecord(classification) {
-			page.Espece.Classification = classification
-			page.Espece.ClassificationID = classification.ID
-		}
-		return nil
-	})
-
-	p.On("click", "[id=cancel]", func(s *ihui.Session, ev ihui.Event) error {
+	p.On("click", "#cancel", func(s *ihui.Session, ev ihui.Event) error {
 		return p.Close()
 	})
 
@@ -81,6 +71,7 @@ func (page *PageEspece) Render(p *ihui.Page) error {
 		if err := db.Create(page.Espece).Error; err != nil {
 			log.Println(err)
 			page.Error = err.Error()
+			return nil
 		}
 		return p.Close()
 	})

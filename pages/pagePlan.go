@@ -3,9 +3,9 @@ package pages
 import (
 	"encoding/json"
 
-	"github.com/jinzhu/gorm"
 	"github.com/rverpillot/coleoptera/model"
 	"github.com/rverpillot/ihui"
+	"gorm.io/gorm"
 )
 
 type infoMap struct {

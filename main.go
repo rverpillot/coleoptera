@@ -16,10 +16,11 @@ import (
 
 	_ "net/http/pprof"
 
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/rverpillot/coleoptera/pages"
 	"github.com/rverpillot/ihui"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 var (
@@ -96,12 +97,16 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	db, err = gorm.Open("sqlite3", baseName)
+	level := logger.Error
+	if *debug {
+		level = logger.Info
+	}
+	db, err = gorm.Open(sqlite.Open(baseName), &gorm.Config{
+		Logger: logger.Default.LogMode(level),
+	})
 	if err != nil {
 		log.Fatal("failed to connect database")
 	}
-	defer db.Close()
-	db.LogMode(*debug)
 
 	// Create & purge tmp dir
 	os.MkdirAll(tmpDir, 0755)

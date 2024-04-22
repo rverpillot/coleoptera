@@ -1,6 +1,18 @@
 div#menu
 
 div.ui.container style="margin-top: 7em;"
+  div.ui.grid
+    div.row
+      {{if .Admin}}
+      div.right.floated.column.six.wide
+        div.ui.button.basic.primary.right.floated id="add-espece" 
+          i.icon.plus
+          | Ajouter une espèce
+        div.ui.button.basic.primary.right.floated id="add-classification" 
+          i.icon.plus
+          | Ajouter une classification
+      {{end}}
+
   {{printf "%d espèces." .Nb}}
   ul
     {{range .Classifications}}

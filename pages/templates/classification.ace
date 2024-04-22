@@ -10,7 +10,7 @@ div.ui.container style="margin-top: 5em;"
       div.ui.input 
         input name="classification" type="text" placeholder="Classification..."
 
-    button.ui.button id="close" Annuler
+    button.ui.button id="close" type="button" Annuler
     button.ui.button.primary type="submit" Valider
 
   {{with .Error}}

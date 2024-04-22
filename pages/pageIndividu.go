@@ -6,9 +6,10 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/jinzhu/gorm"
 	"github.com/rverpillot/coleoptera/model"
 	"github.com/rverpillot/ihui"
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type PageIndividu struct {
@@ -140,30 +141,16 @@ func (page *PageIndividu) Render(p *ihui.Page) error {
 		return p.Close()
 	})
 
-	p.On("click", "#add-espece", func(s *ihui.Session, event ihui.Event) error {
-		espece := model.Espece{}
-		s.ShowPage("espece", newPageEspece(&espece), &ihui.Options{Modal: true})
-		if !db.NewRecord(espece) {
-			page.Individu.Espece = espece
-			page.Individu.EspeceID = espece.ID
-		}
-		return nil
-	})
-
 	p.On("click", "#validation", func(s *ihui.Session, event ihui.Event) error {
 		log.Println(page.Individu)
 		if page.Individu.Espece.ID == 0 {
 			page.Error = "Genre/espèce absent !"
+			return nil
 		}
-		var err error
-		if db.NewRecord(page.Individu) {
-			err = db.Set("gorm:save_associations", false).Create(&page.Individu).Error
-		} else {
-			err = db.Set("gorm:save_associations", false).Save(&page.Individu).Error
-		}
-		if err != nil {
+		if err := db.Omit(clause.Associations).Save(&page.Individu).Error; err != nil {
 			log.Println(err)
 			page.Error = err.Error()
+			return nil
 		}
 		return p.Close()
 	})
