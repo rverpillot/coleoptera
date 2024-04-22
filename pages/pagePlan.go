@@ -36,7 +36,7 @@ func (page *PagePlan) Render(p *ihui.Page) error {
 	}
 
 	p.On("page-created", "", func(s *ihui.Session, event ihui.Event) error {
-		s.Script(`createMap("#map", {lat:%f, lng:%f}, %d, "%s")`,
+		s.Execute(`createMap("#map", {lat:%f, lng:%f}, %d, "%s")`,
 			page.infoMap.Lat, page.infoMap.Lng, page.infoMap.Zoom, p.Id)
 		page.showMarkers(s)
 		return nil
@@ -74,5 +74,5 @@ func (page *PagePlan) showMarkers(session *ihui.Session) {
 	markers, _ = model.Markers(db, search, espece_id)
 	data, _ := json.Marshal(&markers)
 	js := string(data)
-	session.Script("showMarkers('#map',%s)", js)
+	session.Execute("showMarkers('#map',%s)", js)
 }

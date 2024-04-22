@@ -191,9 +191,9 @@ func (page *PageIndividus) Render(p *ihui.Page) error {
 		if err := page.printLabels(db, f); err != nil {
 			return err
 		}
-		s.Script(`
-		win = window.open("","print")
-		if (win) {win.location = "tmp/%s"}
+		s.Execute(`
+		win = window.open("","print");
+		if (win) {win.location = "tmp/%s";}
 		`, path.Base(f.Name()))
 
 		page.clearSelection()
@@ -212,7 +212,7 @@ func (page *PageIndividus) Render(p *ihui.Page) error {
 		if err := export(db, f); err != nil {
 			return err
 		}
-		return s.Script(`window.open("tmp/%s","export")`, path.Base(f.Name()))
+		return s.Execute(`window.open("tmp/%s","export")`, path.Base(f.Name()))
 	})
 
 	return nil

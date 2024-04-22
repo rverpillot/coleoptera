@@ -50,15 +50,15 @@ func (page *PageIndividu) Render(p *ihui.Page) error {
 
 	p.On("page-created", "", func(s *ihui.Session, event ihui.Event) error {
 		if page.Edit {
-			return s.Script(`createEditMap("#mapedit","%s")`, p.Id)
+			return s.Execute(`createEditMap("#mapedit","%s")`, p.Id)
 		} else {
-			return s.Script(`createPreviewMap("#mappreview",%f,%f)`, page.Individu.Longitude, page.Individu.Latitude)
+			return s.Execute(`createPreviewMap("#mappreview",%f,%f)`, page.Individu.Longitude, page.Individu.Latitude)
 		}
 	})
 
 	p.On("page-updated", "", func(s *ihui.Session, event ihui.Event) error {
 		if page.Edit && !page.EditMapCreated {
-			if err := s.Script(`createEditMap("#mapedit","%s")`, p.Id); err != nil {
+			if err := s.Execute(`createEditMap("#mapedit","%s")`, p.Id); err != nil {
 				return err
 			}
 		}
@@ -99,12 +99,12 @@ func (page *PageIndividu) Render(p *ihui.Page) error {
 			long, _ := strconv.ParseFloat(val, 64)
 			page.Individu.Longitude = long
 			page.Search = ""
-			s.Script("updateEditMap(%f,%f)", page.Individu.Latitude, page.Individu.Longitude)
+			s.Execute("updateEditMap(%f,%f)", page.Individu.Latitude, page.Individu.Longitude)
 		case "latitude":
 			lat, _ := strconv.ParseFloat(val, 64)
 			page.Individu.Latitude = lat
 			page.Search = ""
-			s.Script("updateEditMap(%f,%f)", page.Individu.Latitude, page.Individu.Longitude)
+			s.Execute("updateEditMap(%f,%f)", page.Individu.Latitude, page.Individu.Longitude)
 		case "recolteur":
 			page.Individu.Recolteur = val
 		case "commentaire":
