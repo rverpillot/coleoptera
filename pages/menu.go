@@ -60,7 +60,7 @@ func (menu *Menu) Render(page *ihui.Page) error {
 	})
 
 	page.On("click", "#connect", func(s *ihui.Session, _ ihui.Event) error {
-		return s.ShowPage("login", NewPageLogin(), &ihui.Options{Modal: true})
+		return s.ShowModal("login", NewPageLogin(), nil)
 	})
 
 	page.On("click", "#disconnect", func(s *ihui.Session, _ ihui.Event) error {

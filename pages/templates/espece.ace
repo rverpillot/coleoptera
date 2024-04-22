@@ -11,9 +11,6 @@ div.ui.container style="margin-top: 5em;"
         i.dropdown.icon
         div.default.text Classification
         div.menu
-          div.item 
-            a href="#" id="add-classification" Ajouter une classification
-          div.divider
           {{range .Classifications}}
           div.item data-value="{{.ID}}" {{.Nom}}
           {{end}}
@@ -69,7 +66,7 @@ div.ui.container style="margin-top: 5em;"
       div.ui.input
         input name="descripteur" type="text" placeholder="Descripteur, Année..."
 
-    button.ui.button id="cancel" Annuler
+    button.ui.button id="cancel" type="button" Annuler
     button.ui.button.primary type="submit" Valider
 
   {{with .Error}}

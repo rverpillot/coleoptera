@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/go-resty/resty/v2"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 type Location struct {

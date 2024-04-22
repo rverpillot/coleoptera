@@ -1,9 +1,10 @@
-FROM golang:1.22 AS build
+FROM golang:1.22-alpine AS build
 WORKDIR /src
 COPY . .
-RUN go build -o /bin/coleoptera
+RUN apk add build-base
+RUN CGO_ENABLED=1 go build -o /bin/coleoptera
 
-FROM debian:12-slim
+FROM alpine:3.19
 COPY --from=build /bin/coleoptera /bin/coleoptera
 EXPOSE 8080
 CMD ["/bin/coleoptera", "-listen", "0.0.0.0:8080", "/data/coleoptera.db"]

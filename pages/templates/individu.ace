@@ -18,9 +18,6 @@ div.ui.container style="margin-top: 5em;"
         i.dropdown.icon
         div.default.text Espèce
         div.menu
-          div.item 
-            a href="#" id="add-espece" Ajouter une espéce
-          div.divider
           {{range .Especes}}
           div.item data-value="{{.ID}}" {{.NomEspece}}
           {{end}}

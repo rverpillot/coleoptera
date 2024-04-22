@@ -11,10 +11,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/jinzhu/gorm"
 	"github.com/jung-kurt/gofpdf"
 	"github.com/rverpillot/coleoptera/model"
 	"github.com/rverpillot/ihui"
+	"gorm.io/gorm"
 )
 
 type PageIndividus struct {
@@ -126,7 +126,7 @@ func (page *PageIndividus) Render(p *ihui.Page) error {
 		id := event.Value()
 		var individu model.Individu
 		db.Preload("Espece").Preload("Departement").Find(&individu, id)
-		return s.ShowPage("individu", newPageIndividu(individu, false), &ihui.Options{Modal: true})
+		return s.ShowModal("individu", newPageIndividu(individu, false), nil)
 	})
 
 	p.On("check", ".select", func(s *ihui.Session, event ihui.Event) error {
@@ -176,7 +176,7 @@ func (page *PageIndividus) Render(p *ihui.Page) error {
 			Longitude: 6.997305,
 			Altitude:  sql.NullInt64{Int64: 100, Valid: true},
 		}
-		return s.ShowPage("individu", newPageIndividu(individu, true), &ihui.Options{Modal: true})
+		return s.ShowModal("individu", newPageIndividu(individu, true), nil)
 	})
 
 	p.On("click", "#printLabels", func(s *ihui.Session, event ihui.Event) error {
@@ -191,9 +191,9 @@ func (page *PageIndividus) Render(p *ihui.Page) error {
 		if err := page.printLabels(db, f); err != nil {
 			return err
 		}
-		s.Script(`
-		win = window.open("","print")
-		if (win) {win.location = "tmp/%s"}
+		s.Execute(`
+		win = window.open("","print");
+		if (win) {win.location = "tmp/%s";}
 		`, path.Base(f.Name()))
 
 		page.clearSelection()
@@ -212,14 +212,14 @@ func (page *PageIndividus) Render(p *ihui.Page) error {
 		if err := export(db, f); err != nil {
 			return err
 		}
-		return s.Script(`window.open("tmp/%s","export")`, path.Base(f.Name()))
+		return s.Execute(`window.open("tmp/%s","export")`, path.Base(f.Name()))
 	})
 
 	return nil
 }
 
 func export(db *gorm.DB, output io.Writer) error {
-	var count int
+	var count int64
 	var individus []model.Individu
 
 	if err := db.Model(&model.Individu{}).Count(&count).

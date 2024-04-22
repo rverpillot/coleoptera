@@ -3,7 +3,7 @@ package model
 import (
 	"log"
 
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 func LoadIndividus(db *gorm.DB, individus *[]Individu, index int, size int, search string, espece_id uint, order string) int {
@@ -20,7 +20,7 @@ func LoadIndividus(db *gorm.DB, individus *[]Individu, index int, size int, sear
 		}
 	}
 
-	var count int
+	var count int64
 	if err := db.Model(&Individu{}).Count(&count).
 		Offset(index).Limit(size).
 		Order(order).
@@ -29,7 +29,7 @@ func LoadIndividus(db *gorm.DB, individus *[]Individu, index int, size int, sear
 		Find(individus).Error; err != nil {
 		log.Println(err)
 	}
-	return count
+	return int(count)
 }
 
 func AllClassifications(db *gorm.DB) []Classification {
@@ -53,9 +53,9 @@ func AllEspeces(db *gorm.DB) []Espece {
 }
 
 func CountAllEspeces(db *gorm.DB) int {
-	nb := 0
+	var nb int64
 	db.Model(&Espece{}).Count(&nb)
-	return nb
+	return int(nb)
 }
 
 func AllDepartements(db *gorm.DB) []Departement {

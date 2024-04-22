@@ -6,9 +6,10 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/jinzhu/gorm"
 	"github.com/rverpillot/coleoptera/model"
 	"github.com/rverpillot/ihui"
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type PageIndividu struct {
@@ -49,15 +50,15 @@ func (page *PageIndividu) Render(p *ihui.Page) error {
 
 	p.On("page-created", "", func(s *ihui.Session, event ihui.Event) error {
 		if page.Edit {
-			return s.Script(`createEditMap("#mapedit","%s")`, p.Id)
+			return s.Execute(`createEditMap("#mapedit","%s")`, p.Id)
 		} else {
-			return s.Script(`createPreviewMap("#mappreview",%f,%f)`, page.Individu.Longitude, page.Individu.Latitude)
+			return s.Execute(`createPreviewMap("#mappreview",%f,%f)`, page.Individu.Longitude, page.Individu.Latitude)
 		}
 	})
 
 	p.On("page-updated", "", func(s *ihui.Session, event ihui.Event) error {
 		if page.Edit && !page.EditMapCreated {
-			if err := s.Script(`createEditMap("#mapedit","%s")`, p.Id); err != nil {
+			if err := s.Execute(`createEditMap("#mapedit","%s")`, p.Id); err != nil {
 				return err
 			}
 		}
@@ -98,12 +99,12 @@ func (page *PageIndividu) Render(p *ihui.Page) error {
 			long, _ := strconv.ParseFloat(val, 64)
 			page.Individu.Longitude = long
 			page.Search = ""
-			s.Script("updateEditMap(%f,%f)", page.Individu.Latitude, page.Individu.Longitude)
+			s.Execute("updateEditMap(%f,%f)", page.Individu.Latitude, page.Individu.Longitude)
 		case "latitude":
 			lat, _ := strconv.ParseFloat(val, 64)
 			page.Individu.Latitude = lat
 			page.Search = ""
-			s.Script("updateEditMap(%f,%f)", page.Individu.Latitude, page.Individu.Longitude)
+			s.Execute("updateEditMap(%f,%f)", page.Individu.Latitude, page.Individu.Longitude)
 		case "recolteur":
 			page.Individu.Recolteur = val
 		case "commentaire":
@@ -140,30 +141,16 @@ func (page *PageIndividu) Render(p *ihui.Page) error {
 		return p.Close()
 	})
 
-	p.On("click", "#add-espece", func(s *ihui.Session, event ihui.Event) error {
-		espece := model.Espece{}
-		s.ShowPage("espece", newPageEspece(&espece), &ihui.Options{Modal: true})
-		if !db.NewRecord(espece) {
-			page.Individu.Espece = espece
-			page.Individu.EspeceID = espece.ID
-		}
-		return nil
-	})
-
 	p.On("click", "#validation", func(s *ihui.Session, event ihui.Event) error {
 		log.Println(page.Individu)
 		if page.Individu.Espece.ID == 0 {
 			page.Error = "Genre/espèce absent !"
+			return nil
 		}
-		var err error
-		if db.NewRecord(page.Individu) {
-			err = db.Set("gorm:save_associations", false).Create(&page.Individu).Error
-		} else {
-			err = db.Set("gorm:save_associations", false).Save(&page.Individu).Error
-		}
-		if err != nil {
+		if err := db.Omit(clause.Associations).Save(&page.Individu).Error; err != nil {
 			log.Println(err)
 			page.Error = err.Error()
+			return nil
 		}
 		return p.Close()
 	})
