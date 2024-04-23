@@ -17,7 +17,7 @@ func NewPageLogin() *PageLogin {
 }
 
 func (page *PageLogin) Render(p *ihui.Page) error {
-	if err := p.WriteAce(TemplatesFs, "templates/login.ace", page); err != nil {
+	if err := p.WriteGoTemplate(TemplatesFs, "templates/login.html", page); err != nil {
 		return err
 	}
 

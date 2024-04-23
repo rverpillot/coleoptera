@@ -31,7 +31,7 @@ func NewPagePlan(menu *Menu) *PagePlan {
 }
 
 func (page *PagePlan) Render(p *ihui.Page) error {
-	if err := p.WriteAce(TemplatesFs, "templates/plan.ace", page); err != nil {
+	if err := p.WriteGoTemplate(TemplatesFs, "templates/plan.html", page); err != nil {
 		return err
 	}
 

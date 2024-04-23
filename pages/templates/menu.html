@@ -1,0 +1,10 @@
+<div class="ui inverted fixed menu">
+  <div class="header item">
+    <img src="images/icon.png" />
+    <p data-position="right bottom" data-tooltip="v24.04.1 ©Régis Verpillot" data-inverted>Coleoptera</p>
+  </div>
+  {{range .Items}}
+  <a class="item menu-item {{if .Active}}active teal{{end}}" data-id="{{.Name}}">{{.Label}}</a>
+  {{end}}
+  <div class="right menu">{{if .Connected}}<a id="disconnect" class="item">Déconnexion</a>{{else}}<a id="connect" class="item">Connexion</a>{{end}}</div>
+</div>

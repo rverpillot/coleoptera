@@ -18,7 +18,6 @@ import (
 )
 
 type PageIndividus struct {
-	tmpl          ihui.Template
 	menu          *Menu
 	selection     map[uint]bool
 	SelectCount   int
@@ -85,7 +84,7 @@ func (page *PageIndividus) Render(p *ihui.Page) error {
 		}
 	}
 
-	if err := p.WriteAce(TemplatesFs, "templates/individus.ace", page); err != nil {
+	if err := p.WriteGoTemplate(TemplatesFs, "templates/individus.html", page); err != nil {
 		return err
 	}
 
@@ -126,7 +125,7 @@ func (page *PageIndividus) Render(p *ihui.Page) error {
 		id := event.Value()
 		var individu model.Individu
 		db.Preload("Espece").Preload("Departement").Find(&individu, id)
-		return s.ShowModal("individu", newPageIndividu(individu, false), nil)
+		return s.ShowModal("individu", newPageIndividu(individu, false),  &ihui.Options{Target: "#modal"})
 	})
 
 	p.On("check", ".select", func(s *ihui.Session, event ihui.Event) error {
@@ -176,7 +175,7 @@ func (page *PageIndividus) Render(p *ihui.Page) error {
 			Longitude: 6.997305,
 			Altitude:  sql.NullInt64{Int64: 100, Valid: true},
 		}
-		return s.ShowModal("individu", newPageIndividu(individu, true), nil)
+		return s.ShowModal("individu", newPageIndividu(individu, true), &ihui.Options{Target: "#modal"})
 	})
 
 	p.On("click", "#printLabels", func(s *ihui.Session, event ihui.Event) error {
