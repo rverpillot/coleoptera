@@ -13,7 +13,6 @@ require (
 require (
 	github.com/PuerkitoBio/goquery v1.9.1 // indirect
 	github.com/andybalholm/cascadia v1.3.2 // indirect
-	github.com/cbroglie/mustache v1.4.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/websocket v1.5.1 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
