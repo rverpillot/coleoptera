@@ -88,10 +88,10 @@ func (page *PageIndividus) Render(p *ihui.Page) error {
 		return err
 	}
 
-	p.On("page-created", "", func(s *ihui.Session, _ ihui.Event) error {
-		page.Pagination.SetPage(1)
-		return nil
-	})
+	// p.On("page-created", "", func(s *ihui.Session, _ ihui.Event) error {
+	// 	page.Pagination.SetPage(1)
+	// 	return nil
+	// })
 
 	p.On("input", ".search", func(s *ihui.Session, event ihui.Event) error {
 		s.Set("search_individus", event.Value())
