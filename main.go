@@ -100,6 +100,7 @@ func main() {
 	level := logger.Error
 	if *debug {
 		level = logger.Info
+		pages.SetDebugMode()
 	}
 	db, err = gorm.Open(sqlite.Open(baseName), &gorm.Config{
 		Logger: logger.Default.LogMode(level),

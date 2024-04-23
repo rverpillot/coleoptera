@@ -18,7 +18,6 @@ import (
 )
 
 type PageIndividus struct {
-	tmpl          ihui.Template
 	menu          *Menu
 	selection     map[uint]bool
 	SelectCount   int
@@ -85,7 +84,7 @@ func (page *PageIndividus) Render(p *ihui.Page) error {
 		}
 	}
 
-	if err := p.WriteAce(TemplatesFs, "templates/individus.ace", page); err != nil {
+	if err := p.WriteGoTemplate(TemplatesFs, "templates/individus.html", page); err != nil {
 		return err
 	}
 

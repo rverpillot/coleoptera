@@ -25,7 +25,7 @@ func (page *PageEspeces) Render(p *ihui.Page) error {
 	page.Nb = model.CountAllEspeces(db)
 	page.Classifications = model.AllClassifications(db)
 
-	if err := p.WriteAce(TemplatesFs, "templates/especes.ace", page); err != nil {
+	if err := p.WriteGoTemplate(TemplatesFs, "templates/especes.html", page); err != nil {
 		return err
 	}
 

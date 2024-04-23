@@ -1,0 +1,29 @@
+<section class="section">
+    <table class="table is-striped is-fullwidth">
+        <thead>
+            <tr>
+                <td></td>
+                <td class="sortable" data-id="classifications.nom">Classification</td>
+                <td class="sortable" data-id="especes.genre">Genre/Espèce</td>
+                <td class="sortable" data-id="site">Site</td>
+                <td class="sortable" data-id="commune">Commune</td>
+                <td class="sortable" data-id="code">Code</td>
+                <td class="sortable" data-id="date">Date</td>
+            </tr>
+        </thead>
+        <tbody>
+            {{range .Individus}}
+            <tr>
+                <td></td>
+                <td>{{.Espece.Classification.Nom}}</td>
+                <td>{{.Espece.NomEspece}}</td>
+                <td>{{.Site}}</td>
+                <td>{{.Commune}}</td>
+                <td>{{.Code}}</td>
+                <td>{{.Date.Format "02/01/2006"}}</td>
+                <td><a href="#" data-id="{{.ID}}" class="detail">more</a></td>
+            </tr>
+            {{end}}
+        </tbody>
+    </table>
+</section>

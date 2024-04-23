@@ -1,0 +1,39 @@
+<nav class="navbar is-black" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <div class="navbar-item">
+      <img src="images/icon.png">
+      <p class="has-text-weight-bold has-tooltip-bottom" data-tooltip="v24.04.2 ©Régis Verpillot">Coleoptera</p>
+    </div>
+
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarColeoptera">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div id="navbarColeoptera" class="navbar-menu">
+    <div class="navbar-start">
+      {{range .Items}}
+      <a class="menu-item navbar-item {{if .Active}}is-selected{{end}}" data-id="{{.Name}}">{{.Label}}</a>
+      {{end}}
+    </div>
+
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <div class="buttons">
+          {{if .Connected}}
+          <a id="disconnect" class="button is-primary is-small"><strong>Déconnexion</strong></a>
+          {{else}}
+          <a id="connect" class="button is-primary is-small"><strong>Connexion</strong></a>
+          {{end}}
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div id="especes"></div>
+<div id="individus"></div>
+<div id="plan"></div>

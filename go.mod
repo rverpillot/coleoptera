@@ -23,4 +23,4 @@ require (
 	golang.org/x/net v0.24.0 // indirect
 )
 
-// replace github.com/rverpillot/ihui v1.2.3 => ../ihui
+replace github.com/rverpillot/ihui v1.2.3 => ../ihui
