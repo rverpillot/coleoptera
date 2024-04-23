@@ -38,12 +38,12 @@ func (page *PageEspeces) Render(p *ihui.Page) error {
 
 	p.On("click", "#add-espece", func(s *ihui.Session, event ihui.Event) error {
 		var espece model.Espece
-		return s.ShowModal("espece", newPageEspece(&espece), nil)
+		return s.ShowModal("espece", newPageEspece(&espece),  &ihui.Options{Target: "#modal"})
 	})
 
 	p.On("click", "#add-classification", func(s *ihui.Session, event ihui.Event) error {
 		var classification model.Classification
-		return s.ShowModal("classification", newPageClassification(&classification), nil)
+		return s.ShowModal("classification", newPageClassification(&classification),  &ihui.Options{Target: "#modal"})
 	})
 	return nil
 

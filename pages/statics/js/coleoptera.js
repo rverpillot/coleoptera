@@ -1,6 +1,6 @@
 
 $(document).on("page-created page-updated", function (event) {
-    console.log("page-created page-updated")
+    // console.log("page-created page-updated")
     doSemanticUI($("#" + event.detail.page))
 })
 

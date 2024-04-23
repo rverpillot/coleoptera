@@ -1,0 +1,212 @@
+<div class="ui container" style="margin-top: 5em">
+    {{if .Edit}}
+    <div class="ui message attached">
+        <div class="header">Ajouter/Modifier une donnée</div>
+    </div>
+    <form id="formIndividu" class="ui form attached segment fluid">
+        <div class="field two wide">
+            <label>Date :</label><input name="date" type="text" placeholder="JJ/MM/AAAA"
+                value="{{.Individu.Date.Format " 02/01/2006"}}">
+        </div>
+        <div class="field ten wide">
+            <label>Genre/Espèce :</label>
+            <div class="ui dropdown search selection additions">
+                <input name="espece" type="hidden"
+                    value="{{if (gt .Individu.Espece.ID 0)}}{{.Individu.Espece.ID}}{{end}}" />
+                <i class="dropdown icon"></i>
+                <div class="default text">Espèce</div>
+                <div class="menu">
+                    {{range .Especes}}
+                    <div class="item" data-value="{{.ID}}">{{.NomEspece}}</div>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+        <div class="inline fields">
+            <label>Sexe :</label>
+            <div class="field">
+                <div class="ui radio checkbox">
+                    {{if (eq .Individu.Sexe "M")}}
+                    <input class="hidden" name="sexe" tabindex="0" type="radio" value="M" checked />
+                    {{else}}
+                    <input class="hidden" name="sexe" tabindex="0" type="radio" value="M" />
+                    {{end}}
+                    <label><i class="icon man"></i></label>
+                </div>
+            </div>
+            <div class="field">
+                <div class="ui radio checkbox">
+                    {{if (eq .Individu.Sexe "F")}}
+                    <input class="hidden" name="sexe" tabindex="0" type="radio" value="F" checked />
+                    {{else}}
+                    <input class="hidden" name="sexe" tabindex="0" type="radio" value="F" />
+                    {{end}}
+                    <label><i class="icon woman"></i></label>
+                </div>
+            </div>
+        </div>
+        <div class="field six wide">
+            <label>Site :</label>
+            <div class="ui dropdown search selection additions">
+                <input name="site" type="hidden" value="{{.Individu.Site}}" /><i class="dropdown icon"></i>
+                <div class="default text">Site</div>
+                <div class="menu">
+                    {{range .Sites}}
+                    <div class="item" data-value="{{.}}">{{.}}</div>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+        <div class="fields">
+            <div class="field six wide disabled">
+                <label>Commune :</label>
+                <div class="ui dropdown search selection additions">
+                    <input name="commune" type="hidden" value="{{.Individu.Commune}}" /><i class="dropdown icon"></i>
+                    <div class="default text">Commune</div>
+                    <div class="menu">
+                        {{range .Communes}}
+                        <div class="item" data-value="{{.}}">{{.}}</div>
+                        {{end}}
+                    </div>
+                </div>
+            </div>
+            <div class="field six wide disabled">
+                <label>Département :</label>
+                <div class="ui dropdown search selection">
+                    <input name="code" type="hidden" value="{{.Individu.Code}}" /><i class="dropdown icon"></i>
+                    <div class="default text">Département</div>
+                    <div class="menu">
+                        {{range .Departements}}
+                        <div class="item" data-value="{{.Code}}">{{.Code}} - {{.Nom}}</div>
+                        {{end}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="fields">
+            <div class="field four wide"><label>Latitude :</label><input name="latitude" type="text"
+                    value="{{.Individu.Latitude}}" /></div>
+            <div class="field four wide"><label>Longitude :</label><input name="longitude" type="text"
+                    value="{{.Individu.Longitude}}" /></div>
+        </div>
+        <div class="field twelve wide noupdate">
+            <label>Plan :</label>
+            <div id="mapedit" style="margin-top: 10px; width: 100%; height: 450px"></div>
+        </div>
+        <div class="field two wide">
+            <label>Altitude :</label>
+            <div class="ui right labeled input">
+                <input name="altitude" type="text" value="{{.Individu.Altitude.Int64}}" />
+                <div class="ui basic label">m</div>
+            </div>
+        </div>
+        <div class="field four wide">
+            <label>Récolteur :</label>
+            <div class="ui dropdown search selection additions">
+                <input name="recolteur" type="hidden" value="{{.Individu.Recolteur}}" /><i class="dropdown icon"></i>
+                <div class="default text">Récolteur</div>
+                <div class="menu">
+                    {{range .Recolteurs}}
+                    <div class="item" data-value="{{.}}">{{.}}</div>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+        <div class="field"><label>Conditions de capture :</label><textarea name="commentaire"
+                rows="2">{{.Individu.Commentaire.String}}</textarea></div>
+    </form>
+    <div class="ui bottom attached header">
+        <button id="cancel" class="ui button">Annuler</button><button id="validation"
+            class="ui button positive">Valider</button>
+    </div>
+    
+    {{with .Error}}
+    <div class="ui bottom message attached error">{{.}}</div>
+    {{end}}
+    <div style="margin-bottom: 10em"></div>
+    {{else}}
+
+    {{if .Delete}}
+    <div class="ui modal small">
+        <i class="icon close"></i>
+        <div class="header">{{.Individu.Espece.NomEspece}}</div>
+        <div class="content">
+            <p>Supprimer cette donnée ?</p>
+        </div>
+        <div class="actions">
+            <div id="cancel-delete" class="ui deny button">Non</div>
+            <div id="confirm-delete" class="ui red right approve button">Oui</div>
+        </div>
+    </div>
+    {{else}}
+    {{with .Individu}}
+    <h3 class="ui top attached header">{{.Espece.NomEspece}}</h3>
+    <div class="ui segment attached">
+        <table>
+            <style type="text/css" scoped>
+                td {
+                    padding: 5px;
+                }
+
+                .label {
+                    text-align: left;
+                    font-weight: bold;
+                    padding-left: 2em;
+                    width: 10em;
+                }
+
+                .value {
+                    padding-left: 2em;
+                }
+            </style>
+            <tr>
+                <td class="label">Date :</td>
+                <td class="value">{{.Date.Format "02/01/2006"}}</td>
+            </tr>
+            <tr>
+                <td class="label">Sexe :</td>
+                <td class="value">{{if (eq .Sexe "M")}}<i class="icon man"></i>{{else}}<i class="icon woman"></i>{{end}}
+                </td>
+            </tr>
+            <tr>
+                <td class="label">Site :</td>
+                <td class="value">{{.Site}}</td>
+            </tr>
+            <tr>
+                <td class="label">Commune :</td>
+                <td class="value">{{.Commune}}</td>
+            </tr>
+            <tr>
+                <td class="label">Département :</td>
+                <td class="value">{{.Departement.Nom}} ({{.Code}})</td>
+            </tr>
+            <tr>
+                <td class="label">Altitude :</td>
+                <td class="value">{{.Altitude.Int64}}m</td>
+            </tr>
+            <tr>
+                <td class="label">Récolteur :</td>
+                <td class="value">{{.Recolteur}}</td>
+            </tr>
+            <tr>
+                <td class="label">Conditions :</td>
+                <td class="value">{{.Commentaire.String}}</td>
+            </tr>
+            <tr>
+                <td class="label">Plan :</td>
+            </tr>
+        </table>
+        <div id="mappreview" style="margin-top: 10px; width: 100%; height: 400px"></div>
+    </div>
+    {{end}}
+
+    <div class="ui bottom attached header center aligned">
+        <button id="cancel" class="ui button">Fermer</button>
+        {{if .Admin}}
+        <button id="edit" class="ui button primary">Modifier</button>
+        <button id="delete" class="ui button red">Supprimer</button>
+        {{end}}
+    </div>
+    {{end}}
+    {{end}}
+</div>

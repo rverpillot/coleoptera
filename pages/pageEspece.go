@@ -43,7 +43,7 @@ func (page *PageEspece) Render(p *ihui.Page) error {
 	page.AllEspeces = model.AllNomEspeces(db)
 	page.AllSousEspeces = model.AllSousEspeces(db)
 
-	if err := p.WriteAce(TemplatesFs, "templates/espece.ace", page); err != nil {
+	if err := p.WriteGoTemplate(TemplatesFs, "templates/espece.html", page); err != nil {
 		return err
 	}
 

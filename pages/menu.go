@@ -37,7 +37,7 @@ func (menu *Menu) ShowPage(s *ihui.Session, name string) error {
 	for _, item := range menu.Items {
 		if item.Name == name {
 			menu.SetActive(name)
-			if err := s.ShowPage(item.Name, item.Drawer, &ihui.Options{Replace: true, Target: "#" + item.Name, Visible: true}); err != nil {
+			if err := s.ShowPage(item.Name, item.Drawer, nil); err != nil {
 				fmt.Println(err)
 				return err
 			}
@@ -60,7 +60,7 @@ func (menu *Menu) Render(page *ihui.Page) error {
 	})
 
 	page.On("click", "#connect", func(s *ihui.Session, _ ihui.Event) error {
-		return s.ShowModal("login", NewPageLogin(), nil)
+		return s.ShowModal("login", NewPageLogin(),  &ihui.Options{Target: "#modal"})
 	})
 
 	page.On("click", "#disconnect", func(s *ihui.Session, _ ihui.Event) error {
