@@ -40,7 +40,7 @@ func start(session *ihui.Session) error {
 	menu.Add("especes", "Espèces", pages.NewPageEspeces(menu))
 	menu.Add("individus", "Individus", pages.NewPageIndividus(menu))
 	menu.Add("plan", "Plan", pages.NewPagePlan(menu))
-	if err := session.ShowPage("menu", menu, nil); err != nil {
+	if err := session.ShowPage("menu", menu, &ihui.Options{AlwaysVisible: true}); err != nil {
 		return err
 	}
 	return menu.ShowPage(session, "individus")
