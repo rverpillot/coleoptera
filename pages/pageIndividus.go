@@ -125,7 +125,7 @@ func (page *PageIndividus) Render(p *ihui.Page) error {
 		id := event.Value()
 		var individu model.Individu
 		db.Preload("Espece").Preload("Departement").Find(&individu, id)
-		return s.ShowModal("individu", newPageIndividu(individu, false),  &ihui.Options{Target: "#modal"})
+		return s.ShowModal("individu", newPageIndividu(individu, false), &ihui.Options{Target: "#modal"})
 	})
 
 	p.On("check", ".select", func(s *ihui.Session, event ihui.Event) error {
