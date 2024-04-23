@@ -30,21 +30,20 @@
             {{end}}
         </div>
     </div>
-    <table class="ui striped compact sortable table small">
+    <table class="ui table striped compact sortable selectable">
         <thead>
             <tr>
                 <th>
-                    <div class="ui checkbox">{{if .AllSelected}}<input class="hidden selectAll" tabindex="0"
-                            type="checkbox" checked>{{else}}<input class="hidden selectAll" tabindex="0"
-                            type="checkbox">{{end}}</div>
+                    <div class="ui checkbox">
+                        <input class="hidden selectAll" tabindex="0" type="checkbox" {{if .AllSelected}}checked{{end}}>
+                    </div>
                 </th>
-                <th class="{{ .ShowSort " classifications.nom" }}" data-id="classifications.nom">Classification</th>
-                <th class="{{ .ShowSort " especes.genre" }}" data-id="especes.genre">Genre/Espèce</th>
-                <th class="{{ .ShowSort " site" }}" data-id="site">Site</th>
-                <th class="{{ .ShowSort " commune" }}" data-id="commune">Commune</th>
-                <th class="{{ .ShowSort " code" }}" data-id="code">Code</th>
-                <th class="{{ .ShowSort " date" }}" data-id="date">Date</th>
-                <th></th>
+                <th class="{{ .ShowSort "classifications.nom" }}" data-id="classifications.nom">Classification</th>
+                <th class="{{ .ShowSort "especes.genre" }}" data-id="especes.genre">Genre/Espèce</th>
+                <th class="{{ .ShowSort "site" }}" data-id="site">Site</th>
+                <th class="{{ .ShowSort "commune" }}" data-id="commune">Commune</th>
+                <th class="{{ .ShowSort "code" }}" data-id="code">Code</th>
+                <th class="{{ .ShowSort "date" }}" data-id="date">Date</th>
             </tr>
         </thead>
         <tbody>
@@ -52,20 +51,15 @@
             <tr>
                 <td>
                     <div class="ui checkbox">
-                        {{if .Selected}}
-                        <input class="hidden select" tabindex="0" type="checkbox" data-id="{{.ID}}" checked>
-                        {{else}}
-                        <input class="hidden select" tabindex="0" type="checkbox" data-id="{{.ID}}">
-                        {{end}}
+                        <input class="hidden select" tabindex="0" type="checkbox" data-id="{{.ID}}" {{if .Selected}}checked{{end}}>
                     </div>
                 </td>
-                <td>{{.Espece.Classification.Nom}}</td>
-                <td>{{.Espece.NomEspece}}</td>
-                <td>{{.Site}}</td>
-                <td>{{.Commune}}</td>
-                <td>{{.Code}}</td>
-                <td>{{.Date.Format "02/01/2006"}}</td>
-                <td><a class="detail" href="#" data-id="{{.ID}}"><i class="icon zoom"></i></a></td>
+                <td class="detail" data-id="{{.ID}}">{{.Espece.Classification.Nom}}</td>
+                <td class="detail" data-id="{{.ID}}">{{.Espece.NomEspece}}</td>
+                <td class="detail" data-id="{{.ID}}">{{.Site}}</td>
+                <td class="detail" data-id="{{.ID}}">{{.Commune}}</td>
+                <td class="detail" data-id="{{.ID}}">{{.Code}}</td>
+                <td class="detail" data-id="{{.ID}}">{{.Date.Format "02/01/2006"}}</td>
             </tr>
             {{end}}
         </tbody>
