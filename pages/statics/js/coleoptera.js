@@ -1,7 +1,7 @@
 
-$(document).on("page-created page-updated", function (event) {
-    // console.log("page-created page-updated")
-    doSemanticUI($("#" + event.detail.page))
+$(document).on("element-created element-updated", function (event) {
+    // console.log("element-created element-updated")
+    doSemanticUI($("#" + event.detail.element))
 })
 
 

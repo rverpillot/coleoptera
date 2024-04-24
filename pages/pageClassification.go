@@ -18,18 +18,18 @@ func newPageClassification(classification *model.Classification) *PageClassifica
 	}
 }
 
-func (page *PageClassification) Render(p *ihui.Page) error {
-	db := p.Get("db").(*gorm.DB)
+func (page *PageClassification) Render(e *ihui.HTMLElement) error {
+	db := e.Get("db").(*gorm.DB)
 
-	if err := p.WriteGoTemplate(TemplatesFs, "templates/classification.html", page); err != nil {
+	if err := e.WriteGoTemplate(TemplatesFs, "templates/classification.html", page); err != nil {
 		return err
 	}
 
-	p.On("click", "#close", func(s *ihui.Session, event ihui.Event) error {
-		return p.Close()
+	e.On("click", "#close", func(s *ihui.Session, event ihui.Event) error {
+		return e.Close()
 	})
 
-	p.On("submit", "form", func(s *ihui.Session, event ihui.Event) error {
+	e.On("submit", "form", func(s *ihui.Session, event ihui.Event) error {
 		data := event.Data.(map[string]interface{})
 		page.classification.Nom = data["classification"].(string)
 		if page.classification.Nom == "" {
@@ -40,7 +40,7 @@ func (page *PageClassification) Render(p *ihui.Page) error {
 			page.Error = err.Error()
 			return nil
 		}
-		return p.Close()
+		return e.Close()
 	})
 
 	return nil

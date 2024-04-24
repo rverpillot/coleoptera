@@ -34,31 +34,31 @@ func newPageIndividu(individu model.Individu, editMode bool) *PageIndividu {
 	}
 }
 
-func (page *PageIndividu) Render(p *ihui.Page) error {
-	db := p.Get("db").(*gorm.DB)
+func (page *PageIndividu) Render(e *ihui.HTMLElement) error {
+	db := e.Get("db").(*gorm.DB)
 	page.Especes = model.AllEspeces(db)
 
-	page.Admin = p.Get("admin").(bool)
+	page.Admin = e.Get("admin").(bool)
 	page.Sites = model.AllSites(db)
 	page.Communes = model.AllCommunes(db)
 	page.Departements = model.AllDepartements(db)
 	page.Recolteurs = model.AllRecolteurs(db)
 
-	if err := p.WriteGoTemplate(TemplatesFs, "templates/individu.html", page); err != nil {
+	if err := e.WriteGoTemplate(TemplatesFs, "templates/individu.html", page); err != nil {
 		return err
 	}
 
-	p.On("page-created", "", func(s *ihui.Session, event ihui.Event) error {
+	e.On("element-created", "", func(s *ihui.Session, event ihui.Event) error {
 		if page.Edit {
-			return s.Execute(`createEditMap("#mapedit","%s")`, p.Id)
+			return s.Execute(`createEditMap("#mapedit","%s")`, e.Id)
 		} else {
 			return s.Execute(`createPreviewMap("#mappreview",%f,%f)`, page.Individu.Longitude, page.Individu.Latitude)
 		}
 	})
 
-	p.On("page-updated", "", func(s *ihui.Session, event ihui.Event) error {
+	e.On("element-updated", "", func(s *ihui.Session, event ihui.Event) error {
 		if page.Edit && !page.EditMapCreated {
-			if err := s.Execute(`createEditMap("#mapedit","%s")`, p.Id); err != nil {
+			if err := s.Execute(`createEditMap("#mapedit","%s")`, e.Id); err != nil {
 				return err
 			}
 		}
@@ -66,7 +66,7 @@ func (page *PageIndividu) Render(p *ihui.Page) error {
 		return nil
 	})
 
-	p.On("form", "form", func(s *ihui.Session, event ihui.Event) error {
+	e.On("form", "form", func(s *ihui.Session, event ihui.Event) error {
 		data := event.Data.(map[string]interface{})
 		name := data["name"].(string)
 		val := data["val"].(string)
@@ -113,35 +113,35 @@ func (page *PageIndividu) Render(p *ihui.Page) error {
 		return nil
 	})
 
-	p.On("click", "#cancel", func(s *ihui.Session, event ihui.Event) error {
-		return p.Close()
+	e.On("click", "#cancel", func(s *ihui.Session, event ihui.Event) error {
+		return e.Close()
 	})
 
-	p.On("click", "#edit", func(s *ihui.Session, event ihui.Event) error {
+	e.On("click", "#edit", func(s *ihui.Session, event ihui.Event) error {
 		page.Edit = true
 		return nil
 	})
 
-	p.On("click", "#delete", func(s *ihui.Session, event ihui.Event) error {
+	e.On("click", "#delete", func(s *ihui.Session, event ihui.Event) error {
 		page.Delete = true
 		return nil
 	})
 
-	p.On("click", "#confirm-delete", func(s *ihui.Session, event ihui.Event) error {
+	e.On("click", "#confirm-delete", func(s *ihui.Session, event ihui.Event) error {
 		if page.Individu.ID > 0 {
 			if err := db.Delete(page.Individu).Error; err != nil {
 				page.Error = err.Error()
 				log.Println(err)
 			}
 		}
-		return p.Close()
+		return e.Close()
 	})
 
-	p.On("click", "#cancel-delete", func(s *ihui.Session, event ihui.Event) error {
-		return p.Close()
+	e.On("click", "#cancel-delete", func(s *ihui.Session, event ihui.Event) error {
+		return e.Close()
 	})
 
-	p.On("click", "#validation", func(s *ihui.Session, event ihui.Event) error {
+	e.On("click", "#validation", func(s *ihui.Session, event ihui.Event) error {
 		log.Println(page.Individu)
 		if page.Individu.Espece.ID == 0 {
 			page.Error = "Genre/espèce absent !"
@@ -152,10 +152,10 @@ func (page *PageIndividu) Render(p *ihui.Page) error {
 			page.Error = err.Error()
 			return nil
 		}
-		return p.Close()
+		return e.Close()
 	})
 
-	p.On("position", "", func(s *ihui.Session, event ihui.Event) error {
+	e.On("position", "", func(s *ihui.Session, event ihui.Event) error {
 		pos := event.Data.(map[string]interface{})
 		log.Println(pos)
 		page.Individu.Longitude = pos["lng"].(float64)

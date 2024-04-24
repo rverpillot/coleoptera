@@ -34,8 +34,8 @@ func (page *PageEspece) ID() string {
 	return strconv.Itoa(int(page.Espece.ID))
 }
 
-func (page *PageEspece) Render(p *ihui.Page) error {
-	db := p.Get("db").(*gorm.DB)
+func (page *PageEspece) Render(e *ihui.HTMLElement) error {
+	db := e.Get("db").(*gorm.DB)
 
 	page.Classifications = model.AllClassifications(db)
 	page.AllGenres = model.AllGenres(db)
@@ -43,15 +43,15 @@ func (page *PageEspece) Render(p *ihui.Page) error {
 	page.AllEspeces = model.AllNomEspeces(db)
 	page.AllSousEspeces = model.AllSousEspeces(db)
 
-	if err := p.WriteGoTemplate(TemplatesFs, "templates/espece.html", page); err != nil {
+	if err := e.WriteGoTemplate(TemplatesFs, "templates/espece.html", page); err != nil {
 		return err
 	}
 
-	p.On("click", "#cancel", func(s *ihui.Session, ev ihui.Event) error {
-		return p.Close()
+	e.On("click", "#cancel", func(s *ihui.Session, ev ihui.Event) error {
+		return e.Close()
 	})
 
-	p.On("submit", "form", func(s *ihui.Session, ev ihui.Event) error {
+	e.On("submit", "form", func(s *ihui.Session, ev ihui.Event) error {
 		data := ev.Data.(map[string]interface{})
 		id, _ := strconv.Atoi(data["classification"].(string))
 
@@ -73,7 +73,7 @@ func (page *PageEspece) Render(p *ihui.Page) error {
 			page.Error = err.Error()
 			return nil
 		}
-		return p.Close()
+		return e.Close()
 	})
 
 	return nil

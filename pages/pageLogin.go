@@ -16,12 +16,12 @@ func NewPageLogin() *PageLogin {
 	return &PageLogin{}
 }
 
-func (page *PageLogin) Render(p *ihui.Page) error {
-	if err := p.WriteGoTemplate(TemplatesFs, "templates/login.html", page); err != nil {
+func (page *PageLogin) Render(e *ihui.HTMLElement) error {
+	if err := e.WriteGoTemplate(TemplatesFs, "templates/login.html", page); err != nil {
 		return err
 	}
 
-	p.On("submit", "form", func(s *ihui.Session, event ihui.Event) error {
+	e.On("submit", "form", func(s *ihui.Session, event ihui.Event) error {
 		data := event.Data.(map[string]interface{})
 		username := data["username"].(string)
 		password := data["password"].(string)
@@ -35,15 +35,15 @@ func (page *PageLogin) Render(p *ihui.Page) error {
 		}
 		if page.authenticate(username, password) {
 			s.Set("admin", true)
-			return p.Close()
+			return e.Close()
 		} else {
 			page.Error = "Utilisateur ou mot de passe inconnu!"
 			return fmt.Errorf(page.Error)
 		}
 	})
 
-	p.On("click", "#cancel", func(s *ihui.Session, event ihui.Event) error {
-		return p.Close()
+	e.On("click", "#cancel", func(s *ihui.Session, event ihui.Event) error {
+		return e.Close()
 	})
 
 	return nil
