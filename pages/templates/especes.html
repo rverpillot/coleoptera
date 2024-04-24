@@ -1,21 +1,9 @@
-<div class="ui container" style="margin-top: 7em;">
-    <div class="ui grid">
-        <div class="row">
-            {{if .Admin}}
-            <div class="right floated column ten wide">
-                <div id="add-espece" class="ui button basic primary right floated">
-                    <i class="icon plus"></i>
-                    Ajouter une espèce
-                </div>
-                <div id="add-classification" class="ui button basic primary right floated">
-                    <i class="icon plus"></i>
-                    Ajouter une classification
-                </div>
-            </div>
-            {{end}}
-        </div>
-    </div>
-    {{printf "%d espèces." .Nb}}
+<div class="ui container" style="margin-top: 5em;">
+    {{if .Admin}}
+    <button id="add-espece" class="ui button primary right floated">Ajouter une espèce</button>
+    <button id="add-classification" class="ui button primary right floated">Ajouter une classification</button>
+    {{end}}
+    <h3>{{printf "%d espèces." .Nb}}</h3>
     <ul>
         {{range .Classifications}}
         <li class="classification">{{.Nom}}</li>

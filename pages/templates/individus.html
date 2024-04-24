@@ -11,17 +11,17 @@
                 {{if .ShowAllButton}}<div id="reset" class="ui button fluid">Tout</div>{{end}}
             </div>
             {{if and (not .ShowAllButton) .Admin}}
-            <div class="right floated column six wide">
-                <div id="add" class="ui button basic primary right floated">
+            <div class="seven wide column">
+                <button id="add" class="ui button primary right floated">
                     <i class="icon plus"></i>
                     Ajouter
-                </div>
-                <div id="export" class="ui button basic primary right floated" target="export">
+                </button>
+                <button id="export" class="ui button primary right floated" target="export">
                     <i class="icon save icon"></i>
                     Exporter
-                </div>
+                </button>
                 {{if (gt .SelectCount 0)}}
-                <a id="printLabels" class="ui secondary basic button right floated" href="labels.html" target="print">
+                <a id="printLabels" class="ui secondary button right floated" href="labels.html" target="print">
                     <i class="icon print"></i>
                     Etiquettes
                 </a>
