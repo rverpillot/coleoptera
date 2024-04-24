@@ -19,31 +19,31 @@ func NewPageEspeces(menu *Menu) *PageEspeces {
 	}
 }
 
-func (page *PageEspeces) Render(p *ihui.Page) error {
-	db := p.Get("db").(*gorm.DB)
-	page.Admin = p.Get("admin").(bool)
+func (page *PageEspeces) Render(e *ihui.HTMLElement) error {
+	db := e.Get("db").(*gorm.DB)
+	page.Admin = e.Get("admin").(bool)
 	page.Nb = model.CountAllEspeces(db)
 	page.Classifications = model.AllClassifications(db)
 
-	if err := p.WriteGoTemplate(TemplatesFs, "templates/especes.html", page); err != nil {
+	if err := e.WriteGoTemplate(TemplatesFs, "templates/especes.html", page); err != nil {
 		return err
 	}
 
-	p.On("click", ".espece", func(session *ihui.Session, event ihui.Event) error {
+	e.On("click", ".espece", func(session *ihui.Session, event ihui.Event) error {
 		var espece model.Espece
 		db.First(&espece, event.Value())
 		session.Set("search_espece", espece.ID)
 		return page.menu.ShowPage(session, "individus")
 	})
 
-	p.On("click", "#add-espece", func(s *ihui.Session, event ihui.Event) error {
+	e.On("click", "#add-espece", func(s *ihui.Session, event ihui.Event) error {
 		var espece model.Espece
-		return s.ShowModal("espece", newPageEspece(&espece),  &ihui.Options{Target: "#modal"})
+		return s.ShowModal("espece", newPageEspece(&espece), nil)
 	})
 
-	p.On("click", "#add-classification", func(s *ihui.Session, event ihui.Event) error {
+	e.On("click", "#add-classification", func(s *ihui.Session, event ihui.Event) error {
 		var classification model.Classification
-		return s.ShowModal("classification", newPageClassification(&classification),  &ihui.Options{Target: "#modal"})
+		return s.ShowModal("classification", newPageClassification(&classification), nil)
 	})
 	return nil
 

@@ -30,24 +30,24 @@ func NewPagePlan(menu *Menu) *PagePlan {
 	}
 }
 
-func (page *PagePlan) Render(p *ihui.Page) error {
-	if err := p.WriteGoTemplate(TemplatesFs, "templates/plan.html", page); err != nil {
+func (page *PagePlan) Render(e *ihui.HTMLElement) error {
+	if err := e.WriteGoTemplate(TemplatesFs, "templates/plan.html", page); err != nil {
 		return err
 	}
 
-	p.On("page-created", "", func(s *ihui.Session, event ihui.Event) error {
+	e.On("element-created", "", func(s *ihui.Session, event ihui.Event) error {
 		s.Execute(`createMap("#map", {lat:%f, lng:%f}, %d, "%s")`,
-			page.infoMap.Lat, page.infoMap.Lng, page.infoMap.Zoom, p.Id)
+			page.infoMap.Lat, page.infoMap.Lng, page.infoMap.Zoom, e.Id)
 		page.showMarkers(s)
 		return nil
 	})
 
-	p.On("page-updated", "", func(s *ihui.Session, event ihui.Event) error {
+	e.On("element-updated", "", func(s *ihui.Session, event ihui.Event) error {
 		page.showMarkers(s)
 		return nil
 	})
 
-	p.On("map-changed", "", func(s *ihui.Session, event ihui.Event) error {
+	e.On("map-changed", "", func(s *ihui.Session, event ihui.Event) error {
 		data := event.Data.(map[string]interface{})
 		page.infoMap = infoMap{
 			Lat:  data["lat"].(float64),

@@ -41,29 +41,28 @@ func (menu *Menu) ShowPage(s *ihui.Session, name string) error {
 				fmt.Println(err)
 				return err
 			}
-		} else {
-			s.HidePage(item.Name)
+			break
 		}
 	}
 	return nil
 }
 
-func (menu *Menu) Render(page *ihui.Page) error {
-	menu.Connected = page.Get("admin").(bool)
+func (menu *Menu) Render(e *ihui.HTMLElement) error {
+	menu.Connected = e.Get("admin").(bool)
 
-	if err := page.WriteGoTemplate(TemplatesFs, "templates/menu.html", menu); err != nil {
+	if err := e.WriteGoTemplate(TemplatesFs, "templates/menu.html", menu); err != nil {
 		return err
 	}
 
-	page.On("click", ".menu-item", func(s *ihui.Session, event ihui.Event) error {
+	e.On("click", ".menu-item", func(s *ihui.Session, event ihui.Event) error {
 		return menu.ShowPage(s, event.Value())
 	})
 
-	page.On("click", "#connect", func(s *ihui.Session, _ ihui.Event) error {
-		return s.ShowModal("login", NewPageLogin(),  &ihui.Options{Target: "#modal"})
+	e.On("click", "#connect", func(s *ihui.Session, _ ihui.Event) error {
+		return s.ShowModal("login", NewPageLogin(), nil)
 	})
 
-	page.On("click", "#disconnect", func(s *ihui.Session, _ ihui.Event) error {
+	e.On("click", "#disconnect", func(s *ihui.Session, _ ihui.Event) error {
 		s.Set("admin", false)
 		return nil
 	})
