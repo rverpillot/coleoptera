@@ -70,7 +70,7 @@ func (page *PageIndividu) Render(e *ihui.HTMLElement) error {
 		data := event.Data.(map[string]interface{})
 		name := data["name"].(string)
 		val := data["val"].(string)
-		log.Println(name, val)
+		log.Printf("%s=%s", name, val)
 
 		switch name {
 		case "date":
@@ -78,7 +78,8 @@ func (page *PageIndividu) Render(e *ihui.HTMLElement) error {
 		case "espece":
 			id, _ := strconv.Atoi(val)
 			page.Individu.EspeceID = uint(id)
-			db.First(&page.Individu.Espece, id)
+			page.Individu.Espece.ID = uint(id)
+			db.First(&page.Individu.Espece)
 		case "sexe":
 			page.Individu.Sexe = val
 		case "site":
