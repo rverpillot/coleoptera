@@ -1,31 +1,25 @@
-<div class="ui container" style="margin-top: 7em;">
-    <div class="ui grid">
-        <div class="row">
-            {{if .Admin}}
-            <div class="right floated column ten wide">
-                <div id="add-espece" class="ui button basic primary right floated">
-                    <i class="icon plus"></i>
-                    Ajouter une espèce
-                </div>
-                <div id="add-classification" class="ui button basic primary right floated">
-                    <i class="icon plus"></i>
-                    Ajouter une classification
-                </div>
-            </div>
-            {{end}}
-        </div>
-    </div>
-    {{printf "%d espèces." .Nb}}
-    <ul>
-        {{range .Classifications}}
-        <li class="classification">{{.Nom}}</li>
+{{if .Admin}}
+<div class="buttons is-right mt-2 mr-2">
+    <button id="add-classification" class="button is-primary">Ajouter une classification</button>
+    <button id="add-espece" class="button is-primary">Ajouter une espèce</button>
+</div>
+{{end}}
+<section class="section">
+    <h1 class="title">Espèces</h1>
+    <h2 class="subtitle">{{printf "%d espèces." .Nb}}</h2>
+    <div class="content">
         <ul>
-            {{range .Especes}}
-            <li>
-                <a class="espece espece" href="#" data-id="{{.ID}}">{{.NomEspece}}</a> <span>{{.Descripteur}}</span>
+            {{range .Classifications}}
+            <li><span class="classification">{{.Nom}}</span>
+                <ul>
+                    {{range .Especes}}
+                    <li>
+                        <a class="espece" href="#" data-id="{{.ID}}">{{.NomEspece}}</a> <span>{{.Descripteur}}</span>
+                    </li>
+                    {{end}}
+                </ul>
             </li>
             {{end}}
         </ul>
-        {{end}}
-    </ul>
-</div>
+    </div>
+</section>
