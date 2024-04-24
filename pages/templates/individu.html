@@ -26,21 +26,13 @@
             <label>Sexe :</label>
             <div class="field">
                 <div class="ui radio checkbox">
-                    {{if (eq .Individu.Sexe "M")}}
-                    <input class="hidden" name="sexe" tabindex="0" type="radio" value="M" checked />
-                    {{else}}
-                    <input class="hidden" name="sexe" tabindex="0" type="radio" value="M" />
-                    {{end}}
+                    <input name="sexe" type="radio" value="M" {{if (eq .Individu.Sexe "M")}}checked{{end}}/>
                     <label><i class="icon man"></i></label>
                 </div>
             </div>
             <div class="field">
                 <div class="ui radio checkbox">
-                    {{if (eq .Individu.Sexe "F")}}
-                    <input class="hidden" name="sexe" tabindex="0" type="radio" value="F" checked />
-                    {{else}}
-                    <input class="hidden" name="sexe" tabindex="0" type="radio" value="F" />
-                    {{end}}
+                    <input name="sexe" type="radio" value="F" {{if (eq .Individu.Sexe "F")}}checked{{end}}/>
                     <label><i class="icon woman"></i></label>
                 </div>
             </div>

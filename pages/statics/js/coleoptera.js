@@ -136,7 +136,6 @@ function createPreviewMap(tag, longitude, latitude) {
 
 function doSemanticUI(tag) {
     $(tag).find('.ui.modal').modal({ closable: false }).modal("show")
-    $(tag).find('.ui.checkbox').checkbox()
     $(tag).find('.ui.dropdown').dropdown({
         forceSelection: false,
         fullTextSearch: true,
