@@ -26,13 +26,13 @@
             <label>Sexe :</label>
             <div class="field">
                 <div class="ui radio checkbox">
-                    <input name="sexe" type="radio" value="M" {{if (eq .Individu.Sexe "M")}}checked{{end}}/>
+                    <input name="sexe" type="radio" value="M" {{if (eq .Individu.Sexe "M" )}}checked{{end}} />
                     <label><i class="icon man"></i></label>
                 </div>
             </div>
             <div class="field">
                 <div class="ui radio checkbox">
-                    <input name="sexe" type="radio" value="F" {{if (eq .Individu.Sexe "F")}}checked{{end}}/>
+                    <input name="sexe" type="radio" value="F" {{if (eq .Individu.Sexe "F" )}}checked{{end}} />
                     <label><i class="icon woman"></i></label>
                 </div>
             </div>
@@ -40,7 +40,8 @@
         <div class="field six wide">
             <label>Site :</label>
             <div class="ui dropdown search selection additions">
-                <input name="site" type="hidden" value="{{.Individu.Site}}" /><i class="dropdown icon"></i>
+                <input name="site" type="hidden" value="{{.Individu.Site}}" />
+                <i class="dropdown icon"></i>
                 <div class="default text">Site</div>
                 <div class="menu">
                     {{range .Sites}}
@@ -53,7 +54,8 @@
             <div class="field six wide disabled">
                 <label>Commune :</label>
                 <div class="ui dropdown search selection additions">
-                    <input name="commune" type="hidden" value="{{.Individu.Commune}}" /><i class="dropdown icon"></i>
+                    <input name="commune" type="hidden" value="{{.Individu.Commune}}" />
+                    <i class="dropdown icon"></i>
                     <div class="default text">Commune</div>
                     <div class="menu">
                         {{range .Communes}}
@@ -65,7 +67,8 @@
             <div class="field six wide disabled">
                 <label>Département :</label>
                 <div class="ui dropdown search selection">
-                    <input name="code" type="hidden" value="{{.Individu.Code}}" /><i class="dropdown icon"></i>
+                    <input name="code" type="hidden" value="{{.Individu.Code}}" />
+                    <i class="dropdown icon"></i>
                     <div class="default text">Département</div>
                     <div class="menu">
                         {{range .Departements}}
@@ -76,10 +79,14 @@
             </div>
         </div>
         <div class="fields">
-            <div class="field four wide"><label>Latitude :</label><input name="latitude" type="text"
-                    value="{{.Individu.Latitude}}" /></div>
-            <div class="field four wide"><label>Longitude :</label><input name="longitude" type="text"
-                    value="{{.Individu.Longitude}}" /></div>
+            <div class="field four wide">
+                <label>Latitude :</label>
+                <input name="latitude" type="text" value="{{.Individu.Latitude}}" />
+            </div>
+            <div class="field four wide">
+                <label>Longitude :</label>
+                <input name="longitude" type="text" value="{{.Individu.Longitude}}" />
+            </div>
         </div>
         <div class="field twelve wide noupdate">
             <label>Plan :</label>
@@ -95,7 +102,8 @@
         <div class="field four wide">
             <label>Récolteur :</label>
             <div class="ui dropdown search selection additions">
-                <input name="recolteur" type="hidden" value="{{.Individu.Recolteur}}" /><i class="dropdown icon"></i>
+                <input name="recolteur" type="hidden" value="{{.Individu.Recolteur}}" />
+                <i class="dropdown icon"></i>
                 <div class="default text">Récolteur</div>
                 <div class="menu">
                     {{range .Recolteurs}}
@@ -111,7 +119,7 @@
         <button id="cancel" class="ui button">Annuler</button><button id="validation"
             class="ui button positive">Valider</button>
     </div>
-    
+
     {{with .Error}}
     <div class="ui bottom message attached error">{{.}}</div>
     {{end}}
