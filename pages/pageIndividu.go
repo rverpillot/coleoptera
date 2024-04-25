@@ -74,7 +74,7 @@ func (page *PageIndividu) Render(e *ihui.HTMLElement) error {
 
 		switch name {
 		case "date":
-			page.Individu.Date, _ = time.Parse("02/01/2006", val)
+			page.Individu.Date, _ = time.Parse("2006-01-02", val)
 		case "espece":
 			id, _ := strconv.Atoi(val)
 			page.Individu.EspeceID = uint(id)
