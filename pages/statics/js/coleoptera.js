@@ -136,7 +136,6 @@ function createPreviewMap(tag, longitude, latitude) {
 
 function doSemanticUI(tag) {
     $(tag).find('.ui.modal').modal({ closable: false }).modal("show")
-    $(tag).find('.ui.checkbox').checkbox()
     $(tag).find('.ui.dropdown').dropdown({
         forceSelection: false,
         fullTextSearch: true,
@@ -147,18 +146,6 @@ function doSemanticUI(tag) {
             noResults: 'Aucun résultat.'
         }
     })
-    $(tag).find('.ui.dropdown.additions').dropdown({
-        forceSelection: false,
-        allowAdditions: true,
-        hideAdditions: false,
-        message: {
-            addResult: 'Ajouter <b>{term}</b>',
-            count: '{count} selectionné(s)',
-            maxSelections: 'Max {maxCount} selections',
-            noResults: 'Aucun résultat.'
-        }
-    })
-
     $(tag).find('select.dropdown').dropdown()
 
 }
