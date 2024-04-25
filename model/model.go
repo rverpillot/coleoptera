@@ -8,7 +8,7 @@ import (
 )
 
 type Departement struct {
-	Code string `gorm:"primary_key"`
+	Code string `gorm:"primaryKey"`
 	Nom  string
 }
 
@@ -57,7 +57,7 @@ type Individu struct {
 	Site        string
 	Commune     string
 	Code        string
-	Departement Departement `gorm:"ForeignKey:Code;AssociationForeignKey:Code"`
+	Departement Departement `gorm:"foreignKey:Code;references:Code"`
 	Longitude   float64
 	Latitude    float64
 	Recolteur   string
