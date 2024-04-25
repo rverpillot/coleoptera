@@ -1,108 +1,130 @@
-<div class="ui container" style="margin-top: 5em">
+<section class="section">
     {{if .Edit}}
-    <div class="ui message attached">
-        <div class="header">Ajouter/Modifier une donnée</div>
-    </div>
-    <form id="formIndividu" class="ui form attached segment fluid">
-        <div class="field two wide">
-            <label>Date :</label><input name="date" type="text" placeholder="JJ/MM/AAAA"
-                value="{{.Individu.Date.Format " 02/01/2006"}}">
-        </div>
-        <div class="field ten wide">
-            <label>Genre/Espèce :</label>
-            {{$especeID := .Individu.Espece.ID}}
-            <select name="espece" class="ui selection dropdown">
-                {{range .Especes}}
-                <option value="{{.ID}}" {{if (eq .ID $especeID)}}selected="selected"{{end}}>{{.NomEspece}}</option>
-                {{end}}
-            </select>
-        </div>
-        <div class="inline fields">
-            <label>Sexe :</label>
+    <h1 class="title">Ajouter/Modifier une donnée</h1>
+    <div class="container">
+        <form id="formIndividu">
             <div class="field">
-                <div class="ui radio checkbox">
-                    <input name="sexe" type="radio" value="M" {{if (eq .Individu.Sexe "M" )}}checked{{end}} />
-                    <label><i class="icon man"></i></label>
+                <label class="label">Date</label>
+                <div class="control">
+                    <input name="date" class="input" type="date" value='{{.Individu.Date.Format "2006-01-02"}}'>
                 </div>
             </div>
             <div class="field">
-                <div class="ui radio checkbox">
-                    <input name="sexe" type="radio" value="F" {{if (eq .Individu.Sexe "F" )}}checked{{end}} />
-                    <label><i class="icon woman"></i></label>
+                <label class="label">Genre/Espèce</label>
+                <div class="control select">
+                    {{$especeID := .Individu.Espece.ID}}
+                    <select name="espece" class="ui selection dropdown">
+                        {{range .Especes}}
+                        <option value="{{.ID}}" {{if (eq .ID $especeID)}}selected="selected" {{end}}>{{.NomEspece}}
+                        </option>
+                        {{end}}
+                    </select>
                 </div>
             </div>
-        </div>
-        <div class="field six wide">
-            <label>Site :</label>
-            <input name="site" list="sites" type="text" value="{{.Individu.Site}}" />
-            <datalist id="sites">
-                {{range .Sites}}
-                <option value="{{.}}">
-                {{end}}
-            </datalist>
-        </div>
-        <div class="fields">
-            <div class="field six wide disabled">
-                <label>Commune :</label>
-                <input name="commune" list="communes" type="text" value="{{.Individu.Commune}}" />
-                <datalist id="communes">
-                    {{range .Communes}}
+            <div class="field">
+                <label class="label">Sexe</label>
+                <div class="control">
+                    <label class="radio">
+                        <input name="sexe" type="radio" value="M" {{if (eq .Individu.Sexe "M" )}}checked{{end}} />
+                        Mâle
+                    </label>
+                    <label class="radio">
+                        <input name="sexe" type="radio" value="F" {{if (eq .Individu.Sexe "F" )}}checked{{end}} />
+                        Femelle
+                    </label>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Site</label>
+                <input name="site" list="sites" class="input" type="text" value="{{.Individu.Site}}" />
+                <datalist id="sites">
+                    {{range .Sites}}
                     <option value="{{.}}">
-                    {{end}}
+                        {{end}}
                 </datalist>
             </div>
-            <div class="field six wide disabled">
-                <label>Département :</label>
-                <input name="code" list="departements" type="text" value="{{.Individu.Code}}" />
-                <datalist id="departements">
-                    {{range .Departements}}
-                    <option value="{{.Code}}">
-                    {{end}}
-                </datalist>
+            <div class="field">
+                <label class="label">Commune</label>
+                <div class="control">
+                    <input name="commune" list="communes" class="input" type="text" value="{{.Individu.Commune}}"
+                        readonly />
+                    <datalist id="communes">
+                        {{range .Communes}}
+                        <option value="{{.}}">
+                            {{end}}
+                    </datalist>
+                </div>
             </div>
-        </div>
-        <div class="fields">
-            <div class="field four wide">
-                <label>Latitude :</label>
-                <input name="latitude" type="text" value="{{.Individu.Latitude}}" />
+            <div class="field">
+                <label class="label">Département</label>
+                <div class="control">
+                    <input name="code" list="departements" class="input" type="text" value="{{.Individu.Code}}"
+                        readonly />
+                    <datalist id="departements">
+                        {{range .Departements}}
+                        <option value="{{.Code}}">
+                            {{end}}
+                    </datalist>
+                </div>
             </div>
-            <div class="field four wide">
-                <label>Longitude :</label>
-                <input name="longitude" type="text" value="{{.Individu.Longitude}}" />
+            <div class="field">
+                <label class="label">Plan</label>
+                <div class="control">
+                    <div id="mapedit" style="margin-top: 10px; width: 100%; height: 450px"></div>
+                </div>
             </div>
-        </div>
-        <div class="field twelve wide noupdate">
-            <label>Plan :</label>
-            <div id="mapedit" style="margin-top: 10px; width: 100%; height: 450px"></div>
-        </div>
-        <div class="field two wide">
-            <label>Altitude :</label>
-            <div class="ui right labeled input">
-                <input name="altitude" type="text" value="{{.Individu.Altitude.Int64}}" />
-                <div class="ui basic label">m</div>
+            <div class="field">
+                <label class="label">Latitude</label>
+                <div class="control">
+                    <input name="latitude" type="text" class="input" value="{{.Individu.Latitude}}" />
+                </div>
             </div>
-        </div>
-        <div class="field four wide">
-            <label>Récolteur :</label>
-            <input name="recolteur" list="recolteurs" type="text" value="{{.Individu.Recolteur}}" />
-            <datalist id="recolteurs">
-                {{range .Recolteurs}}
-                <option value="{{.}}">
-                    {{end}}
-            </datalist>
-        </div>
-        <div class="field"><label>Conditions de capture :</label><textarea name="commentaire"
-                rows="2">{{.Individu.Commentaire.String}}</textarea></div>
-    </form>
-    <div class="ui bottom attached header">
-        <button id="cancel" class="ui button">Annuler</button><button id="validation"
-            class="ui button positive">Valider</button>
-    </div>
+            <div class="field">
+                <label class="label">Longitude</label>
+                <div class="control">
+                    <input name="longitude" type="text" class="input" value="{{.Individu.Longitude}}" />
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Altitude</label>
+                <div class="control">
+                    <input name="altitude" type="text" class="input" value="{{.Individu.Altitude.Int64}}" />
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Récolteur</label>
+                <div class="control">
+                    <input name="recolteur" list="recolteurs" type="text" class="input"
+                        value="{{.Individu.Recolteur}}" />
+                    <datalist id="recolteurs">
+                        {{range .Recolteurs}}
+                        <option value="{{.}}">
+                            {{end}}
+                    </datalist>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Conditions de capture</label>
+                <div class="control">
+                    <textarea name="commentaire" class="textarea" rows="2">{{.Individu.Commentaire.String}}</textarea>
+                </div>
+            </div>
 
-    {{with .Error}}
-    <div class="ui bottom message attached error">{{.}}</div>
-    {{end}}
-    <div style="margin-bottom: 10em"></div>
+            <div class="field is-grouped">
+                <div class="control">
+                    <button id="validation" class="button is-link">Valider</button>
+                </div>
+                <div class="control">
+                    <button id="cancel" class="button is-link is-light">Annuler</button>
+                </div>
+            </div>
+        </form>
+
+        {{with .Error}}
+        <div class="ui bottom message attached error">{{.}}</div>
+        {{end}}
+        <div style="margin-bottom: 10em"></div>
+    </div>
     {{else}}
 
     {{if .Delete}}
@@ -119,32 +141,16 @@
     </div>
     {{else}}
     {{with .Individu}}
-    <h3 class="ui top attached header">{{.Espece.NomEspece}}</h3>
-    <div class="ui segment attached">
+    <h1 class="title">{{.Espece.NomEspece}}</h1>
+    <div class="container">
         <table>
-            <style type="text/css" scoped>
-                td {
-                    padding: 5px;
-                }
-
-                .label {
-                    text-align: left;
-                    font-weight: bold;
-                    padding-left: 2em;
-                    width: 10em;
-                }
-
-                .value {
-                    padding-left: 2em;
-                }
-            </style>
             <tr>
                 <td class="label">Date :</td>
                 <td class="value">{{.Date.Format "02/01/2006"}}</td>
             </tr>
             <tr>
                 <td class="label">Sexe :</td>
-                <td class="value">{{if (eq .Sexe "M")}}<i class="icon man"></i>{{else}}<i class="icon woman"></i>{{end}}
+                <td class="value">{{if (eq .Sexe "M")}}Mâle{{else}}Femelle{{end}}
                 </td>
             </tr>
             <tr>
@@ -171,21 +177,19 @@
                 <td class="label">Conditions :</td>
                 <td class="value">{{.Commentaire.String}}</td>
             </tr>
-            <tr>
-                <td class="label">Plan :</td>
-            </tr>
         </table>
-        <div id="mappreview" style="margin-top: 10px; width: 100%; height: 400px"></div>
-    </div>
-    {{end}}
-
-    <div class="ui bottom attached header center aligned">
-        <button id="cancel" class="ui button">Fermer</button>
-        {{if .Admin}}
-        <button id="edit" class="ui button primary">Modifier</button>
-        <button id="delete" class="ui button red">Supprimer</button>
+        <div id="mappreview" style="margin: 10px; width: 80%; height: 400px"></div>
         {{end}}
+
+        <div class="buttons">
+            <button id="cancel" class="button is-light">Fermer</button>
+            {{if .Admin}}
+            <button id="edit" class="button is-primary">Modifier</button>
+            <button id="delete" class="button is-danger">Supprimer</button>
+            {{end}}
+        </div>
     </div>
+
     {{end}}
     {{end}}
-</div>
+</section>
