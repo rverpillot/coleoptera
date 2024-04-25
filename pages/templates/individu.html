@@ -4,12 +4,12 @@
         <div class="header">Ajouter/Modifier une donnée</div>
     </div>
     <form id="formIndividu" class="ui form attached segment fluid">
-        <div class="field two wide">
-            <label>Date :</label><input name="date" type="text" placeholder="JJ/MM/AAAA"
-                value="{{.Individu.Date.Format " 02/01/2006"}}">
+        <div class="field three wide">
+            <label>Date</label>
+            <input name="date" type="date" value="{{.Individu.Date.Format "2006-01-02"}}">
         </div>
         <div class="field ten wide">
-            <label>Genre/Espèce :</label>
+            <label>Genre/Espèce</label>
             {{$especeID := .Individu.Espece.ID}}
             <select name="espece" class="ui selection dropdown">
                 {{range .Especes}}
@@ -18,7 +18,7 @@
             </select>
         </div>
         <div class="inline fields">
-            <label>Sexe :</label>
+            <label>Sexe</label>
             <div class="field">
                 <div class="ui radio checkbox">
                     <input name="sexe" type="radio" value="M" {{if (eq .Individu.Sexe "M" )}}checked{{end}} />
@@ -33,7 +33,7 @@
             </div>
         </div>
         <div class="field six wide">
-            <label>Site :</label>
+            <label>Site</label>
             <input name="site" list="sites" type="text" value="{{.Individu.Site}}" />
             <datalist id="sites">
                 {{range .Sites}}
@@ -43,7 +43,7 @@
         </div>
         <div class="fields">
             <div class="field six wide disabled">
-                <label>Commune :</label>
+                <label>Commune</label>
                 <input name="commune" list="communes" type="text" value="{{.Individu.Commune}}" />
                 <datalist id="communes">
                     {{range .Communes}}
@@ -52,7 +52,7 @@
                 </datalist>
             </div>
             <div class="field six wide disabled">
-                <label>Département :</label>
+                <label>Département</label>
                 <input name="code" list="departements" type="text" value="{{.Individu.Code}}" />
                 <datalist id="departements">
                     {{range .Departements}}
@@ -61,29 +61,29 @@
                 </datalist>
             </div>
         </div>
+        <div class="field twelve wide noupdate">
+            <label>Plan</label>
+            <div id="mapedit" style="margin-top: 10px; width: 100%; height: 450px"></div>
+        </div>
         <div class="fields">
             <div class="field four wide">
-                <label>Latitude :</label>
+                <label>Latitude</label>
                 <input name="latitude" type="text" value="{{.Individu.Latitude}}" />
             </div>
             <div class="field four wide">
-                <label>Longitude :</label>
+                <label>Longitude</label>
                 <input name="longitude" type="text" value="{{.Individu.Longitude}}" />
             </div>
         </div>
-        <div class="field twelve wide noupdate">
-            <label>Plan :</label>
-            <div id="mapedit" style="margin-top: 10px; width: 100%; height: 450px"></div>
-        </div>
         <div class="field two wide">
-            <label>Altitude :</label>
+            <label>Altitude</label>
             <div class="ui right labeled input">
                 <input name="altitude" type="text" value="{{.Individu.Altitude.Int64}}" />
                 <div class="ui basic label">m</div>
             </div>
         </div>
         <div class="field four wide">
-            <label>Récolteur :</label>
+            <label>Récolteur</label>
             <input name="recolteur" list="recolteurs" type="text" value="{{.Individu.Recolteur}}" />
             <datalist id="recolteurs">
                 {{range .Recolteurs}}
@@ -91,7 +91,7 @@
                     {{end}}
             </datalist>
         </div>
-        <div class="field"><label>Conditions de capture :</label><textarea name="commentaire"
+        <div class="field"><label>Conditions de capture</label><textarea name="commentaire"
                 rows="2">{{.Individu.Commentaire.String}}</textarea></div>
     </form>
     <div class="ui bottom attached header">
