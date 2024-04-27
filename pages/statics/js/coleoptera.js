@@ -6,72 +6,53 @@ $(document).on("element-created element-updated", function (event) {
 
 
 var map_individus;
-var gmarkers = [];
-
-function mapIGN(map, controls) {
-    L.geoportalLayer.WMTS({
-        layer: "ORTHOIMAGERY.ORTHO-SAT.SPOT.2021"
-    }).addTo(map);
-    L.geoportalLayer.WMTS({
-        layer: "ORTHOIMAGERY.ORTHOPHOTOS"
-    }).addTo(map);
-    L.geoportalLayer.WMTS({
-        layer: "GEOGRAPHICALGRIDSYSTEMS.MAPS"
-    },{
-        opacity: 100
-    }).addTo(map);
-
-    var layerSwitcher = L.geoportalControl.LayerSwitcher();
-    map.addControl(layerSwitcher);
-
-    if (controls) {
-        var mp = L.geoportalControl.MousePosition();
-        map.addControl(mp);
-
-        var search = L.geoportalControl.SearchEngine({ displayMarker: false });
-        map.addControl(search);
-    }
-    return map
-}
 
 function showMarkers(tag, markers) {
     // console.log("show markers")
-
-    $.each(gmarkers, function (i, marker) {
-        marker.remove()
-    })
-
-    gmarkers = []
-    positions = []
-    $.each(markers, function (i, location) {
-        var position = location.Location
-        var marker = L.marker(position, {
-            title: location.Infos.join("\n")
-        })
-        positions.push(position)
+    var gmarkers = []
+    $.each(markers, function (i, marker) {
+        var marker = {
+            position: { x: marker.Location.lng, y: marker.Location.lat, projection: "CRS:84" },
+            content: marker.Infos.join("\n"),
+            url: "images/icon.png",
+        }
         gmarkers.push(marker)
-        marker.addTo(map_individus)
     })
 
-    var bounds = L.latLngBounds(positions)
-    // map_individus.fitBounds(bounds, { maxZoom: 6, padding: [5, 5] })
-    map_individus.fitBounds(bounds, { maxZoom: 6 })
+    map_individus.setMarkersOptions(gmarkers)
 }
 
 function createMap(tag, center, zoom, pageName) {
     if ($(tag).length == 0) return;
 
-    map_individus = L.map($(tag)[0], {
-        center: [center.lat, center.lng],
-        zoom: zoom
-    })
-    mapIGN(map_individus, true)
+    map_individus = Gp.Map.load(
+        $(tag)[0],
+        {
+            apiKey: "cartes,satellite,ortho",
+            center: { geolocate: true },
+            zoom: zoom,
+            mapEventsOptions: {
+            },
+            controlsOptions: {
+                "search": {
+                    maximised: true
+                },
+                "layerswitcher": {
+                    maximised: true
+                },
+            },
+            layersOptions: {
+                "ORTHOIMAGERY.ORTHOPHOTOS": {},
+                "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2": {},
+                "GEOGRAPHICALGRIDSYSTEMS.MAPS": {},
+            }
+        })
 
-    map_individus.on("moveend zoomend", function (ev) {
-        var center = map_individus.getCenter()
-        var data = { lat: center.lat, lng: center.lng, zoom: map_individus.getZoom() }
-        ihui.trigger("map-changed", pageName, data, false)
-    })
+    // map_individus.on("moveend zoomend", function (ev) {
+    //     var center = map_individus.getCenter()
+    //     var data = { lat: center.lat, lng: center.lng, zoom: map_individus.getZoom() }
+    //     ihui.trigger("map-changed", pageName, data, false)
+    // })
 
     console.log("createMap")
 }
@@ -86,17 +67,36 @@ function refreshMap(center, zoom) {
 function createEditMap(tag, pageName) {
     var latitude = parseFloat($("[name=latitude]").val())
     var longitude = parseFloat($("[name=longitude]").val())
-    var position = { lat: 47.626951, lng: 6.997541 }
+    var position = { y: 47.626951, x: 6.997541, projection: "CRS:84"}
 
     if (!isNaN(longitude) && !isNaN(latitude)) {
-        position = { lat: latitude, lng: longitude };
+        position.x = longitude;
+        position.y = latitude;
     }
-    var editMap = L.map($(tag)[0], {
-        center: position,
-        zoom: 10,
-        scrollWheelZoom: false
-    })
-    mapIGN(editMap, true);
+
+    var editMap = Gp.Map.load(
+        $(tag)[0],
+        {
+            apiKey: "cartes,satellite,ortho",
+            center: position,
+            zoom: 10,
+            mapEventsOptions: {
+            },
+            controlsOptions: {
+                "search": {
+                    maximised: true
+                },
+                "layerswitcher": {
+                    maximised: true
+                },
+            },
+            layersOptions: {
+                "ORTHOIMAGERY.ORTHOPHOTOS": {},
+                "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2": {},
+                "GEOGRAPHICALGRIDSYSTEMS.MAPS": {},
+            },
+            markerOptions: [position]
+        })
 
     var editMarker = L.marker(position, {
         // title: position.toString(),
