@@ -23,9 +23,9 @@ func NewPagePlan(menu *Menu) *PagePlan {
 	return &PagePlan{
 		menu: menu,
 		infoMap: infoMap{
-			Lat:  46.435317,
-			Lng:  1.812990,
-			Zoom: 5,
+			Lat:  0,
+			Lng:  0,
+			Zoom: 8,
 		},
 	}
 }

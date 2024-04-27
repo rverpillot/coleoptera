@@ -10,14 +10,14 @@ var gmarkers = [];
 
 function mapIGN(map, controls) {
     L.geoportalLayer.WMTS({
-        layer: "ORTHOIMAGERY.ORTHO-SAT.SPOT.2021"
-    }).addTo(map);
-    L.geoportalLayer.WMTS({
         layer: "ORTHOIMAGERY.ORTHOPHOTOS"
     }).addTo(map);
+    // L.geoportalLayer.WMTS({
+    //     layer: "GEOGRAPHICALGRIDSYSTEMS.MAPS"
+    // }).addTo(map);
     L.geoportalLayer.WMTS({
-        layer: "GEOGRAPHICALGRIDSYSTEMS.MAPS"
-    },{
+        layer: "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2"
+    }, {
         opacity: 100
     }).addTo(map);
 
@@ -25,7 +25,12 @@ function mapIGN(map, controls) {
     map.addControl(layerSwitcher);
 
     if (controls) {
-        var mp = L.geoportalControl.MousePosition();
+        var mp = L.geoportalControl.MousePosition({
+            displayCoordinate: true,
+            altitude: {
+                triggerDelay: 1000,
+            }
+        });
         map.addControl(mp);
 
         var search = L.geoportalControl.SearchEngine({ displayMarker: false });
@@ -61,11 +66,14 @@ function showMarkers(tag, markers) {
 function createMap(tag, center, zoom, pageName) {
     if ($(tag).length == 0) return;
 
-    map_individus = L.map($(tag)[0], {
-        center: [center.lat, center.lng],
-        zoom: zoom
-    })
+    map_individus = L.map($(tag)[0], {})
     mapIGN(map_individus, true)
+
+    if (center.lat == 0 && center.lng == 0) {
+        map_individus.locate({ setView: true, maxZoom: 10 })
+    } else {
+        map_individus.setView([center.lat, center.lng], zoom)
+    }
 
     map_individus.on("moveend zoomend", function (ev) {
         var center = map_individus.getCenter()
@@ -123,7 +131,7 @@ function createPreviewMap(tag, longitude, latitude) {
 
     var previewMap = L.map($(tag)[0], {
         center: position,
-        zoom: 6,
+        zoom: 10,
         scrollWheelZoom: false
     })
     mapIGN(previewMap, false);
