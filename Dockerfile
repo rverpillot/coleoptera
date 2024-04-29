@@ -2,6 +2,7 @@ FROM golang:1.22-alpine AS build
 WORKDIR /src
 COPY . .
 RUN apk add build-base
+RUN go mod download
 RUN CGO_ENABLED=1 go build -o /bin/coleoptera
 
 FROM alpine:3.19
