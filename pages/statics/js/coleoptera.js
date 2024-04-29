@@ -35,6 +35,9 @@ function mapIGN(map, controls) {
 
         var search = L.geoportalControl.SearchEngine({ displayMarker: false });
         map.addControl(search);
+
+        var revSearch = L.geoportalControl.ReverseGeocode(opts);
+        map.addControl(revSearch);
     }
     return map
 }
