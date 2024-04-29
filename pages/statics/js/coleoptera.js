@@ -9,19 +9,26 @@ var map_individus;
 var gmarkers = [];
 
 function mapIGN(map, controls) {
-    L.geoportalLayer.WMTS({
+    var ortho = L.geoportalLayer.WMTS({
         layer: "ORTHOIMAGERY.ORTHOPHOTOS"
     }).addTo(map);
     // L.geoportalLayer.WMTS({
     //     layer: "GEOGRAPHICALGRIDSYSTEMS.MAPS"
     // }).addTo(map);
-    L.geoportalLayer.WMTS({
+    var ign = L.geoportalLayer.WMTS({
         layer: "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2"
     }, {
         opacity: 100
     }).addTo(map);
 
-    var layerSwitcher = L.geoportalControl.LayerSwitcher();
+    var layerSwitcher = L.geoportalControl.LayerSwitcher({
+        position: "topright",
+        collapsed: true,
+        layers: [
+            { layer: ortho, config: { title: "Satellite" } },
+            { layer: ign, config: { title: "Plan" } },
+        ]
+    });
     map.addControl(layerSwitcher);
 
     if (controls) {
@@ -36,7 +43,7 @@ function mapIGN(map, controls) {
         var search = L.geoportalControl.SearchEngine({ displayMarker: false });
         map.addControl(search);
 
-        var revSearch = L.geoportalControl.ReverseGeocode(opts);
+        var revSearch = L.geoportalControl.ReverseGeocode();
         map.addControl(revSearch);
     }
     return map
