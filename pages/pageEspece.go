@@ -18,6 +18,9 @@ type PageEspece struct {
 	AllSousGenres   []string
 	AllEspeces      []string
 	AllSousEspeces  []string
+	AllDescripteurs []string
+	IndividusCount  int64
+	Delete          bool
 	Error           string
 }
 
@@ -42,12 +45,37 @@ func (page *PageEspece) Render(e *ihui.HTMLElement) error {
 	page.AllSousGenres = model.AllSousGenres(db)
 	page.AllEspeces = model.AllNomEspeces(db)
 	page.AllSousEspeces = model.AllSousEspeces(db)
+	page.AllDescripteurs = model.AllDescripteurs(db)
 
 	if err := e.WriteGoTemplate(TemplatesFs, "templates/espece.html", page); err != nil {
 		return err
 	}
 
 	e.On("click", "#cancel", func(s *ihui.Session, ev ihui.Event) error {
+		return e.Close()
+	})
+
+	e.On("click", "#delete", func(s *ihui.Session, ev ihui.Event) error {
+		if err := db.Model(&model.Individu{}).Where("espece_id = ?", page.Espece.ID).Count(&page.IndividusCount).Error; err != nil {
+			log.Println(err)
+			page.Error = err.Error()
+			return nil
+		}
+		page.Delete = true
+		return nil
+	})
+
+	e.On("click", "#confirm-delete", func(s *ihui.Session, ev ihui.Event) error {
+		if err := db.Select("Individus").Delete(page.Espece).Error; err != nil {
+			log.Println(err)
+			page.Error = err.Error()
+			return nil
+		}
+		return e.Close()
+	})
+
+	e.On("click", "#cancel-delete", func(s *ihui.Session, ev ihui.Event) error {
+		page.Delete = false
 		return e.Close()
 	})
 
@@ -68,7 +96,7 @@ func (page *PageEspece) Render(e *ihui.HTMLElement) error {
 		}
 
 		log.Println(page.Espece)
-		if err := db.Create(page.Espece).Error; err != nil {
+		if err := db.Save(page.Espece).Error; err != nil {
 			log.Println(err)
 			page.Error = err.Error()
 			return nil

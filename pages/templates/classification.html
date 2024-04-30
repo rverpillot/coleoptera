@@ -1,16 +1,37 @@
+{{if .Delete}}
+<div class="ui modal small">
+    <i class="icon close"></i>
+    <div class="header">{{.Classification.Nom}}</div>
+    <div class="content">
+        <span class="ui large text">Supprimer cette classification ?</span>
+        {{if gt .EspecesCount 0}}
+        <div class="ui inverted red segment">
+            <p>Attention: {{.EspecesCount}} espèce(s) appartenant à cette classification seront aussi supprimées.</p>
+        </div>
+        {{end}}
+    </div>
+    <div class="actions">
+        <div id="cancel-delete" class="ui deny button">Non</div>
+        <div id="confirm-delete" class="ui red right approve button">Oui</div>
+    </div>
+    {{with .Error}}
+    <div class="ui bottom message attached error">{{.}}</div>
+    {{end}}
+</div>
+{{end}}
+
 <div class="ui container" style="margin-top: 5em;">
     <div class="ui message attached">
         <div class="header">Ajouter/Modifier une classification</div>
     </div>
     <form class="ui form attached fluid segment">
         <div class="field ten wide">
-            <label>Nom de la classification :</label>
-            <div class="ui input">
-                <input name="classification" type="text" placeholder="Classification...">
-            </div>
+            <label>Nom de la classification</label>
+            <input name="classification" type="text" value="{{.Classification.Nom}}" />
         </div>
         <button id="close" class="ui button" type="button">Annuler</button>
         <button class="ui button primary" type="submit">Valider</button>
+        {{if gt .Classification.ID 0}}<button id="delete" type="button" class="ui negative button">Supprimer</button>{{end}}
     </form>
 
     {{with .Error}}

@@ -1,3 +1,21 @@
+{{if .Delete}}
+<div class="ui modal small">
+    <i class="icon close"></i>
+    <div class="header">{{.Individu.Espece.NomEspece}}</div>
+    <div class="content">
+        <p>Supprimer cette donnée ?</p>
+    </div>
+    <div class="actions">
+        <div id="cancel-delete" class="ui deny button">Non</div>
+        <div id="confirm-delete" class="ui red right approve button">Oui</div>
+    </div>
+    {{with .Error}}
+    <div class="ui bottom message attached error">{{.}}</div>
+    {{end}}
+</div>
+{{end}}
+
+
 <div class="ui container" style="margin-top: 5em">
     {{if .Edit}}
     <div class="ui message attached">
@@ -11,7 +29,7 @@
         <div class="field ten wide">
             <label>Genre/Espèce</label>
             {{$especeID := .Individu.Espece.ID}}
-            <select name="espece" class="ui selection dropdown">
+            <select name="espece" class="ui selection search dropdown">
                 {{range .Especes}}
                 <option value="{{.ID}}" {{if (eq .ID $especeID)}}selected="selected"{{end}}>{{.NomEspece}}</option>
                 {{end}}
@@ -104,20 +122,6 @@
     {{end}}
     <div style="margin-bottom: 10em"></div>
     {{else}}
-
-    {{if .Delete}}
-    <div class="ui modal small">
-        <i class="icon close"></i>
-        <div class="header">{{.Individu.Espece.NomEspece}}</div>
-        <div class="content">
-            <p>Supprimer cette donnée ?</p>
-        </div>
-        <div class="actions">
-            <div id="cancel-delete" class="ui deny button">Non</div>
-            <div id="confirm-delete" class="ui red right approve button">Oui</div>
-        </div>
-    </div>
-    {{else}}
     {{with .Individu}}
     <h3 class="ui top attached header">{{.Espece.NomEspece}}</h3>
     <div class="ui segment attached">
@@ -180,9 +184,8 @@
         <button id="cancel" class="ui button">Fermer</button>
         {{if .Admin}}
         <button id="edit" class="ui button primary">Modifier</button>
-        <button id="delete" class="ui button red">Supprimer</button>
+        <button id="delete" class="ui negative button">Supprimer</button>
         {{end}}
     </div>
-    {{end}}
     {{end}}
 </div>

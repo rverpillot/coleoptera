@@ -28,6 +28,7 @@ type Espece struct {
 	Espece           string
 	SousEspece       string
 	Descripteur      string
+	Individus        []Individu
 }
 
 func (espece *Espece) NomEspece() string {

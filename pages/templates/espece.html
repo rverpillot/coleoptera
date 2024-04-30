@@ -1,74 +1,94 @@
+{{if .Delete}}
+<div class="ui modal small">
+    <i class="icon close"></i>
+    <div class="header">{{.Espece.NomEspece}}</div>
+    <div class="content">
+        <span class="ui large text">Supprimer cette espèce ?</span>
+        {{if gt .IndividusCount 0}}
+        <div class="ui inverted red segment">
+            <p>Attention: {{.IndividusCount}} individu(s) appartenant à cette espéce seront aussi supprimés.</p>
+        </div>
+        {{end}}
+    </div>
+    <div class="actions">
+        <div id="cancel-delete" class="ui deny button">Non</div>
+        <div id="confirm-delete" class="ui red right approve button">Oui</div>
+    </div>
+    {{with .Error}}
+    <div class="ui bottom message attached error">{{.}}</div>
+    {{end}}
+</div>
+{{end}}
+
 <div class="ui container" style="margin-top: 5em;">
     <div class="ui message attached">
-        <div class="header">Ajouter une espèce</div>
+        <div class="header">{{if gt .Espece.ID 0}}Modifier{{else}}Ajouter{{end}} une espèce</div>
     </div>
 
     <form class="ui form attached fluid segment">
-        <div class="field eight wide"><label>Classification :</label>
-            <div class="ui dropdown search selection additions"><input name="classification" type="hidden"
-                    value="{{.ID}}"><i class="dropdown icon"></i>
-                <div class="default text">Classification</div>
-                <div class="menu">
-                    {{range .Classifications}}
-                    <div class="item" data-value="{{.ID}}">{{.Nom}}</div>
+        <div class="field eight wide">
+            <label>Classification</label>
+            <select name="classification" class="ui selection search dropdown">
+                {{$classificationID := .Espece.ClassificationID}}
+                {{range .Classifications}}
+                <option value="{{.ID}}" {{if (eq .ID $classificationID)}}selected="selected" {{end}}>{{.Nom}}</option>
+                {{end}}
+            </select>
+        </div>
+        <div class="fields">
+            <div class="field five wide">
+                <label>Genre</label>
+                <input name="genre" list="genres" type="text" value="{{.Espece.Genre}}" />
+                <datalist id="genres">
+                    {{range .AllGenres}}
+                    <option value="{{.}}">
                     {{end}}
-                </div>
+                </datalist>
+            </div>
+            <div class="field five wide">
+                <label>Sous-genre</label>
+                <input name="sous_genre" list="sous_genres" type="text" value="{{.Espece.SousGenre}}" />
+                <datalist id="sous_genres">
+                    {{range .AllSousGenres}}
+                    <option value="{{.}}">
+                    {{end}}
+                </datalist>
             </div>
         </div>
         <div class="fields">
-            <div class="field five wide"><label>Genre :</label>
-                <div class="ui dropdown search selection additions"><input name="genre" type="hidden"><i
-                        class="dropdown icon"></i>
-                    <div class="default text">genre</div>
-                    <div class="menu">
-                        {{range .AllGenres}}
-                        <div class="item">{{.}}</div>
-                        {{end}}
-                    </div>
-                </div>
+            <div class="field five wide">
+                <label>Espèce</label>
+                <input name="espece" list="especes" type="text" value="{{.Espece.Espece}}" />
+                <datalist id="especes">
+                    {{range .AllEspeces}}
+                    <option value="{{.}}">
+                    {{end}}
+                </datalist>
             </div>
-            <div class="field five wide"><label>Sous-genre :</label>
-                <div class="ui dropdown search selection additions"><input name="sous_genre" type="hidden"><i
-                        class="dropdown icon"></i>
-                    <div class="default text">sous-genre</div>
-                    <div class="menu">
-                        {{range .AllSousGenres}}
-                        <div class="item">{{.}}</div>
-                        {{end}}
-                    </div>
-                </div>
+            <div class="field five wide">
+                <label>Ssp</label>
+                <input name="sous_espece" list="sous_especes" type="text" value="{{.Espece.SousEspece}}" />
+                <datalist id="sous_especes">
+                    {{range .AllSousEspeces}}
+                    <option value="{{.}}">
+                    {{end}}
+                </datalist>
             </div>
         </div>
-        <div class="fields">
-            <div class="field five wide"><label>Espèce :</label>
-                <div class="ui dropdown search selection additions"><input name="espece" type="hidden"><i
-                        class="dropdown icon"></i>
-                    <div class="default text">espèce</div>
-                    <div class="menu">
-                        {{range .AllEspeces}}
-                        <div class="item">{{.}}</div>
-                        {{end}}
-                    </div>
-                </div>
-            </div>
-            <div class="field five wide"><label>Ssp :</label>
-                <div class="ui dropdown search selection additions"><input name="sous_espece" type="hidden"><i
-                        class="dropdown icon"></i>
-                    <div class="default text">ssp</div>
-                    <div class="menu">
-                        {{range .AllSousEspeces}}
-                        <div class="item">{{.}}</div>
-                        {{end}}
-                    </div>
-                </div>
-            </div>
+        <div class="field four wide">
+            <label>Descripteur</label>
+            <input name="descripteur" list="descripteurs" type="text" placeholder="Descripteur, Année...", value="{{.Espece.Descripteur}}">
+            <datalist id="descripteurs">
+                {{range .AllDescripteurs}}
+                <option value="{{.}}">
+                {{end}}
+            </datalist>
         </div>
-        <div class="field four wide"><label>Descripteur :</label>
-            <div class="ui input"><input name="descripteur" type="text" placeholder="Descripteur, Année..."></div>
-        </div><button id="cancel" class="ui button" type="button">Annuler</button><button class="ui button primary"
-            type="submit">Valider</button>
-    </form>
 
+        <button id="cancel" class="ui button" type="button">Annuler</button>
+        <button class="ui button primary" type="submit">Valider</button>
+        {{if gt .Espece.ID 0}}<button id="delete" type="button" class="ui negative button">Supprimer</button>{{end}}
+    </form>
     {{with .Error}}
     <div class="ui bottom message attached error">{{.}}</div>
     {{end}}

@@ -126,6 +126,21 @@ func AllSousEspeces(db *gorm.DB) []string {
 	return result
 }
 
+func AllDescripteurs(db *gorm.DB) []string {
+	var descripteurs []string
+	rows, err := db.Raw("select distinct(descripteur) from especes order by 1").Rows()
+	if err != nil {
+		log.Println(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var name string
+		rows.Scan(&name)
+		descripteurs = append(descripteurs, name)
+	}
+	return descripteurs
+}
+
 func AllRecolteurs(db *gorm.DB) []string {
 	var recolteurs []string
 	rows, err := db.Raw("select distinct(recolteur) from individus order by recolteur").Rows()

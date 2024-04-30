@@ -5,12 +5,17 @@
     {{end}}
     <h3>{{printf "%d espèces." .Nb}}</h3>
     <ul>
+        {{$admin := .Admin}}
         {{range .Classifications}}
+        {{if $admin}}
+        <a class="classification" href="#" data-id="{{.ID}}">{{.Nom}}...</a>
+        {{else}}
         <li class="classification">{{.Nom}}</li>
+        {{end}}
         <ul>
             {{range .Especes}}
             <li>
-                <a class="espece espece" href="#" data-id="{{.ID}}">{{.NomEspece}}</a> <span>{{.Descripteur}}</span>
+                <a class="espece" href="#" data-id="{{.ID}}">{{.NomEspece}}</a> <span>{{.Descripteur}}</span>
             </li>
             {{end}}
         </ul>
