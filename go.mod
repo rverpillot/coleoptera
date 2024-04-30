@@ -5,13 +5,13 @@ go 1.22
 require (
 	github.com/go-resty/resty/v2 v2.12.0
 	github.com/jung-kurt/gofpdf v1.16.2
-	github.com/rverpillot/ihui v1.3.3
+	github.com/rverpillot/ihui v1.3.4
 	gorm.io/driver/sqlite v1.5.5
 	gorm.io/gorm v1.25.10
 )
 
 require (
-	github.com/PuerkitoBio/goquery v1.9.1 // indirect
+	github.com/PuerkitoBio/goquery v1.9.2 // indirect
 	github.com/andybalholm/cascadia v1.3.2 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/websocket v1.5.1 // indirect
@@ -21,4 +21,4 @@ require (
 	golang.org/x/net v0.24.0 // indirect
 )
 
-// replace github.com/rverpillot/ihui v1.3.3 => ../ihui
+// replace github.com/rverpillot/ihui v1.3.4 => ../ihui
