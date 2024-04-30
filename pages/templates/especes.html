@@ -8,7 +8,7 @@
         {{$admin := .Admin}}
         {{range .Classifications}}
         {{if $admin}}
-        <a class="classification" href="#" data-id="{{.ID}}">{{.Nom}}...</a>
+        <a class="classification" href="#" data-id="{{.ID}}">{{.Nom}}</a>
         {{else}}
         <li class="classification">{{.Nom}}</li>
         {{end}}
