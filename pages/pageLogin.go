@@ -17,10 +17,6 @@ func NewPageLogin() *PageLogin {
 }
 
 func (page *PageLogin) Render(e *ihui.HTMLElement) error {
-	if err := e.WriteGoTemplate(TemplatesFs, "templates/login.html", page); err != nil {
-		return err
-	}
-
 	e.OnSubmit("form", func(s *ihui.Session, event ihui.Event) error {
 		data := event.Data.(map[string]interface{})
 		username := data["username"].(string)
@@ -46,7 +42,7 @@ func (page *PageLogin) Render(e *ihui.HTMLElement) error {
 		return e.Close()
 	})
 
-	return nil
+	return e.WriteGoTemplate(TemplatesFs, "templates/login.html", page)
 }
 
 func (page *PageLogin) authenticate(username string, password string) bool {

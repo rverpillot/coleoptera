@@ -43,7 +43,7 @@ func start(session *ihui.Session) error {
 	if err := session.AddElement("menu", menu, nil); err != nil {
 		return err
 	}
-	return menu.ShowPage(session, "individus")
+	return menu.ShowItem(session, "individus")
 }
 
 func main() {

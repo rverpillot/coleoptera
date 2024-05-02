@@ -47,10 +47,6 @@ func (page *PageEspece) Render(e *ihui.HTMLElement) error {
 	page.AllSousEspeces = model.AllSousEspeces(db)
 	page.AllDescripteurs = model.AllDescripteurs(db)
 
-	if err := e.WriteGoTemplate(TemplatesFs, "templates/espece.html", page); err != nil {
-		return err
-	}
-
 	e.OnClick("#cancel", func(s *ihui.Session, ev ihui.Event) error {
 		return e.Close()
 	})
@@ -104,5 +100,5 @@ func (page *PageEspece) Render(e *ihui.HTMLElement) error {
 		return e.Close()
 	})
 
-	return nil
+	return e.WriteGoTemplate(TemplatesFs, "templates/espece.html", page)
 }

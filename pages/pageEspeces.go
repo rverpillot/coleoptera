@@ -25,10 +25,6 @@ func (page *PageEspeces) Render(e *ihui.HTMLElement) error {
 	page.Nb = model.CountAllEspeces(db)
 	page.Classifications = model.AllClassifications(db)
 
-	if err := e.WriteGoTemplate(TemplatesFs, "templates/especes.html", page); err != nil {
-		return err
-	}
-
 	e.OnClick(".espece", func(session *ihui.Session, event ihui.Event) error {
 		var espece model.Espece
 		db.First(&espece, event.Value())
@@ -36,7 +32,7 @@ func (page *PageEspeces) Render(e *ihui.HTMLElement) error {
 			return session.ShowModal("espece", newPageEspece(&espece), nil)
 		}
 		session.Set("search_espece", espece.ID)
-		return page.menu.ShowPage(session, "individus")
+		return page.menu.ShowItem(session, "individus")
 	})
 
 	e.OnClick("a.classification", func(session *ihui.Session, event ihui.Event) error {
@@ -57,6 +53,6 @@ func (page *PageEspeces) Render(e *ihui.HTMLElement) error {
 		var classification model.Classification
 		return s.ShowModal("classification", newPageClassification(&classification), nil)
 	})
-	return nil
 
+	return e.WriteGoTemplate(TemplatesFs, "templates/especes.html", page)
 }

@@ -83,10 +83,6 @@ func (page *PageIndividus) Render(e *ihui.HTMLElement) error {
 		}
 	}
 
-	if err := e.WriteGoTemplate(TemplatesFs, "templates/individus.html", page); err != nil {
-		return err
-	}
-
 	// p.On("element-created", "", func(s *ihui.Session, _ ihui.Event) error {
 	// 	page.Pagination.SetPage(1)
 	// 	return nil
@@ -213,7 +209,7 @@ func (page *PageIndividus) Render(e *ihui.HTMLElement) error {
 		return s.Execute(`window.open("tmp/%s","export")`, path.Base(f.Name()))
 	})
 
-	return nil
+	return e.WriteGoTemplate(TemplatesFs, "templates/individus.html", page)
 }
 
 func export(db *gorm.DB, output io.Writer) error {

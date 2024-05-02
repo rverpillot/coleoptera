@@ -25,10 +25,6 @@ func newPageClassification(classification *model.Classification) *PageClassifica
 func (page *PageClassification) Render(e *ihui.HTMLElement) error {
 	db := e.Get("db").(*gorm.DB)
 
-	if err := e.WriteGoTemplate(TemplatesFs, "templates/classification.html", page); err != nil {
-		return err
-	}
-
 	e.OnClick("#close", func(s *ihui.Session, event ihui.Event) error {
 		return e.Close()
 	})
@@ -78,5 +74,5 @@ func (page *PageClassification) Render(e *ihui.HTMLElement) error {
 		return e.Close()
 	})
 
-	return nil
+	return e.WriteGoTemplate(TemplatesFs, "templates/classification.html", page)
 }

@@ -33,7 +33,7 @@ func (menu *Menu) SetActive(name string) {
 	}
 }
 
-func (menu *Menu) ShowPage(s *ihui.Session, name string) error {
+func (menu *Menu) ShowItem(s *ihui.Session, name string) error {
 	for _, item := range menu.Items {
 		if item.Name == name {
 			menu.SetActive(name)
@@ -50,12 +50,8 @@ func (menu *Menu) ShowPage(s *ihui.Session, name string) error {
 func (menu *Menu) Render(e *ihui.HTMLElement) error {
 	menu.Connected = e.Get("admin").(bool)
 
-	if err := e.WriteGoTemplate(TemplatesFs, "templates/menu.html", menu); err != nil {
-		return err
-	}
-
 	e.OnClick(".menu-item", func(s *ihui.Session, event ihui.Event) error {
-		return menu.ShowPage(s, event.Value())
+		return menu.ShowItem(s, event.Value())
 	})
 
 	e.OnClick("#connect", func(s *ihui.Session, _ ihui.Event) error {
@@ -66,5 +62,6 @@ func (menu *Menu) Render(e *ihui.HTMLElement) error {
 		s.Set("admin", false)
 		return nil
 	})
-	return nil
+
+	return e.WriteGoTemplate(TemplatesFs, "templates/menu.html", menu)
 }

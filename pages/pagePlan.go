@@ -31,10 +31,6 @@ func NewPagePlan(menu *Menu) *PagePlan {
 }
 
 func (page *PagePlan) Render(e *ihui.HTMLElement) error {
-	if err := e.WriteGoTemplate(TemplatesFs, "templates/plan.html", page); err != nil {
-		return err
-	}
-
 	e.On("element-created", "", func(s *ihui.Session, event ihui.Event) error {
 		s.Execute(`createMap("#map", {lat:%f, lng:%f}, %d, "%s")`,
 			page.infoMap.Lat, page.infoMap.Lng, page.infoMap.Zoom, e.Id)
@@ -57,7 +53,7 @@ func (page *PagePlan) Render(e *ihui.HTMLElement) error {
 		return nil
 	})
 
-	return nil
+	return e.WriteGoTemplate(TemplatesFs, "templates/plan.html", page)
 }
 
 func (page *PagePlan) showMarkers(session *ihui.Session) {

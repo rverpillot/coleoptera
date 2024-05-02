@@ -44,10 +44,6 @@ func (page *PageIndividu) Render(e *ihui.HTMLElement) error {
 	page.Departements = model.AllDepartements(db)
 	page.Recolteurs = model.AllRecolteurs(db)
 
-	if err := e.WriteGoTemplate(TemplatesFs, "templates/individu.html", page); err != nil {
-		return err
-	}
-
 	e.On("element-created", "", func(s *ihui.Session, event ihui.Event) error {
 		if page.Edit {
 			return s.Execute(`createEditMap("#mapedit","%s")`, e.Id)
@@ -172,5 +168,5 @@ func (page *PageIndividu) Render(e *ihui.HTMLElement) error {
 		return nil
 	})
 
-	return nil
+	return e.WriteGoTemplate(TemplatesFs, "templates/individu.html", page)
 }
