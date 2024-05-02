@@ -66,7 +66,7 @@ func (page *PageIndividu) Render(e *ihui.HTMLElement) error {
 		return nil
 	})
 
-	e.On("form", "form", func(s *ihui.Session, event ihui.Event) error {
+	e.OnForm("form", func(s *ihui.Session, event ihui.Event) error {
 		data := event.Data.(map[string]interface{})
 		name := data["name"].(string)
 		val := data["val"].(string)
@@ -114,21 +114,21 @@ func (page *PageIndividu) Render(e *ihui.HTMLElement) error {
 		return nil
 	})
 
-	e.On("click", "#cancel", func(s *ihui.Session, event ihui.Event) error {
+	e.OnClick("#cancel", func(s *ihui.Session, event ihui.Event) error {
 		return e.Close()
 	})
 
-	e.On("click", "#edit", func(s *ihui.Session, event ihui.Event) error {
+	e.OnClick("#edit", func(s *ihui.Session, event ihui.Event) error {
 		page.Edit = true
 		return nil
 	})
 
-	e.On("click", "#delete", func(s *ihui.Session, event ihui.Event) error {
+	e.OnClick("#delete", func(s *ihui.Session, event ihui.Event) error {
 		page.Delete = true
 		return nil
 	})
 
-	e.On("click", "#confirm-delete", func(s *ihui.Session, event ihui.Event) error {
+	e.OnClick("#confirm-delete", func(s *ihui.Session, event ihui.Event) error {
 		if page.Individu.ID > 0 {
 			if err := db.Delete(page.Individu).Error; err != nil {
 				page.Error = err.Error()
@@ -138,11 +138,11 @@ func (page *PageIndividu) Render(e *ihui.HTMLElement) error {
 		return e.Close()
 	})
 
-	e.On("click", "#cancel-delete", func(s *ihui.Session, event ihui.Event) error {
+	e.OnClick("#cancel-delete", func(s *ihui.Session, event ihui.Event) error {
 		return e.Close()
 	})
 
-	e.On("click", "#validation", func(s *ihui.Session, event ihui.Event) error {
+	e.OnClick("#validation", func(s *ihui.Session, event ihui.Event) error {
 		log.Println(page.Individu)
 		if page.Individu.Espece.ID == 0 {
 			page.Error = "Genre/espèce absent !"

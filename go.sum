@@ -31,6 +31,8 @@ github.com/rverpillot/ihui v1.3.3 h1:vwoU5iSIekS0JqFiKpvXg3ajr0BJ6KtA7WL9F1kozC4
 github.com/rverpillot/ihui v1.3.3/go.mod h1:DylRJLi3w3WlBBqqXPRk1fF4KJ4Nwbkzwk/VKgZ2DvE=
 github.com/rverpillot/ihui v1.3.4 h1:x2gLB9LsmymQzWz2GBdyV+Eqtinzb5Aodl4TnMXGVe0=
 github.com/rverpillot/ihui v1.3.4/go.mod h1:DylRJLi3w3WlBBqqXPRk1fF4KJ4Nwbkzwk/VKgZ2DvE=
+github.com/rverpillot/ihui v1.3.5 h1:EKi7mcNh+VqpOfbAI5BOSfnl903FE1S37PLzshDW6EY=
+github.com/rverpillot/ihui v1.3.5/go.mod h1:zIZ72IBlmGzyt2JgFad0NairJbnNAC9yC86T+ikffq0=
 github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXfy6kDkUVs=
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=

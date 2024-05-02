@@ -54,15 +54,15 @@ func (menu *Menu) Render(e *ihui.HTMLElement) error {
 		return err
 	}
 
-	e.On("click", ".menu-item", func(s *ihui.Session, event ihui.Event) error {
+	e.OnClick(".menu-item", func(s *ihui.Session, event ihui.Event) error {
 		return menu.ShowPage(s, event.Value())
 	})
 
-	e.On("click", "#connect", func(s *ihui.Session, _ ihui.Event) error {
+	e.OnClick("#connect", func(s *ihui.Session, _ ihui.Event) error {
 		return s.ShowModal("login", NewPageLogin(), nil)
 	})
 
-	e.On("click", "#disconnect", func(s *ihui.Session, _ ihui.Event) error {
+	e.OnClick("#disconnect", func(s *ihui.Session, _ ihui.Event) error {
 		s.Set("admin", false)
 		return nil
 	})

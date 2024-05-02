@@ -29,11 +29,11 @@ func (page *PageClassification) Render(e *ihui.HTMLElement) error {
 		return err
 	}
 
-	e.On("click", "#close", func(s *ihui.Session, event ihui.Event) error {
+	e.OnClick("#close", func(s *ihui.Session, event ihui.Event) error {
 		return e.Close()
 	})
 
-	e.On("click", "#delete", func(s *ihui.Session, ev ihui.Event) error {
+	e.OnClick("#delete", func(s *ihui.Session, ev ihui.Event) error {
 		if err := db.Model(&model.Espece{}).Where("classification_id = ?", page.Classification.ID).Count(&page.EspecesCount).Error; err != nil {
 			log.Println(err)
 			page.Error = err.Error()
@@ -43,7 +43,7 @@ func (page *PageClassification) Render(e *ihui.HTMLElement) error {
 		return nil
 	})
 
-	e.On("click", "#confirm-delete", func(s *ihui.Session, ev ihui.Event) error {
+	e.OnClick("#confirm-delete", func(s *ihui.Session, ev ihui.Event) error {
 		var ids []uint
 		for _, espece := range page.Classification.Especes {
 			ids = append(ids, espece.ID)
@@ -64,7 +64,7 @@ func (page *PageClassification) Render(e *ihui.HTMLElement) error {
 		return e.Close()
 	})
 
-	e.On("submit", "form", func(s *ihui.Session, event ihui.Event) error {
+	e.OnSubmit("form", func(s *ihui.Session, event ihui.Event) error {
 		data := event.Data.(map[string]interface{})
 		page.Classification.Nom = data["classification"].(string)
 		if page.Classification.Nom == "" {

@@ -29,7 +29,7 @@ func (page *PageEspeces) Render(e *ihui.HTMLElement) error {
 		return err
 	}
 
-	e.On("click", ".espece", func(session *ihui.Session, event ihui.Event) error {
+	e.OnClick(".espece", func(session *ihui.Session, event ihui.Event) error {
 		var espece model.Espece
 		db.First(&espece, event.Value())
 		if page.Admin {
@@ -39,7 +39,7 @@ func (page *PageEspeces) Render(e *ihui.HTMLElement) error {
 		return page.menu.ShowPage(session, "individus")
 	})
 
-	e.On("click", "a.classification", func(session *ihui.Session, event ihui.Event) error {
+	e.OnClick("a.classification", func(session *ihui.Session, event ihui.Event) error {
 		var classification model.Classification
 		db.Preload("Especes").First(&classification, event.Value())
 		if page.Admin {
@@ -47,13 +47,13 @@ func (page *PageEspeces) Render(e *ihui.HTMLElement) error {
 		}
 		return nil
 	})
-	e.On("click", "#add-espece", func(s *ihui.Session, event ihui.Event) error {
+	e.OnClick("#add-espece", func(s *ihui.Session, event ihui.Event) error {
 
 		var espece model.Espece
 		return s.ShowModal("espece", newPageEspece(&espece), nil)
 	})
 
-	e.On("click", "#add-classification", func(s *ihui.Session, event ihui.Event) error {
+	e.OnClick("#add-classification", func(s *ihui.Session, event ihui.Event) error {
 		var classification model.Classification
 		return s.ShowModal("classification", newPageClassification(&classification), nil)
 	})

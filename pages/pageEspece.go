@@ -51,11 +51,11 @@ func (page *PageEspece) Render(e *ihui.HTMLElement) error {
 		return err
 	}
 
-	e.On("click", "#cancel", func(s *ihui.Session, ev ihui.Event) error {
+	e.OnClick("#cancel", func(s *ihui.Session, ev ihui.Event) error {
 		return e.Close()
 	})
 
-	e.On("click", "#delete", func(s *ihui.Session, ev ihui.Event) error {
+	e.OnClick("#delete", func(s *ihui.Session, ev ihui.Event) error {
 		if err := db.Model(&model.Individu{}).Where("espece_id = ?", page.Espece.ID).Count(&page.IndividusCount).Error; err != nil {
 			log.Println(err)
 			page.Error = err.Error()
@@ -65,7 +65,7 @@ func (page *PageEspece) Render(e *ihui.HTMLElement) error {
 		return nil
 	})
 
-	e.On("click", "#confirm-delete", func(s *ihui.Session, ev ihui.Event) error {
+	e.OnClick("#confirm-delete", func(s *ihui.Session, ev ihui.Event) error {
 		if err := db.Select("Individus").Delete(page.Espece).Error; err != nil {
 			log.Println(err)
 			page.Error = err.Error()
@@ -74,12 +74,12 @@ func (page *PageEspece) Render(e *ihui.HTMLElement) error {
 		return e.Close()
 	})
 
-	e.On("click", "#cancel-delete", func(s *ihui.Session, ev ihui.Event) error {
+	e.OnClick("#cancel-delete", func(s *ihui.Session, ev ihui.Event) error {
 		page.Delete = false
 		return e.Close()
 	})
 
-	e.On("submit", "form", func(s *ihui.Session, ev ihui.Event) error {
+	e.OnSubmit("form", func(s *ihui.Session, ev ihui.Event) error {
 		data := ev.Data.(map[string]interface{})
 		id, _ := strconv.Atoi(data["classification"].(string))
 

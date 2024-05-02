@@ -21,7 +21,7 @@ func (page *PageLogin) Render(e *ihui.HTMLElement) error {
 		return err
 	}
 
-	e.On("submit", "form", func(s *ihui.Session, event ihui.Event) error {
+	e.OnSubmit("form", func(s *ihui.Session, event ihui.Event) error {
 		data := event.Data.(map[string]interface{})
 		username := data["username"].(string)
 		password := data["password"].(string)
@@ -42,7 +42,7 @@ func (page *PageLogin) Render(e *ihui.HTMLElement) error {
 		}
 	})
 
-	e.On("click", "#cancel", func(s *ihui.Session, event ihui.Event) error {
+	e.OnClick("#cancel", func(s *ihui.Session, event ihui.Event) error {
 		return e.Close()
 	})
 

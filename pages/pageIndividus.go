@@ -92,14 +92,14 @@ func (page *PageIndividus) Render(e *ihui.HTMLElement) error {
 	// 	return nil
 	// })
 
-	e.On("input", ".search", func(s *ihui.Session, event ihui.Event) error {
+	e.OnInput(".search", func(s *ihui.Session, event ihui.Event) error {
 		s.Set("search_individus", event.Value())
 		s.Set("search_espece", uint(0))
 		page.Pagination.SetPage(1)
 		return nil
 	})
 
-	e.On("check", ".selectAll", func(s *ihui.Session, event ihui.Event) error {
+	e.OnCheck(".selectAll", func(s *ihui.Session, event ihui.Event) error {
 		page.AllSelected = event.IsChecked()
 
 		if page.AllSelected {
@@ -120,14 +120,14 @@ func (page *PageIndividus) Render(e *ihui.HTMLElement) error {
 		return nil
 	})
 
-	e.On("click", ".detail", func(s *ihui.Session, event ihui.Event) error {
+	e.OnClick(".detail", func(s *ihui.Session, event ihui.Event) error {
 		id := event.Value()
 		var individu model.Individu
 		db.Preload("Espece").Preload("Departement").Find(&individu, id)
 		return s.ShowModal("individu", newPageIndividu(individu, false), nil)
 	})
 
-	e.On("check", ".select", func(s *ihui.Session, event ihui.Event) error {
+	e.OnCheck(".select", func(s *ihui.Session, event ihui.Event) error {
 		ID, _ := strconv.Atoi(event.Id)
 		if event.IsChecked() {
 			page.selection[uint(ID)] = true
@@ -138,24 +138,24 @@ func (page *PageIndividus) Render(e *ihui.HTMLElement) error {
 		return nil
 	})
 
-	e.On("click", "#reset", func(s *ihui.Session, event ihui.Event) error {
+	e.OnClick("#reset", func(s *ihui.Session, event ihui.Event) error {
 		s.Set("search_individus", "")
 		s.Set("search_espece", uint(0))
 		page.Pagination.SetPage(1)
 		return nil
 	})
 
-	e.On("click", "#next", func(s *ihui.Session, event ihui.Event) error {
+	e.OnClick("#next", func(s *ihui.Session, event ihui.Event) error {
 		page.Pagination.NextPage()
 		return nil
 	})
 
-	e.On("click", "#previous", func(s *ihui.Session, event ihui.Event) error {
+	e.OnClick("#previous", func(s *ihui.Session, event ihui.Event) error {
 		page.Pagination.PreviousPage()
 		return nil
 	})
 
-	e.On("click", "table .sortable", func(s *ihui.Session, event ihui.Event) error {
+	e.OnClick("table .sortable", func(s *ihui.Session, event ihui.Event) error {
 		name := event.Id
 		if name == page.fieldSort {
 			page.ascendingSort = !page.ascendingSort
@@ -166,7 +166,7 @@ func (page *PageIndividus) Render(e *ihui.HTMLElement) error {
 		return nil
 	})
 
-	e.On("click", "#add", func(s *ihui.Session, event ihui.Event) error {
+	e.OnClick("#add", func(s *ihui.Session, event ihui.Event) error {
 		individu := model.Individu{
 			Date:      time.Now(),
 			Sexe:      "M",
@@ -177,7 +177,7 @@ func (page *PageIndividus) Render(e *ihui.HTMLElement) error {
 		return s.ShowModal("individu", newPageIndividu(individu, true), nil)
 	})
 
-	e.On("click", "#printLabels", func(s *ihui.Session, event ihui.Event) error {
+	e.OnClick("#printLabels", func(s *ihui.Session, event ihui.Event) error {
 		tmpDir := path.Join(os.TempDir(), "coleoptera")
 
 		f, err := os.CreateTemp(tmpDir, "etiquettes-*.pdf")
@@ -198,7 +198,7 @@ func (page *PageIndividus) Render(e *ihui.HTMLElement) error {
 		return nil
 	})
 
-	e.On("click", "#export", func(s *ihui.Session, event ihui.Event) error {
+	e.OnClick("#export", func(s *ihui.Session, event ihui.Event) error {
 		tmpDir := path.Join(os.TempDir(), "coleoptera")
 
 		f, err := os.CreateTemp(tmpDir, "coleoptera-*.csv")
