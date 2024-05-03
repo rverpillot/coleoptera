@@ -120,7 +120,7 @@ func (page *PageIndividus) Render(e *ihui.HTMLElement) error {
 		id := event.Value()
 		var individu model.Individu
 		db.Preload("Espece").Preload("Departement").Find(&individu, id)
-		return s.ShowModal("individu", newPageIndividu(individu, false), nil)
+		return s.ShowModal("individu", newPageIndividu(individu, page.Admin), nil)
 	})
 
 	e.OnCheck(".select", func(s *ihui.Session, event ihui.Event) error {

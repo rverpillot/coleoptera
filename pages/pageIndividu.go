@@ -114,11 +114,6 @@ func (page *PageIndividu) Render(e *ihui.HTMLElement) error {
 		return e.Close()
 	})
 
-	e.OnClick("#edit", func(s *ihui.Session, event ihui.Event) error {
-		page.Edit = true
-		return nil
-	})
-
 	e.OnClick("#delete", func(s *ihui.Session, event ihui.Event) error {
 		page.Delete = true
 		return nil
