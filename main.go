@@ -125,7 +125,7 @@ func main() {
 	staticsFS, _ := fs.Sub(pages.ResourcesFs, "statics")
 	http.Handle(*contextRoot, http.StripPrefix(*contextRoot, http.FileServer(http.FS(staticsFS))))
 	http.Handle(*contextRoot+"tmp/", http.StripPrefix(*contextRoot+"tmp", http.FileServer(http.Dir(tmpDir))))
-	ihui.Handle(http.DefaultServeMux, *contextRoot, start)
+	ihui.Handle(*contextRoot, start)
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
