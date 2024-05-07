@@ -120,7 +120,7 @@ func (page *PageIndividus) Render(e *ihui.HTMLElement) error {
 		id := event.Value()
 		var individu model.Individu
 		db.Preload("Espece").Preload("Departement").Find(&individu, id)
-		return s.ShowModal("individu", newPageIndividu(individu, page.Admin), nil)
+		return s.ShowModal("individu", newPageIndividu(individu, page.Admin))
 	})
 
 	e.OnCheck(".select", func(s *ihui.Session, event ihui.Event) error {
@@ -170,7 +170,7 @@ func (page *PageIndividus) Render(e *ihui.HTMLElement) error {
 			Longitude: 6.997305,
 			Altitude:  sql.NullInt64{Int64: 100, Valid: true},
 		}
-		return s.ShowModal("individu", newPageIndividu(individu, true), nil)
+		return s.ShowModal("individu", newPageIndividu(individu, true))
 	})
 
 	e.OnClick("#printLabels", func(s *ihui.Session, event ihui.Event) error {

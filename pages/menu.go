@@ -37,7 +37,7 @@ func (menu *Menu) ShowItem(s *ihui.Session, name string) error {
 	for _, item := range menu.Items {
 		if item.Name == name {
 			menu.SetActive(name)
-			if err := s.ShowPage(item.Name, item.Drawer, nil); err != nil {
+			if err := s.ShowPage(item.Name, item.Drawer); err != nil {
 				fmt.Println(err)
 				return err
 			}
@@ -55,7 +55,7 @@ func (menu *Menu) Render(e *ihui.HTMLElement) error {
 	})
 
 	e.OnClick("#connect", func(s *ihui.Session, _ ihui.Event) error {
-		return s.ShowModal("login", NewPageLogin(), nil)
+		return s.ShowModal("login", NewPageLogin())
 	})
 
 	e.OnClick("#disconnect", func(s *ihui.Session, _ ihui.Event) error {

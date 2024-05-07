@@ -5,7 +5,7 @@ go 1.22
 require (
 	github.com/go-resty/resty/v2 v2.12.0
 	github.com/jung-kurt/gofpdf v1.16.2
-	github.com/rverpillot/ihui v1.3.7
+	github.com/rverpillot/ihui v1.3.8
 	gorm.io/driver/sqlite v1.5.5
 	gorm.io/gorm v1.25.10
 )
@@ -18,7 +18,7 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/mattn/go-sqlite3 v1.14.22 // indirect
-	golang.org/x/net v0.24.0 // indirect
+	golang.org/x/net v0.25.0 // indirect
 )
 
-// replace github.com/rverpillot/ihui v1.3.6 => ../ihui
+// replace github.com/rverpillot/ihui v1.3.8 => ../ihui

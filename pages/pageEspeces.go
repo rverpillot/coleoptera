@@ -29,7 +29,7 @@ func (page *PageEspeces) Render(e *ihui.HTMLElement) error {
 		var espece model.Espece
 		db.First(&espece, event.Value())
 		if page.Admin {
-			return session.ShowModal("espece", newPageEspece(&espece), nil)
+			return session.ShowModal("espece", newPageEspece(&espece))
 		}
 		session.Set("search_espece", espece.ID)
 		return page.menu.ShowItem(session, "individus")
@@ -39,19 +39,19 @@ func (page *PageEspeces) Render(e *ihui.HTMLElement) error {
 		var classification model.Classification
 		db.Preload("Especes").First(&classification, event.Value())
 		if page.Admin {
-			return session.ShowModal("classification", newPageClassification(&classification), nil)
+			return session.ShowModal("classification", newPageClassification(&classification))
 		}
 		return nil
 	})
 	e.OnClick("#add-espece", func(s *ihui.Session, event ihui.Event) error {
 
 		var espece model.Espece
-		return s.ShowModal("espece", newPageEspece(&espece), nil)
+		return s.ShowModal("espece", newPageEspece(&espece))
 	})
 
 	e.OnClick("#add-classification", func(s *ihui.Session, event ihui.Event) error {
 		var classification model.Classification
-		return s.ShowModal("classification", newPageClassification(&classification), nil)
+		return s.ShowModal("classification", newPageClassification(&classification))
 	})
 
 	return e.WriteGoTemplate(TemplatesFs, "templates/especes.html", page)
