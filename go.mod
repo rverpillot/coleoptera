@@ -5,7 +5,7 @@ go 1.22
 require (
 	github.com/go-resty/resty/v2 v2.12.0
 	github.com/jung-kurt/gofpdf v1.16.2
-	github.com/rverpillot/ihui v1.3.8
+	github.com/rverpillot/ihui v1.3.9
 	gorm.io/driver/sqlite v1.5.5
 	gorm.io/gorm v1.25.10
 )
