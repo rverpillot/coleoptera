@@ -3,7 +3,7 @@ module github.com/rverpillot/coleoptera
 go 1.22
 
 require (
-	github.com/go-resty/resty/v2 v2.13.0
+	github.com/go-resty/resty/v2 v2.13.1
 	github.com/jung-kurt/gofpdf v1.16.2
 	github.com/rverpillot/ihui v1.3.11
 	gorm.io/driver/sqlite v1.5.5
