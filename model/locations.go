@@ -94,14 +94,18 @@ func getAltitude(lng, lat float64) (int64, error) {
 }
 
 func FindLocation(lng, lat float64) (string, string, int64, error) {
+	// https://geoservices.ign.fr/documentation/services/services-geoplateforme/geocodage
 	url := "https://data.geopf.fr/geocodage/reverse"
-	resMap := make(map[string]interface{})
+	resMap := make(map[string]any)
 	client := resty.New()
 	// client.AllowGetMethodPayload = true
 	// client.SetDebug(true)
 	resp, err := client.R().
 		SetHeader("Accept", "application/json").
-		SetQueryParam("searchgeom", fmt.Sprintf(`{"type": "Circle", "coordinates": [%f,%f], "radius": 500}`, lng, lat)).
+		SetQueryParam("lon", fmt.Sprintf("%f", lng)).
+		SetQueryParam("lat", fmt.Sprintf("%f", lat)).
+		SetQueryParam("index", "poi").
+		SetQueryParam("category", "commune").
 		SetResult(&resMap).
 		Get(url)
 	if err != nil {
@@ -117,19 +121,20 @@ func FindLocation(lng, lat float64) (string, string, int64, error) {
 	}
 
 	log.Println("findLocation", resMap)
-	features := resMap["features"].([]interface{})
+	features := resMap["features"].([]any)
 	if len(features) == 0 {
 		return "", "", altitude, fmt.Errorf("no location found")
 	}
-	properties := features[0].(map[string]interface{})["properties"].(map[string]interface{})
+
+	properties := features[0].(map[string]any)["properties"].(map[string]any)
 
 	commune := ""
 	code := ""
-	if properties["city"] != nil {
-		commune = properties["city"].(string)
+	if properties["name"] != nil {
+		commune = properties["name"].([]any)[0].(string)
 	}
-	if properties["citycode"] != nil {
-		code = properties["citycode"].(string)[0.:2]
+	if properties["postcode"] != nil {
+		code = properties["postcode"].([]any)[0].(string)[0.:2]
 	}
 	return commune, code, altitude, err
 }
