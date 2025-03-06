@@ -156,10 +156,10 @@ func (page *PageIndividu) Render(e *ihui.HTMLElement) error {
 		var altitude int64
 		var err error
 		page.Individu.Commune, page.Individu.Code, altitude, err = model.FindLocation(page.Individu.Longitude, page.Individu.Latitude)
+		page.Individu.Altitude = sql.NullInt64{Int64: altitude, Valid: true}
 		if err != nil {
 			log.Println(err)
 		}
-		page.Individu.Altitude = sql.NullInt64{Int64: altitude, Valid: true}
 		return nil
 	})
 

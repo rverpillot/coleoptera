@@ -110,10 +110,16 @@ func FindLocation(lng, lat float64) (string, string, int64, error) {
 	if resp.StatusCode() != 200 {
 		return "", "", 0, fmt.Errorf("error %d", resp.StatusCode())
 	}
+
+	altitude, err := getAltitude(lng, lat)
+	if err != nil {
+		return "", "", 0, err
+	}
+
 	log.Println("findLocation", resMap)
 	features := resMap["features"].([]interface{})
 	if len(features) == 0 {
-		return "", "", 0, fmt.Errorf("no location found")
+		return "", "", altitude, fmt.Errorf("no location found")
 	}
 	properties := features[0].(map[string]interface{})["properties"].(map[string]interface{})
 
@@ -125,6 +131,5 @@ func FindLocation(lng, lat float64) (string, string, int64, error) {
 	if properties["citycode"] != nil {
 		code = properties["citycode"].(string)[0.:2]
 	}
-	altitude, err := getAltitude(lng, lat)
 	return commune, code, altitude, err
 }
