@@ -1,6 +1,7 @@
 module github.com/rverpillot/coleoptera
 
 go 1.23
+toolchain go1.24.1
 
 require (
 	github.com/go-resty/resty/v2 v2.16.5
@@ -18,8 +19,8 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/mattn/go-sqlite3 v1.14.24 // indirect
-	golang.org/x/net v0.35.0 // indirect
-	golang.org/x/text v0.22.0 // indirect
+	golang.org/x/net v0.38.0 // indirect
+	golang.org/x/text v0.23.0 // indirect
 )
 
 // replace github.com/rverpillot/ihui v1.3.10 => ../ihui
