@@ -148,7 +148,7 @@ func (page *PageIndividu) Render(e *ihui.HTMLElement) error {
 	})
 
 	e.On("position", "", func(s *ihui.Session, event ihui.Event) error {
-		pos := event.Data.(map[string]interface{})
+		pos := event.Data.(map[string]any)
 		log.Println(pos)
 		page.Individu.Longitude = pos["lng"].(float64)
 		page.Individu.Latitude = pos["lat"].(float64)
